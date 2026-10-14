@@ -1,31 +1,47 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:shopivo/main.dart';
+import 'package:shopivo/core/utils/formatters.dart';
+import 'package:shopivo/core/utils/validators.dart';
+import 'package:shopivo/data/models/product.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const Shopivo());
+  group('formatPrice', () {
+    test('adds currency, grouping and two decimals', () {
+      expect(formatPrice(1234.5), '\$1,234.50');
+      expect(formatPrice(0), '\$0.00');
+      expect(formatPrice(999), '\$999.00');
+    });
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('Validators', () {
+    test('email', () {
+      expect(Validators.email('a@b.co'), isNull);
+      expect(Validators.email('nope'), isNotNull);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('password needs 6+ chars', () {
+      expect(Validators.password('12345'), isNotNull);
+      expect(Validators.password('123456'), isNull);
+    });
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('Product', () {
+    test('parses a Supabase row with a joined category', () {
+      final product = Product.fromMap({
+        'id': 'p1',
+        'name': 'Tee',
+        'price': 20,
+        'compare_at_price': '25.00',
+        'stock': 3,
+        'images': ['a.jpg'],
+        'sizes': ['S', 'M'],
+        'categories': {'name': 'Tops'},
+      });
+      expect(product.price, 20.0);
+      expect(product.onSale, isTrue);
+      expect(product.discountPercent, 20);
+      expect(product.categoryName, 'Tops');
+      expect(product.primaryImage, 'a.jpg');
+    });
   });
 }
-
