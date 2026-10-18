@@ -7,6 +7,7 @@ import '../../features/admin/admin_shell.dart';
 import '../../features/admin/categories/admin_categories_screen.dart';
 import '../../features/admin/customers/admin_customers_screen.dart';
 import '../../features/admin/dashboard/admin_dashboard_screen.dart';
+import '../../features/admin/notifications/admin_broadcast_screen.dart';
 import '../../features/admin/orders/admin_orders_screen.dart';
 import '../../features/admin/products/admin_products_screen.dart';
 import '../../features/admin/products/product_form_screen.dart';
@@ -19,6 +20,7 @@ import '../../features/checkout/checkout_screen.dart';
 import '../../features/checkout/order_success_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/misc/not_found_screen.dart';
+import '../../features/notifications/notifications_screen.dart';
 import '../../features/product/product_detail_screen.dart';
 import '../../features/shop/shop_screen.dart';
 import '../../features/wishlist/wishlist_screen.dart';
@@ -30,6 +32,7 @@ const _authPages = {'/login', '/signup', '/forgot-password'};
 bool _requiresLogin(String path) =>
     path == '/checkout' ||
     path == '/wishlist' ||
+    path == '/notifications' ||
     path.startsWith('/account') ||
     path.startsWith('/order-success') ||
     path.startsWith('/admin');
@@ -91,6 +94,10 @@ GoRouter createRouter(AuthProvider auth) {
                 _page(state, OrderSuccessScreen(orderId: state.pathParameters['id']!)),
           ),
           GoRoute(path: '/wishlist', pageBuilder: (context, state) => _page(state, const WishlistScreen())),
+          GoRoute(
+            path: '/notifications',
+            pageBuilder: (context, state) => _page(state, const NotificationsScreen()),
+          ),
           GoRoute(
             path: '/account',
             pageBuilder: (context, state) => _page(state, const AccountScreen(section: AccountSection.profile)),
@@ -154,6 +161,10 @@ GoRouter createRouter(AuthProvider auth) {
           GoRoute(
             path: '/admin/customers',
             pageBuilder: (context, state) => _page(state, const AdminCustomersScreen()),
+          ),
+          GoRoute(
+            path: '/admin/notify',
+            pageBuilder: (context, state) => _page(state, const AdminBroadcastScreen()),
           ),
         ],
       ),

@@ -11,6 +11,7 @@ import '../../state/cart_provider.dart';
 import '../../state/wishlist_provider.dart';
 import '../widgets/app_button.dart';
 import '../widgets/app_logo.dart';
+import '../widgets/notification_bell.dart';
 import '../widgets/page_container.dart';
 
 class SiteHeader extends StatelessWidget {
@@ -99,6 +100,10 @@ class SiteHeader extends StatelessWidget {
                     onPressed: () => context.go('/cart'),
                   ),
                   const SizedBox(width: 8),
+                  if (auth.isLoggedIn && width >= Breakpoints.mobile) ...[
+                    const NotificationBell(),
+                    const SizedBox(width: 8),
+                  ],
                   if (auth.isLoggedIn)
                     const _AccountMenu()
                   else if (!compact)
@@ -250,6 +255,7 @@ class _AccountMenu extends StatelessWidget {
         const PopupMenuItem(value: '/account', child: _MenuRow(Icons.person_outline_rounded, 'My profile')),
         const PopupMenuItem(value: '/account/orders', child: _MenuRow(Icons.receipt_long_outlined, 'My orders')),
         const PopupMenuItem(value: '/wishlist', child: _MenuRow(Icons.favorite_border_rounded, 'Wishlist')),
+        const PopupMenuItem(value: '/notifications', child: _MenuRow(Icons.notifications_none_rounded, 'Notifications')),
         if (auth.isAdmin)
           const PopupMenuItem(value: '/admin', child: _MenuRow(Icons.dashboard_customize_outlined, 'Admin panel')),
         const PopupMenuDivider(),

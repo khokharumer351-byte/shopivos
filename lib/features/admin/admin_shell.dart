@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../shared/widgets/app_logo.dart';
+import '../../shared/widgets/notification_bell.dart';
 import '../../shared/widgets/page_container.dart';
 import '../../shared/widgets/state_views.dart';
 import '../../state/auth_provider.dart';
@@ -23,6 +24,7 @@ const _entries = [
   _AdminNavEntry('Categories', Icons.category_outlined, '/admin/categories'),
   _AdminNavEntry('Orders', Icons.receipt_long_outlined, '/admin/orders'),
   _AdminNavEntry('Customers', Icons.people_outline_rounded, '/admin/customers'),
+  _AdminNavEntry('Notify', Icons.campaign_outlined, '/admin/notify'),
 ];
 
 /// Frame for the admin panel. Also acts as the access gate: only profiles
@@ -64,6 +66,7 @@ class AdminShell extends StatelessWidget {
               backgroundColor: AppColors.ink,
               foregroundColor: Colors.white,
               title: Text('Admin', style: AppText.display(20, color: Colors.white)),
+              actions: const [NotificationBell(size: 36), SizedBox(width: 12)],
             )
           : null,
       body: compact

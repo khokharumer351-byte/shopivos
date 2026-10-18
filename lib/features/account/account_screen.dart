@@ -98,6 +98,12 @@ class _AccountNav extends StatelessWidget {
           selected: section == current,
           onTap: () => context.go(section.path),
         ),
+      _NavItem(
+        label: 'Notifications',
+        icon: Icons.notifications_none_rounded,
+        selected: false,
+        onTap: () => context.go('/notifications'),
+      ),
       if (auth.isAdmin)
         _NavItem(
           label: 'Admin panel',
@@ -109,11 +115,22 @@ class _AccountNav extends StatelessWidget {
     ];
 
     if (compact) {
+      // No sidebar (or website drawer in the app), so sign-out lives here too.
+      final signOut = _NavItem(
+        label: 'Sign out',
+        icon: Icons.logout_rounded,
+        selected: false,
+        onTap: () async {
+          await context.read<AuthProvider>().signOut();
+          if (context.mounted) context.go('/');
+        },
+      );
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            for (final item in items) Padding(padding: const EdgeInsets.only(right: 8), child: item),
+            for (final item in [...items, signOut])
+              Padding(padding: const EdgeInsets.only(right: 8), child: item),
           ],
         ),
       );

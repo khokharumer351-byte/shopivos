@@ -8,4 +8,9 @@ abstract final class AppConfig {
 
   static const productImagesBucket = 'product-images';
   static const lowStockThreshold = 5;
+
+  /// Deep link the mobile app opens from sign-up / password-reset emails.
+  /// Must be listed in Supabase → Authentication → URL Configuration → Redirect URLs,
+  /// and match the scheme in AndroidManifest.xml and ios/Runner/Info.plist.
+  static const appAuthCallback = 'io.shopivo.app://login-callback';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/config/app_config.dart';
 import '../supabase_client.dart';
 
 class AuthRepository {
@@ -25,7 +26,7 @@ class AuthRepository {
       email: email.trim(),
       password: password,
       data: {'full_name': fullName.trim()},
-      emailRedirectTo: kIsWeb ? Uri.base.origin : null,
+      emailRedirectTo: kIsWeb ? Uri.base.origin : AppConfig.appAuthCallback,
     );
     return response.session != null;
   }
@@ -33,7 +34,8 @@ class AuthRepository {
   Future<void> sendPasswordReset(String email) async {
     await _auth.resetPasswordForEmail(
       email.trim(),
-      redirectTo: kIsWeb ? '${Uri.base.origin}/reset-password' : null,
+      // On the app the link reopens Shopivo, which then shows /reset-password.
+      redirectTo: kIsWeb ? '${Uri.base.origin}/reset-password' : AppConfig.appAuthCallback,
     );
   }
 
