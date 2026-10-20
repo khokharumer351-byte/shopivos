@@ -26,7 +26,10 @@ Future<void> main() async {
 
   // On the app this also handles the io.shopivo.app://login-callback deep link
   // from sign-up and password-reset emails.
-  await Supabase.initialize(url: Env.supabaseUrl, anonKey: Env.supabaseAnonKey);
+  await Supabase.initialize(
+    url: Env.supabaseUrl,
+    publishableKey: Env.supabaseAnonKey,
+  );
   await LocalNotifications.init();
   runApp(const ShopivoApp());
 }
