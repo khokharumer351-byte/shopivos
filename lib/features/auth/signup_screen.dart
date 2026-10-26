@@ -103,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.name],
                   validator: (v) => Validators.notEmpty(v, 'Name'),
-                  decoration: const InputDecoration(hintText: 'Alex Morgan'),
+                  decoration: const InputDecoration(hintText: 'Name'),
                 ),
               ),
               const SizedBox(height: 18),

@@ -7,8 +7,11 @@ class AppBackHandler {
     _current = _location;
     _router.routerDelegate.addListener(_onRouteChanged);
     _dispatcher = _router.backButtonDispatcher.createChildBackButtonDispatcher()
-      ..addCallback(_onBack)
-      ..takePriority();
+      ..addCallback(_onBack);
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _dispatcher.takePriority(),
+    );
   }
 
   final GoRouter _router;
