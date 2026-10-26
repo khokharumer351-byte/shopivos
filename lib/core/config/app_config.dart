@@ -1,6 +1,9 @@
 abstract final class AppConfig {
   static const appName = 'Shopivo';
-  static const currencySymbol = '\$';
+
+  /// Prices are stored in the database in USD and converted to PKR for display.
+  static const currencySymbol = 'Rs ';
+  static const usdToPkr = 280.0;
 
   /// Keep these two in sync with `place_order` in supabase/schema.sql.
   static const freeShippingThreshold = 50.0;

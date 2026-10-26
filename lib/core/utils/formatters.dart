@@ -1,14 +1,15 @@
 import '../config/app_config.dart';
 
 String formatPrice(num value) {
-  final parts = value.toDouble().abs().toStringAsFixed(2).split('.');
+  final amount = value.toDouble() * AppConfig.usdToPkr;
+  final parts = amount.abs().toStringAsFixed(2).split('.');
   final digits = parts[0];
   final grouped = StringBuffer();
   for (var i = 0; i < digits.length; i++) {
     if (i > 0 && (digits.length - i) % 3 == 0) grouped.write(',');
     grouped.write(digits[i]);
   }
-  final sign = value < 0 ? '-' : '';
+  final sign = amount < 0 ? '-' : '';
   return '$sign${AppConfig.currencySymbol}${grouped.toString()}.${parts[1]}';
 }
 
