@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               secondaryImageUrl: featured.length > 1 ? featured[1].primaryImage : null,
             ),
             const Marquee(
-              items: ['NEW SEASON', 'LIMITED DROPS', 'FREE SHIPPING \$50+', 'CLASSICS REMIXED', '30-DAY RETURNS'],
+              items: ['NEW SEASON', 'LIMITED DROPS', 'FREE SHIPPING RS 14,000+', 'CLASSICS REMIXED', '30-DAY RETURNS'],
             ),
             if (snapshot.hasError)
               ErrorView(

@@ -136,7 +136,7 @@ class _ArtPanel extends StatelessWidget {
             ),
           ),
           const Marquee(
-            items: ['NEW DROPS WEEKLY', 'FREE SHIPPING \$50+', '30-DAY RETURNS', 'MEMBER PRICES'],
+            items: ['NEW DROPS WEEKLY', 'FREE SHIPPING RS 14,000+', '30-DAY RETURNS', 'MEMBER PRICES'],
             background: AppColors.lime,
             foreground: AppColors.ink,
           ),
