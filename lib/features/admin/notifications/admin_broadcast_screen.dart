@@ -9,8 +9,6 @@ import '../../../shared/widgets/form_fields.dart';
 import '../../../shared/widgets/page_container.dart';
 import '../widgets/admin_page.dart';
 
-/// Send a notification to every customer — shows up in their inbox on the
-/// website and as a phone notification in the app.
 class AdminBroadcastScreen extends StatefulWidget {
   const AdminBroadcastScreen({super.key});
 
@@ -34,9 +32,21 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   };
 
   static const _presets = [
-    ('New drop is live ✦', 'Fresh pieces just landed. Go get yours before they sell out.', '/shop?sort=newest'),
-    ('Weekend sale 🔥', 'Up to 30% off selected styles — this weekend only.', '/shop'),
-    ('Back in stock', 'Your faves are back. Restocked and ready to ship.', '/shop?featured=1'),
+    (
+      'New drop is live ✦',
+      'Fresh pieces just landed. Go get yours before they sell out.',
+      '/shop?sort=newest',
+    ),
+    (
+      'Weekend sale 🔥',
+      'Up to 30% off selected styles — this weekend only.',
+      '/shop',
+    ),
+    (
+      'Back in stock',
+      'Your faves are back. Restocked and ready to ship.',
+      '/shop?featured=1',
+    ),
   ];
 
   @override
@@ -58,14 +68,19 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
     final ok = await confirmDialog(
       context,
       title: 'Send to every customer?',
-      message: 'Everyone gets "${_title.text.trim()}" in their inbox and as a phone notification.',
+      message:
+          'Everyone gets "${_title.text.trim()}" in their inbox and as a phone notification.',
       confirmLabel: 'Send',
     );
     if (!ok) return;
 
     setState(() => _sending = true);
     try {
-      final count = await _repo.broadcast(title: _title.text.trim(), body: _body.text.trim(), link: _link);
+      final count = await _repo.broadcast(
+        title: _title.text.trim(),
+        body: _body.text.trim(),
+        link: _link,
+      );
       if (!mounted) return;
       showSnack(context, 'Sent to $count customer${count == 1 ? '' : 's'} ✦');
       _title.clear();
@@ -110,8 +125,12 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             child: TextFormField(
               controller: _title,
               maxLength: 80,
-              decoration: const InputDecoration(hintText: 'New drop is live ✦', counterText: ''),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Add a title' : null,
+              decoration: const InputDecoration(
+                hintText: 'New drop is live ✦',
+                counterText: '',
+              ),
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Add a title' : null,
             ),
           ),
           const SizedBox(height: 18),
@@ -121,19 +140,21 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
               controller: _body,
               maxLines: 3,
               maxLength: 240,
-              decoration: const InputDecoration(hintText: 'What do you want to tell your customers?'),
+              decoration: const InputDecoration(
+                hintText: 'What do you want to tell your customers?',
+              ),
             ),
           ),
           const SizedBox(height: 10),
           LabeledField(
             label: 'Opens',
             child: DropdownButtonFormField<String>(
-              // Rebuild when a preset changes the link.
               key: ValueKey(_link),
               initialValue: _link,
               isExpanded: true,
               items: [
-                for (final entry in _links.entries) DropdownMenuItem(value: entry.key, child: Text(entry.value)),
+                for (final entry in _links.entries)
+                  DropdownMenuItem(value: entry.key, child: Text(entry.value)),
               ],
               onChanged: (v) => setState(() => _link = v ?? '/'),
             ),
@@ -152,18 +173,25 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
 
     final preview = _Preview(
       title: _title.text.trim().isEmpty ? 'Your title' : _title.text.trim(),
-      body: _body.text.trim().isEmpty ? 'Your message shows up here.' : _body.text.trim(),
+      body: _body.text.trim().isEmpty
+          ? 'Your message shows up here.'
+          : _body.text.trim(),
     );
 
     return AdminPage(
       title: 'Notify',
-      subtitle: 'Send a message to every customer — web inbox + phone notification.',
+      subtitle:
+          'Send a message to every customer — web inbox + phone notification.',
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 760) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [InkCard(child: form), const SizedBox(height: 24), preview],
+              children: [
+                InkCard(child: form),
+                const SizedBox(height: 24),
+                preview,
+              ],
             );
           }
           return Row(
@@ -199,7 +227,9 @@ class _Preview extends StatelessWidget {
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: AppColors.ink, width: 1.5),
-            boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(4, 4))],
+            boxShadow: const [
+              BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
+            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +242,10 @@ class _Preview extends StatelessWidget {
                   color: AppColors.ink,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text('s.', style: AppText.display(18, color: AppColors.lime)),
+                child: Text(
+                  's.',
+                  style: AppText.display(18, color: AppColors.lime),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -221,13 +254,25 @@ class _Preview extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text('SHOPIVO', style: AppText.label(size: 10, color: AppColors.muted)),
+                        Text(
+                          'SHOPIVO',
+                          style: AppText.label(
+                            size: 10,
+                            color: AppColors.muted,
+                          ),
+                        ),
                         const Spacer(),
-                        Text('now', style: AppText.body(11, color: AppColors.muted)),
+                        Text(
+                          'now',
+                          style: AppText.body(11, color: AppColors.muted),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(title, style: AppText.body(14, weight: FontWeight.w700)),
+                    Text(
+                      title,
+                      style: AppText.body(14, weight: FontWeight.w700),
+                    ),
                     const SizedBox(height: 2),
                     Text(body, style: AppText.body(13, color: AppColors.muted)),
                   ],

@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import '../../data/models/product.dart';
 import 'product_card.dart';
 
-/// Responsive grid that sizes columns from the available width.
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({super.key, required this.products, this.maxColumns = 4, this.spacing = 20});
+  const ProductGrid({
+    super.key,
+    required this.products,
+    this.maxColumns = 4,
+    this.spacing = 20,
+  });
 
   final List<Product> products;
   final int maxColumns;
@@ -26,7 +30,10 @@ class ProductGrid extends StatelessWidget {
           runSpacing: gap + 8,
           children: [
             for (final product in products)
-              SizedBox(width: itemWidth, child: ProductCard(key: ValueKey(product.id), product: product)),
+              SizedBox(
+                width: itemWidth,
+                child: ProductCard(key: ValueKey(product.id), product: product),
+              ),
           ],
         );
       },

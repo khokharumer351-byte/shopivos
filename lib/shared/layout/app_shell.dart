@@ -25,25 +25,33 @@ class _Tab {
 const _tabs = [
   _Tab('Home', Icons.home_outlined, Icons.home_rounded, '/'),
   _Tab('Shop', Icons.grid_view_outlined, Icons.grid_view_rounded, '/shop'),
-  _Tab('Saved', Icons.favorite_border_rounded, Icons.favorite_rounded, '/wishlist'),
+  _Tab(
+    'Saved',
+    Icons.favorite_border_rounded,
+    Icons.favorite_rounded,
+    '/wishlist',
+  ),
   _Tab('Bag', Icons.shopping_bag_outlined, Icons.shopping_bag_rounded, '/cart'),
   _Tab('You', Icons.person_outline_rounded, Icons.person_rounded, '/account'),
 ];
 
-/// Pages that sit directly under a tab, so they get no back arrow.
 const _tabRoots = {'/', '/shop', '/wishlist', '/cart', '/account'};
 
 int _tabIndexFor(String path) {
   if (path == '/') return 0;
   if (path.startsWith('/shop') || path.startsWith('/product')) return 1;
   if (path.startsWith('/wishlist')) return 2;
-  if (path.startsWith('/cart') || path.startsWith('/checkout') || path.startsWith('/order-success')) return 3;
-  if (path.startsWith('/account') || path.startsWith('/notifications')) return 4;
+  if (path.startsWith('/cart') ||
+      path.startsWith('/checkout') ||
+      path.startsWith('/order-success')) {
+    return 3;
+  }
+  if (path.startsWith('/account') || path.startsWith('/notifications')) {
+    return 4;
+  }
   return -1;
 }
 
-/// Mobile-app frame around every storefront page: compact top bar and a
-/// bottom tab bar, replacing the website's header, drawer and footer.
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.location, required this.child});
 
@@ -102,7 +110,8 @@ class _TopBar extends StatelessWidget {
                     tooltip: 'Back',
                     size: 40,
                     onPressed: () {
-                      final handled = AppBackHandler.instance?.goBack() ?? false;
+                      final handled =
+                          AppBackHandler.instance?.goBack() ?? false;
                       if (!handled) context.go('/');
                     },
                   ),
@@ -201,10 +210,19 @@ class _TabItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: active ? AppColors.lime : Colors.transparent,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: active ? AppColors.ink : Colors.transparent, width: 1.5),
-        boxShadow: active ? const [BoxShadow(color: AppColors.ink, offset: Offset(2, 2))] : null,
+        border: Border.all(
+          color: active ? AppColors.ink : Colors.transparent,
+          width: 1.5,
+        ),
+        boxShadow: active
+            ? const [BoxShadow(color: AppColors.ink, offset: Offset(2, 2))]
+            : null,
       ),
-      child: Icon(active ? tab.activeIcon : tab.icon, size: 22, color: AppColors.ink),
+      child: Icon(
+        active ? tab.activeIcon : tab.icon,
+        size: 22,
+        color: AppColors.ink,
+      ),
     );
 
     return Semantics(
@@ -248,7 +266,11 @@ class _TabItem extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppText.body(11, weight: active ? FontWeight.w700 : FontWeight.w500, height: 1.2),
+              style: AppText.body(
+                11,
+                weight: active ? FontWeight.w700 : FontWeight.w500,
+                height: 1.2,
+              ),
             ),
           ],
         ),

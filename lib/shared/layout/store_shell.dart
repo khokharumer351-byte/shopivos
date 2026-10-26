@@ -6,8 +6,6 @@ import 'mobile_nav_drawer.dart';
 import 'site_footer.dart';
 import 'site_header.dart';
 
-/// Frame around every storefront page: sticky header + scrollable body.
-/// In the Android/iOS app it becomes [AppShell] (top bar + bottom tabs).
 class StoreShell extends StatelessWidget {
   const StoreShell({super.key, required this.location, required this.child});
 
@@ -30,8 +28,6 @@ class StoreShell extends StatelessWidget {
   }
 }
 
-/// Scrollable page body that ends with the footer on the website.
-/// The app has a tab bar instead, so it only gets some breathing room.
 class StorePage extends StatelessWidget {
   const StorePage({super.key, required this.children, this.showFooter = true});
 

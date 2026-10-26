@@ -33,14 +33,14 @@ class _ShopivoAppState extends State<ShopivoApp> {
     super.initState();
     if (isMobileApp) {
       _backHandler = AppBackHandler(_router);
-      // Tapping a system notification opens the page it points to.
+
       LocalNotifications.onOpenLink = _openLink;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final link = await LocalNotifications.takeLaunchLink();
         if (link != null) _openLink(link);
       });
     }
-    // Realtime can miss messages while the app sleeps; catch up on return.
+
     _lifecycle = AppLifecycleListener(onResume: _notifications.refresh);
   }
 
@@ -63,14 +63,18 @@ class _ShopivoAppState extends State<ShopivoApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>.value(value: _auth),
-        ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider()..load()),
+        ChangeNotifierProvider<CartProvider>(
+          create: (_) => CartProvider()..load(),
+        ),
         ChangeNotifierProxyProvider<AuthProvider, WishlistProvider>(
           create: (_) => WishlistProvider(),
-          update: (_, auth, wishlist) => (wishlist ?? WishlistProvider())..bindUser(auth.user?.id),
+          update: (_, auth, wishlist) =>
+              (wishlist ?? WishlistProvider())..bindUser(auth.user?.id),
         ),
         ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
           create: (_) => _notifications,
-          update: (_, auth, notifications) => (notifications ?? _notifications)..bindUser(auth.user?.id),
+          update: (_, auth, notifications) =>
+              (notifications ?? _notifications)..bindUser(auth.user?.id),
         ),
       ],
       child: MaterialApp.router(
@@ -83,7 +87,6 @@ class _ShopivoAppState extends State<ShopivoApp> {
   }
 }
 
-/// Fallback app shown when Supabase keys are not configured yet.
 class SetupRequiredApp extends StatelessWidget {
   const SetupRequiredApp({super.key});
 

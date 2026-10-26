@@ -5,22 +5,25 @@ import '../supabase_client.dart';
 class OrderRepository {
   static const _select = '*, order_items(*), profiles(email)';
 
-  /// Places the order through the `place_order` RPC, which re-checks prices
-  /// and stock on the server. Returns the new order id.
   Future<String> placeOrder({
     required List<CartItem> items,
     required ShippingDetails shipping,
   }) async {
-    final result = await supabase.rpc('place_order', params: {
-      'p_items': items
-          .map((item) => {
+    final result = await supabase.rpc(
+      'place_order',
+      params: {
+        'p_items': items
+            .map(
+              (item) => {
                 'product_id': item.product.id,
                 'quantity': item.quantity,
                 'size': item.size,
-              })
-          .toList(),
-      'p_shipping': shipping.toMap(),
-    });
+              },
+            )
+            .toList(),
+        'p_shipping': shipping.toMap(),
+      },
+    );
     return result as String;
   }
 
@@ -34,11 +37,14 @@ class OrderRepository {
   }
 
   Future<ShopOrder?> fetchOrder(String id) async {
-    final row = await supabase.from('orders').select(_select).eq('id', id).maybeSingle();
+    final row = await supabase
+        .from('orders')
+        .select(_select)
+        .eq('id', id)
+        .maybeSingle();
     return row == null ? null : ShopOrder.fromMap(row);
   }
 
-  /// Admin only (enforced by RLS).
   Future<List<ShopOrder>> fetchAllOrders({String? status, int? limit}) async {
     var query = supabase.from('orders').select(_select);
     if (status != null) query = query.eq('status', status);
@@ -47,7 +53,6 @@ class OrderRepository {
     return rows.map(ShopOrder.fromMap).toList();
   }
 
-  /// Admin only (enforced by RLS).
   Future<void> updateStatus(String orderId, String status) async {
     await supabase.from('orders').update({'status': status}).eq('id', orderId);
   }

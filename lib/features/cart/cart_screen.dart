@@ -29,7 +29,8 @@ class CartScreen extends StatelessWidget {
           EmptyState(
             icon: Icons.shopping_bag_outlined,
             title: 'Your bag is empty',
-            message: 'Main character energy needs a wardrobe. Go find something you love.',
+            message:
+                'Main character energy needs a wardrobe. Go find something you love.',
             actionLabel: 'Start shopping',
             onAction: () => context.go('/shop'),
           ),
@@ -57,21 +58,42 @@ class CartScreen extends StatelessWidget {
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'Your ', style: AppText.display(compact ? 40 : 60)),
-                    TextSpan(text: 'bag', style: AppText.serif(compact ? 44 : 64, color: AppColors.violet)),
-                    TextSpan(text: ' (${cart.count})', style: AppText.display(compact ? 24 : 32, color: AppColors.muted)),
+                    TextSpan(
+                      text: 'Your ',
+                      style: AppText.display(compact ? 40 : 60),
+                    ),
+                    TextSpan(
+                      text: 'bag',
+                      style: AppText.serif(
+                        compact ? 44 : 64,
+                        color: AppColors.violet,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' (${cart.count})',
+                      style: AppText.display(
+                        compact ? 24 : 32,
+                        color: AppColors.muted,
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 32),
-              if (compact) ...[items, const SizedBox(height: 16), const OrderSummaryCard(showCheckout: true)]
-              else
+              if (compact) ...[
+                items,
+                const SizedBox(height: 16),
+                const OrderSummaryCard(showCheckout: true),
+              ] else
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: items),
                     const SizedBox(width: 32),
-                    const SizedBox(width: 380, child: OrderSummaryCard(showCheckout: true)),
+                    const SizedBox(
+                      width: 380,
+                      child: OrderSummaryCard(showCheckout: true),
+                    ),
                   ],
                 ),
             ],
@@ -102,7 +124,11 @@ class CartLine extends StatelessWidget {
             onTap: () => context.go('/product/${product.id}'),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: SizedBox(width: editable ? 96 : 64, height: editable ? 120 : 80, child: NetImage(product.primaryImage)),
+              child: SizedBox(
+                width: editable ? 96 : 64,
+                height: editable ? 120 : 80,
+                child: NetImage(product.primaryImage),
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -118,7 +144,11 @@ class CartLine extends StatelessWidget {
                         product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: AppText.body(editable ? 16 : 14, weight: FontWeight.w700, height: 1.3),
+                        style: AppText.body(
+                          editable ? 16 : 14,
+                          weight: FontWeight.w700,
+                          height: 1.3,
+                        ),
                       ),
                     ),
                     if (editable)
@@ -135,9 +165,20 @@ class CartLine extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 4,
                   children: [
-                    if (item.size != null) Text('Size ${item.size}', style: AppText.body(13, color: AppColors.muted)),
-                    if (!editable) Text('Qty ${item.quantity}', style: AppText.body(13, color: AppColors.muted)),
-                    Text(formatPrice(product.price), style: AppText.body(13, color: AppColors.muted)),
+                    if (item.size != null)
+                      Text(
+                        'Size ${item.size}',
+                        style: AppText.body(13, color: AppColors.muted),
+                      ),
+                    if (!editable)
+                      Text(
+                        'Qty ${item.quantity}',
+                        style: AppText.body(13, color: AppColors.muted),
+                      ),
+                    Text(
+                      formatPrice(product.price),
+                      style: AppText.body(13, color: AppColors.muted),
+                    ),
                   ],
                 ),
                 SizedBox(height: editable ? 16 : 6),
@@ -151,7 +192,10 @@ class CartLine extends StatelessWidget {
                         onChanged: (value) => cart.setQuantity(item, value),
                       ),
                     const Spacer(),
-                    Text(formatPrice(item.lineTotal), style: AppText.display(editable ? 18 : 15)),
+                    Text(
+                      formatPrice(item.lineTotal),
+                      style: AppText.display(editable ? 18 : 15),
+                    ),
                   ],
                 ),
               ],
@@ -172,7 +216,10 @@ class OrderSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
-    final progress = (cart.subtotal / AppConfig.freeShippingThreshold).clamp(0.0, 1.0);
+    final progress = (cart.subtotal / AppConfig.freeShippingThreshold).clamp(
+      0.0,
+      1.0,
+    );
 
     return InkCard(
       shadow: true,
@@ -214,7 +261,12 @@ class OrderSummaryCard extends StatelessWidget {
           const SizedBox(height: 20),
           _SummaryRow(label: 'Subtotal', value: formatPrice(cart.subtotal)),
           const SizedBox(height: 10),
-          _SummaryRow(label: 'Shipping', value: cart.shippingFee == 0 ? 'Free' : formatPrice(cart.shippingFee)),
+          _SummaryRow(
+            label: 'Shipping',
+            value: cart.shippingFee == 0
+                ? 'Free'
+                : formatPrice(cart.shippingFee),
+          ),
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),

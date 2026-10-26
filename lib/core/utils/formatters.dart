@@ -13,14 +13,26 @@ String formatPrice(num value) {
   return '$sign${AppConfig.currencySymbol}${grouped.toString()}.${parts[1]}';
 }
 
-const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const _months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 String formatDate(DateTime? date) {
   if (date == null) return '—';
   return '${_months[date.month - 1]} ${date.day}, ${date.year}';
 }
 
-/// Short, human friendly order reference, e.g. `#3F9A12BC`.
 String orderRef(String id) {
   final clean = id.replaceAll('-', '');
   return '#${(clean.length > 8 ? clean.substring(0, 8) : clean).toUpperCase()}';

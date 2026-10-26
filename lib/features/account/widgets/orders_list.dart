@@ -28,7 +28,9 @@ class _OrdersListState extends State<OrdersList> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final userId = context.read<AuthProvider>().user?.id;
-    if (_future == null && userId != null) _future = _repo.fetchMyOrders(userId);
+    if (_future == null && userId != null) {
+      _future = _repo.fetchMyOrders(userId);
+    }
   }
 
   @override
@@ -36,8 +38,12 @@ class _OrdersListState extends State<OrdersList> {
     return FutureBuilder<List<ShopOrder>>(
       future: _future,
       builder: (context, snapshot) {
-        if (snapshot.hasError) return ErrorView(message: friendlyError(snapshot.error!));
-        if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+        if (snapshot.hasError) {
+          return ErrorView(message: friendlyError(snapshot.error!));
+        }
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const LoadingView();
+        }
         final orders = snapshot.data ?? const <ShopOrder>[];
         if (orders.isEmpty) {
           return EmptyState(
@@ -51,7 +57,10 @@ class _OrdersListState extends State<OrdersList> {
         return Column(
           children: [
             for (final order in orders)
-              Padding(padding: const EdgeInsets.only(bottom: 14), child: OrderTile(order: order)),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: OrderTile(order: order),
+              ),
           ],
         );
       },
@@ -67,7 +76,10 @@ class OrderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final thumbs = order.items.where((i) => i.productImage != null).take(3).toList();
+    final thumbs = order.items
+        .where((i) => i.productImage != null)
+        .take(3)
+        .toList();
 
     return Material(
       color: AppColors.surface,
@@ -83,7 +95,8 @@ class OrderTile extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                width: 56.0 + (thumbs.length > 1 ? (thumbs.length - 1) * 22.0 : 0),
+                width:
+                    56.0 + (thumbs.length > 1 ? (thumbs.length - 1) * 22.0 : 0),
                 height: 64,
                 child: Stack(
                   children: [
@@ -106,7 +119,10 @@ class OrderTile extends StatelessWidget {
                           height: 64,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.ink, width: 1.5),
+                            border: Border.all(
+                              color: AppColors.ink,
+                              width: 1.5,
+                            ),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),

@@ -7,9 +7,14 @@ import '../../core/theme/app_text.dart';
 import '../../core/utils/formatters.dart';
 import '../../data/models/order.dart';
 
-/// Small rounded label, e.g. "SALE -20%".
 class Pill extends StatelessWidget {
-  const Pill(this.text, {super.key, this.color = AppColors.lime, this.textColor = AppColors.ink, this.icon});
+  const Pill(
+    this.text, {
+    super.key,
+    this.color = AppColors.lime,
+    this.textColor = AppColors.ink,
+    this.icon,
+  });
 
   final String text;
   final Color color;
@@ -28,17 +33,28 @@ class Pill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 13, color: textColor), const SizedBox(width: 4)],
-          Text(text.toUpperCase(), style: AppText.label(size: 10.5, color: textColor)),
+          if (icon != null) ...[
+            Icon(icon, size: 13, color: textColor),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            text.toUpperCase(),
+            style: AppText.label(size: 10.5, color: textColor),
+          ),
         ],
       ),
     );
   }
 }
 
-/// Round rotated sticker, the Gen-Z garnish on hero sections.
 class Sticker extends StatelessWidget {
-  const Sticker({super.key, required this.text, this.size = 110, this.color = AppColors.lime, this.angle = 0.2});
+  const Sticker({
+    super.key,
+    required this.text,
+    this.size = 110,
+    this.color = AppColors.lime,
+    this.angle = 0.2,
+  });
 
   final String text;
   final double size;
@@ -57,7 +73,9 @@ class Sticker extends StatelessWidget {
           color: color,
           shape: BoxShape.circle,
           border: Border.all(color: AppColors.ink, width: 2),
-          boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(4, 4))],
+          boxShadow: const [
+            BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
+          ],
         ),
         child: Padding(
           padding: EdgeInsets.all(size * 0.12),
@@ -73,7 +91,12 @@ class Sticker extends StatelessWidget {
 }
 
 class PriceTag extends StatelessWidget {
-  const PriceTag({super.key, required this.price, this.compareAt, this.size = 16});
+  const PriceTag({
+    super.key,
+    required this.price,
+    this.compareAt,
+    this.size = 16,
+  });
 
   final double price;
   final double? compareAt;
@@ -86,13 +109,20 @@ class PriceTag extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 8,
       children: [
-        Text(formatPrice(price), style: AppText.display(size, color: onSale ? AppColors.violet : AppColors.ink)),
+        Text(
+          formatPrice(price),
+          style: AppText.display(
+            size,
+            color: onSale ? AppColors.violet : AppColors.ink,
+          ),
+        ),
         if (onSale)
           Text(
             formatPrice(compareAt!),
-            style: AppText.body(size * 0.8, color: AppColors.muted).copyWith(
-              decoration: TextDecoration.lineThrough,
-            ),
+            style: AppText.body(
+              size * 0.8,
+              color: AppColors.muted,
+            ).copyWith(decoration: TextDecoration.lineThrough),
           ),
       ],
     );
@@ -100,7 +130,12 @@ class PriceTag extends StatelessWidget {
 }
 
 class StarRating extends StatelessWidget {
-  const StarRating({super.key, required this.rating, this.size = 16, this.color = AppColors.ink});
+  const StarRating({
+    super.key,
+    required this.rating,
+    this.size = 16,
+    this.color = AppColors.ink,
+  });
 
   final double rating;
   final double size;
@@ -114,7 +149,9 @@ class StarRating extends StatelessWidget {
         final value = rating - index;
         final icon = value >= 1
             ? Icons.star_rounded
-            : (value >= 0.5 ? Icons.star_half_rounded : Icons.star_outline_rounded);
+            : (value >= 0.5
+                  ? Icons.star_half_rounded
+                  : Icons.star_outline_rounded);
         return Icon(icon, size: size, color: color);
       }),
     );
@@ -122,7 +159,12 @@ class StarRating extends StatelessWidget {
 }
 
 class StarPicker extends StatelessWidget {
-  const StarPicker({super.key, required this.value, required this.onChanged, this.size = 30});
+  const StarPicker({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.size = 30,
+  });
 
   final int value;
   final ValueChanged<int> onChanged;
@@ -150,7 +192,13 @@ class StarPicker extends StatelessWidget {
 }
 
 class QuantityStepper extends StatelessWidget {
-  const QuantityStepper({super.key, required this.value, required this.onChanged, this.max, this.compact = false});
+  const QuantityStepper({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.max,
+    this.compact = false,
+  });
 
   final int value;
   final ValueChanged<int> onChanged;
@@ -179,7 +227,11 @@ class QuantityStepper extends StatelessWidget {
           ),
           SizedBox(
             width: compact ? 22 : 32,
-            child: Text('$value', textAlign: TextAlign.center, style: AppText.display(compact ? 14 : 16)),
+            child: Text(
+              '$value',
+              textAlign: TextAlign.center,
+              style: AppText.display(compact ? 14 : 16),
+            ),
           ),
           IconButton(
             visualDensity: VisualDensity.compact,
@@ -199,13 +251,13 @@ class StatusChip extends StatelessWidget {
   final String status;
 
   static Color colorFor(String status) => switch (status) {
-        OrderStatus.pending => AppColors.peach,
-        OrderStatus.processing => AppColors.sky,
-        OrderStatus.shipped => AppColors.violet,
-        OrderStatus.delivered => AppColors.lime,
-        OrderStatus.cancelled => AppColors.paperDark,
-        _ => AppColors.paperDark,
-      };
+    OrderStatus.pending => AppColors.peach,
+    OrderStatus.processing => AppColors.sky,
+    OrderStatus.shipped => AppColors.violet,
+    OrderStatus.delivered => AppColors.lime,
+    OrderStatus.cancelled => AppColors.paperDark,
+    _ => AppColors.paperDark,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +270,14 @@ class StatusChip extends StatelessWidget {
   }
 }
 
-/// Section heading: small kicker label + big title with an optional serif word.
 class SectionTitle extends StatelessWidget {
-  const SectionTitle({super.key, required this.kicker, required this.title, this.accent, this.trailing});
+  const SectionTitle({
+    super.key,
+    required this.kicker,
+    required this.title,
+    this.accent,
+    this.trailing,
+  });
 
   final String kicker;
   final String title;
@@ -234,13 +291,20 @@ class SectionTitle extends StatelessWidget {
     final heading = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('✦ ${kicker.toUpperCase()}', style: AppText.label(color: AppColors.muted)),
+        Text(
+          '✦ ${kicker.toUpperCase()}',
+          style: AppText.label(color: AppColors.muted),
+        ),
         const SizedBox(height: 10),
         Text.rich(
           TextSpan(
             children: [
               TextSpan(text: title, style: AppText.display(size)),
-              if (accent != null) TextSpan(text: ' $accent', style: AppText.serif(size + 4, color: AppColors.violet)),
+              if (accent != null)
+                TextSpan(
+                  text: ' $accent',
+                  style: AppText.serif(size + 4, color: AppColors.violet),
+                ),
             ],
           ),
         ),
@@ -250,14 +314,21 @@ class SectionTitle extends StatelessWidget {
     if (trailing == null) return heading;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
-      children: [Expanded(child: heading), const SizedBox(width: 16), trailing!],
+      children: [
+        Expanded(child: heading),
+        const SizedBox(width: 16),
+        trailing!,
+      ],
     );
   }
 }
 
-/// Wavy-free, simple diagonal stripes used as a decorative fill.
 class StripesPainter extends CustomPainter {
-  const StripesPainter({this.color = AppColors.ink, this.gap = 14, this.strokeWidth = 1.5});
+  const StripesPainter({
+    this.color = AppColors.ink,
+    this.gap = 14,
+    this.strokeWidth = 1.5,
+  });
 
   final Color color;
   final double gap;
@@ -270,7 +341,11 @@ class StripesPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
     final diagonal = size.width + size.height;
     for (double x = -size.height; x < diagonal; x += gap) {
-      canvas.drawLine(Offset(x, size.height), Offset(x + size.height, 0), paint);
+      canvas.drawLine(
+        Offset(x, size.height),
+        Offset(x + size.height, 0),
+        paint,
+      );
     }
   }
 

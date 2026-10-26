@@ -16,7 +16,6 @@ const _channel = AndroidNotificationChannel(
 );
 
 Future<void> init(void Function(String link) onOpenLink) async {
-  // dart:io also exists on desktop; only phones get system notifications.
   if (!isMobileApp || _ready) return;
   try {
     await _plugin.initialize(
@@ -34,7 +33,9 @@ Future<void> init(void Function(String link) onOpenLink) async {
       },
     );
     await _plugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(_channel);
     _ready = true;
   } catch (e) {
@@ -46,10 +47,14 @@ Future<void> requestPermission() async {
   if (!_ready) return;
   try {
     await _plugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.requestNotificationsPermission();
     await _plugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
         ?.requestPermissions(alert: true, badge: true, sound: true);
   } catch (e) {
     debugPrint('Notification permission request failed: $e');
@@ -60,7 +65,6 @@ Future<void> show(AppNotification notification) async {
   if (!_ready) return;
   try {
     await _plugin.show(
-      // Stable 31-bit id per notification row.
       notification.id.hashCode & 0x7fffffff,
       notification.title,
       notification.body,
@@ -74,7 +78,11 @@ Future<void> show(AppNotification notification) async {
           color: const Color(0xFF7B5CFF),
           styleInformation: BigTextStyleInformation(notification.body),
         ),
-        iOS: const DarwinNotificationDetails(presentAlert: true, presentBanner: true, presentSound: true),
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBanner: true,
+          presentSound: true,
+        ),
       ),
       payload: notification.link,
     );

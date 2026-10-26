@@ -47,7 +47,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _prefill();
   }
 
-  /// Fills the form from the saved profile once it is available.
   void _prefill() {
     if (_prefilled) return;
     final profile = context.read<AuthProvider>().profile;
@@ -63,7 +62,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void dispose() {
-    for (final c in [_name, _phone, _address, _city, _postal, _country, _notes]) {
+    for (final c in [
+      _name,
+      _phone,
+      _address,
+      _city,
+      _postal,
+      _country,
+      _notes,
+    ]) {
       c.dispose();
     }
     super.dispose();
@@ -92,17 +99,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final profile = auth.profile;
       if (_saveAddress && profile != null) {
         try {
-          await auth.updateProfile(profile.copyWith(
-            fullName: _name.text.trim(),
-            phone: _phone.text.trim(),
-            address: _address.text.trim(),
-            city: _city.text.trim(),
-            postalCode: _postal.text.trim(),
-            country: _country.text.trim(),
-          ));
-        } catch (_) {
-          // Saving the address is a nice-to-have; the order already went through.
-        }
+          await auth.updateProfile(
+            profile.copyWith(
+              fullName: _name.text.trim(),
+              phone: _phone.text.trim(),
+              address: _address.text.trim(),
+              city: _city.text.trim(),
+              postalCode: _postal.text.trim(),
+              country: _country.text.trim(),
+            ),
+          );
+        } catch (_) {}
       }
 
       cart.clear();
@@ -116,7 +123,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // The profile may finish loading after the first frame (e.g. on refresh).
     final profile = context.watch<AuthProvider>().profile;
     if (!_prefilled && profile != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -153,60 +159,78 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                FieldRow(children: [
-                  LabeledField(
-                    label: 'Full name',
-                    child: TextFormField(
-                      controller: _name,
-                      validator: (v) => Validators.notEmpty(v, 'Name'),
-                      decoration: const InputDecoration(hintText: 'Alex Morgan'),
+                FieldRow(
+                  children: [
+                    LabeledField(
+                      label: 'Full name',
+                      child: TextFormField(
+                        controller: _name,
+                        validator: (v) => Validators.notEmpty(v, 'Name'),
+                        decoration: const InputDecoration(
+                          hintText: 'Alex Morgan',
+                        ),
+                      ),
                     ),
-                  ),
-                  LabeledField(
-                    label: 'Phone',
-                    child: TextFormField(
-                      controller: _phone,
-                      keyboardType: TextInputType.phone,
-                      validator: (v) => Validators.notEmpty(v, 'Phone'),
-                      decoration: const InputDecoration(hintText: '+1 555 0100'),
+                    LabeledField(
+                      label: 'Phone',
+                      child: TextFormField(
+                        controller: _phone,
+                        keyboardType: TextInputType.phone,
+                        validator: (v) => Validators.notEmpty(v, 'Phone'),
+                        decoration: const InputDecoration(
+                          hintText: '+1 555 0100',
+                        ),
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 LabeledField(
                   label: 'Address',
                   child: TextFormField(
                     controller: _address,
                     validator: (v) => Validators.notEmpty(v, 'Address'),
-                    decoration: const InputDecoration(hintText: 'Street, building, apartment'),
+                    decoration: const InputDecoration(
+                      hintText: 'Street, building, apartment',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                FieldRow(children: [
-                  LabeledField(
-                    label: 'City',
-                    child: TextFormField(
-                      controller: _city,
-                      validator: (v) => Validators.notEmpty(v, 'City'),
-                      decoration: const InputDecoration(hintText: 'City'),
+                FieldRow(
+                  children: [
+                    LabeledField(
+                      label: 'City',
+                      child: TextFormField(
+                        controller: _city,
+                        validator: (v) => Validators.notEmpty(v, 'City'),
+                        decoration: const InputDecoration(hintText: 'City'),
+                      ),
                     ),
-                  ),
-                  LabeledField(
-                    label: 'Postal code',
-                    child: TextFormField(controller: _postal, decoration: const InputDecoration(hintText: '00000')),
-                  ),
-                  LabeledField(
-                    label: 'Country',
-                    child: TextFormField(controller: _country, decoration: const InputDecoration(hintText: 'Country')),
-                  ),
-                ]),
+                    LabeledField(
+                      label: 'Postal code',
+                      child: TextFormField(
+                        controller: _postal,
+                        decoration: const InputDecoration(hintText: '00000'),
+                      ),
+                    ),
+                    LabeledField(
+                      label: 'Country',
+                      child: TextFormField(
+                        controller: _country,
+                        decoration: const InputDecoration(hintText: 'Country'),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 LabeledField(
                   label: 'Order notes (optional)',
                   child: TextFormField(
                     controller: _notes,
                     maxLines: 2,
-                    decoration: const InputDecoration(hintText: 'Gate code, delivery time, anything else…'),
+                    decoration: const InputDecoration(
+                      hintText: 'Gate code, delivery time, anything else…',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -215,7 +239,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   controlAffinity: ListTileControlAffinity.leading,
                   value: _saveAddress,
                   onChanged: (v) => setState(() => _saveAddress = v ?? false),
-                  title: Text('Save these details to my profile', style: AppText.body(14)),
+                  title: Text(
+                    'Save these details to my profile',
+                    style: AppText.body(14),
+                  ),
                 ),
               ],
             ),
@@ -246,7 +273,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final item in cart.items)
-            Padding(padding: const EdgeInsets.only(bottom: 10), child: CartLine(item: item, editable: false)),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: CartLine(item: item, editable: false),
+            ),
           const SizedBox(height: 8),
           AppButton(
             label: 'Place order',
@@ -275,14 +305,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text.rich(
-                TextSpan(children: [
-                  TextSpan(text: 'Check', style: AppText.display(compact ? 40 : 60)),
-                  TextSpan(text: 'out.', style: AppText.serif(compact ? 44 : 64, color: AppColors.violet)),
-                ]),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Check',
+                      style: AppText.display(compact ? 40 : 60),
+                    ),
+                    TextSpan(
+                      text: 'out.',
+                      style: AppText.serif(
+                        compact ? 44 : 64,
+                        color: AppColors.violet,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 32),
-              if (compact) ...[form, const SizedBox(height: 32), summary]
-              else
+              if (compact) ...[
+                form,
+                const SizedBox(height: 32),
+                summary,
+              ] else
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -352,11 +396,18 @@ class _PaymentOption extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: AppText.body(15, weight: FontWeight.w700)),
-                  Text(subtitle, style: AppText.body(13, color: AppColors.muted)),
+                  Text(
+                    subtitle,
+                    style: AppText.body(13, color: AppColors.muted),
+                  ),
                 ],
               ),
             ),
-            Icon(selected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded),
+            Icon(
+              selected
+                  ? Icons.radio_button_checked_rounded
+                  : Icons.radio_button_off_rounded,
+            ),
           ],
         ),
       ),

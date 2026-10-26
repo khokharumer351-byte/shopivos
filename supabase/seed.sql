@@ -1,7 +1,7 @@
--- =============================================================================
--- Shopivo — demo data (optional). Run AFTER schema.sql.
--- Images are placeholders from picsum.photos; replace them from the admin panel.
--- =============================================================================
+
+
+
+
 
 insert into public.categories (name, image_url) values
   ('Tops',        'https://picsum.photos/seed/shopivo-cat-tops/600/600'),

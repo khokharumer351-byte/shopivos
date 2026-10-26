@@ -5,13 +5,19 @@ abstract final class Breakpoints {
   static const tablet = 960.0;
   static const desktop = 1200.0;
 
-  static bool isMobile(BuildContext context) => MediaQuery.sizeOf(context).width < mobile;
-  static bool isCompact(BuildContext context) => MediaQuery.sizeOf(context).width < tablet;
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.sizeOf(context).width < mobile;
+  static bool isCompact(BuildContext context) =>
+      MediaQuery.sizeOf(context).width < tablet;
 }
 
-/// Centers content with a max width and responsive side padding.
 class PageContainer extends StatelessWidget {
-  const PageContainer({super.key, required this.child, this.maxWidth = 1280, this.verticalPadding = 0});
+  const PageContainer({
+    super.key,
+    required this.child,
+    this.maxWidth = 1280,
+    this.verticalPadding = 0,
+  });
 
   final Widget child;
   final double maxWidth;
@@ -20,13 +26,18 @@ class PageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final horizontal = width < Breakpoints.mobile ? 16.0 : (width < Breakpoints.tablet ? 24.0 : 40.0);
+    final horizontal = width < Breakpoints.mobile
+        ? 16.0
+        : (width < Breakpoints.tablet ? 24.0 : 40.0);
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: verticalPadding),
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontal,
+            vertical: verticalPadding,
+          ),
           child: child,
         ),
       ),
@@ -34,7 +45,6 @@ class PageContainer extends StatelessWidget {
   }
 }
 
-/// White card with an ink border — the base surface used across the app.
 class InkCard extends StatelessWidget {
   const InkCard({
     super.key,
@@ -59,7 +69,9 @@ class InkCard extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: const Color(0xFF0E0E10), width: 1.5),
-        boxShadow: shadow ? const [BoxShadow(color: Color(0xFF0E0E10), offset: Offset(5, 5))] : null,
+        boxShadow: shadow
+            ? const [BoxShadow(color: Color(0xFF0E0E10), offset: Offset(5, 5))]
+            : null,
       ),
       child: child,
     );

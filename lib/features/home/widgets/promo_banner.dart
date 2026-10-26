@@ -24,16 +24,37 @@ class PromoBanner extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: 'The ', style: AppText.display(compact ? 38 : 52, color: Colors.white)),
-                TextSpan(text: 'classics,', style: AppText.serif(compact ? 42 : 58, color: AppColors.lime)),
-                TextSpan(text: '\nremixed.', style: AppText.display(compact ? 38 : 52, color: Colors.white)),
+                TextSpan(
+                  text: 'The ',
+                  style: AppText.display(
+                    compact ? 38 : 52,
+                    color: Colors.white,
+                  ),
+                ),
+                TextSpan(
+                  text: 'classics,',
+                  style: AppText.serif(
+                    compact ? 42 : 58,
+                    color: AppColors.lime,
+                  ),
+                ),
+                TextSpan(
+                  text: '\nremixed.',
+                  style: AppText.display(
+                    compact ? 38 : 52,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'Old-school silhouettes, new-school energy. Built to outlive the algorithm.',
-            style: AppText.body(15, color: Colors.white.withValues(alpha: 0.75)),
+            style: AppText.body(
+              15,
+              color: Colors.white.withValues(alpha: 0.75),
+            ),
           ),
           const SizedBox(height: 28),
           AppButton(
@@ -102,7 +123,9 @@ class _Panel extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(32),
         border: Border.all(color: AppColors.ink, width: 2),
-        boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(6, 6))],
+        boxShadow: const [
+          BoxShadow(color: AppColors.ink, offset: Offset(6, 6)),
+        ],
       ),
       child: child,
     );

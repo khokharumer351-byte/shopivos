@@ -35,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      // On success the router redirects away from /login automatically.
       await context.read<AuthProvider>().signIn(_email.text, _password.text);
     } catch (e) {
       if (mounted) showSnack(context, friendlyError(e), error: true);
@@ -64,7 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.email],
                   validator: Validators.email,
-                  decoration: const InputDecoration(hintText: 'you@example.com'),
+                  decoration: const InputDecoration(
+                    hintText: 'you@example.com',
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
@@ -74,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _password,
                   textInputAction: TextInputAction.done,
                   autofillHints: const [AutofillHints.password],
-                  validator: (v) => (v == null || v.isEmpty) ? 'Password is required' : null,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? 'Password is required' : null,
                   onSubmitted: (_) => _submit(),
                 ),
               ),
@@ -84,7 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () => context.go('/forgot-password'),
                   child: Text(
                     'Forgot password?',
-                    style: AppText.body(14, weight: FontWeight.w600, color: AppColors.violet),
+                    style: AppText.body(
+                      14,
+                      weight: FontWeight.w600,
+                      color: AppColors.violet,
+                    ),
                   ),
                 ),
               ),
@@ -101,10 +107,16 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('New here?', style: AppText.body(14, color: AppColors.muted)),
+                  Text(
+                    'New here?',
+                    style: AppText.body(14, color: AppColors.muted),
+                  ),
                   TextButton(
                     onPressed: () => context.go('/signup'),
-                    child: Text('Create an account', style: AppText.body(14, weight: FontWeight.w700)),
+                    child: Text(
+                      'Create an account',
+                      style: AppText.body(14, weight: FontWeight.w700),
+                    ),
                   ),
                 ],
               ),

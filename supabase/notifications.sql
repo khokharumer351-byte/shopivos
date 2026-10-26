@@ -1,17 +1,17 @@
--- =============================================================================
--- Shopivo — notifications (web + mobile app)
--- Run this once in Supabase Dashboard → SQL Editor, AFTER schema.sql.
--- It is safe to re-run.
---
--- What it does:
---   * notifications table (one row per user per message), protected by RLS
---   * customers get a notification when they place an order and whenever
---     an admin changes its status
---   * admins get a notification for every new order and when a product
---     runs low on stock
---   * admins can broadcast a message to every customer (new drops, promos)
---   * the table is added to Supabase Realtime so the app shows them instantly
--- =============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 create table if not exists public.notifications (
   id         uuid primary key default gen_random_uuid(),
@@ -28,8 +28,8 @@ create index if not exists notifications_user_idx on public.notifications (user_
 
 alter table public.notifications enable row level security;
 
--- Users only ever see and manage their own notifications. Nobody inserts from
--- the client: rows are created by the triggers / RPC below (security definer).
+
+
 drop policy if exists "notifications: read own" on public.notifications;
 create policy "notifications: read own" on public.notifications
   for select using (user_id = auth.uid());
@@ -42,9 +42,9 @@ drop policy if exists "notifications: delete own" on public.notifications;
 create policy "notifications: delete own" on public.notifications
   for delete using (user_id = auth.uid());
 
--- -----------------------------------------------------------------------------
--- Helpers
--- -----------------------------------------------------------------------------
+
+
+
 
 create or replace function public.order_ref(p_id uuid)
 returns text
@@ -68,12 +68,12 @@ $$;
 
 revoke execute on function public.notify_admins(text, text, text) from public, anon, authenticated;
 
--- -----------------------------------------------------------------------------
--- Orders
--- -----------------------------------------------------------------------------
 
--- place_order inserts the order first and fills in the totals with an UPDATE
--- at the end, so "order placed" is sent when the total is set (0 → amount).
+
+
+
+
+
 create or replace function public.notify_order_placed()
 returns trigger
 language plpgsql
@@ -160,9 +160,9 @@ create trigger orders_notify_status
   after update of status on public.orders
   for each row execute function public.notify_order_status();
 
--- -----------------------------------------------------------------------------
--- Low stock (threshold matches AppConfig.lowStockThreshold = 5)
--- -----------------------------------------------------------------------------
+
+
+
 
 create or replace function public.notify_low_stock()
 returns trigger
@@ -188,10 +188,10 @@ create trigger products_notify_low_stock
   after update of stock on public.products
   for each row execute function public.notify_low_stock();
 
--- -----------------------------------------------------------------------------
--- Admin broadcast (e.g. "New drop is live") — sent to every customer.
--- Returns how many people received it.
--- -----------------------------------------------------------------------------
+
+
+
+
 
 create or replace function public.broadcast_notification(p_title text, p_body text, p_link text default null)
 returns integer
@@ -222,9 +222,9 @@ $$;
 revoke execute on function public.broadcast_notification(text, text, text) from public, anon;
 grant execute on function public.broadcast_notification(text, text, text) to authenticated;
 
--- -----------------------------------------------------------------------------
--- Realtime: push new rows to the signed-in app instantly (RLS still applies).
--- -----------------------------------------------------------------------------
+
+
+
 
 do $$
 begin

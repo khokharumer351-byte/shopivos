@@ -9,9 +9,10 @@ import '../supabase_client.dart';
 class StorageRepository {
   final _random = Random();
 
-  /// Uploads an image to the public `product-images` bucket and returns its URL.
   Future<String> uploadProductImage(Uint8List bytes, String fileName) async {
-    final ext = fileName.contains('.') ? fileName.split('.').last.toLowerCase() : 'jpg';
+    final ext = fileName.contains('.')
+        ? fileName.split('.').last.toLowerCase()
+        : 'jpg';
     final path =
         'products/${DateTime.now().millisecondsSinceEpoch}-${_random.nextInt(0x7fffffff).toRadixString(16)}.$ext';
     final bucket = supabase.storage.from(AppConfig.productImagesBucket);
@@ -25,9 +26,9 @@ class StorageRepository {
   }
 
   String _mimeType(String ext) => switch (ext) {
-        'png' => 'image/png',
-        'webp' => 'image/webp',
-        'gif' => 'image/gif',
-        _ => 'image/jpeg',
-      };
+    'png' => 'image/png',
+    'webp' => 'image/webp',
+    'gif' => 'image/gif',
+    _ => 'image/jpeg',
+  };
 }

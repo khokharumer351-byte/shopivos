@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 
-/// Network image with soft loading / error placeholders.
 class NetImage extends StatelessWidget {
-  const NetImage(this.url, {super.key, this.fit = BoxFit.cover, this.width, this.height, this.placeholder});
+  const NetImage(
+    this.url, {
+    super.key,
+    this.fit = BoxFit.cover,
+    this.width,
+    this.height,
+    this.placeholder,
+  });
 
   final String? url;
   final BoxFit fit;
@@ -21,7 +27,8 @@ class NetImage extends StatelessWidget {
       fit: fit,
       width: width,
       height: height,
-      loadingBuilder: (context, child, progress) => progress == null ? child : _fallback(loading: true),
+      loadingBuilder: (context, child, progress) =>
+          progress == null ? child : _fallback(loading: true),
       errorBuilder: (context, error, stackTrace) => _fallback(),
     );
   }
@@ -37,7 +44,10 @@ class NetImage extends StatelessWidget {
           ? const SizedBox(
               width: 18,
               height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.muted),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.muted,
+              ),
             )
           : const Icon(Icons.image_outlined, color: AppColors.muted),
     );

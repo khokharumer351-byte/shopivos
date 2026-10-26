@@ -12,8 +12,6 @@ import '../../shared/widgets/page_container.dart';
 import '../../state/auth_provider.dart';
 import 'widgets/auth_layout.dart';
 
-/// Landing page for the reset link from the email. Supabase exchanges the
-/// token in the URL for a temporary session; then the user picks a new password.
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
@@ -57,7 +55,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       return AuthLayout(
         title: 'Verifying',
         accent: 'link…',
-        subtitle: 'Hang tight while we confirm your reset link. If nothing happens, the link may have expired.',
+        subtitle:
+            'Hang tight while we confirm your reset link. If nothing happens, the link may have expired.',
         child: InkCard(
           color: AppColors.paperDark,
           child: Column(
@@ -65,7 +64,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             children: [
               const Center(child: CircularProgressIndicator()),
               const SizedBox(height: 20),
-              Text('Link expired or already used?', style: AppText.body(14, weight: FontWeight.w600)),
+              Text(
+                'Link expired or already used?',
+                style: AppText.body(14, weight: FontWeight.w600),
+              ),
               const SizedBox(height: 12),
               AppButton(
                 label: 'Request a new link',
@@ -82,7 +84,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return AuthLayout(
       title: 'New',
       accent: 'password.',
-      subtitle: 'Choose a new password for ${auth.user?.email ?? 'your account'}.',
+      subtitle:
+          'Choose a new password for ${auth.user?.email ?? 'your account'}.',
       child: Form(
         key: _formKey,
         child: Column(
@@ -101,7 +104,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               label: 'Confirm new password',
               child: PasswordField(
                 controller: _confirm,
-                validator: (v) => v != _password.text ? 'Passwords don’t match' : null,
+                validator: (v) =>
+                    v != _password.text ? 'Passwords don’t match' : null,
                 onSubmitted: (_) => _submit(),
               ),
             ),

@@ -18,7 +18,6 @@ import '../../../shared/widgets/page_container.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../widgets/admin_page.dart';
 
-/// Create (productId == null) or edit a product.
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key, this.productId});
 
@@ -62,7 +61,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   @override
   void dispose() {
-    for (final c in [_name, _description, _price, _compareAt, _stock, _sizes, _imageUrl]) {
+    for (final c in [
+      _name,
+      _description,
+      _price,
+      _compareAt,
+      _stock,
+      _sizes,
+      _imageUrl,
+    ]) {
       c.dispose();
     }
     super.dispose();
@@ -107,7 +114,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   Future<void> _pickImages() async {
-    final files = await ImagePicker().pickMultiImage(maxWidth: 1800, imageQuality: 85);
+    final files = await ImagePicker().pickMultiImage(
+      maxWidth: 1800,
+      imageQuality: 85,
+    );
     if (files.isEmpty) return;
     setState(() => _uploading = true);
     try {
@@ -118,7 +128,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         setState(() => _images.add(url));
       }
     } catch (e) {
-      if (mounted) showSnack(context, 'Upload failed: ${friendlyError(e)}', error: true);
+      if (mounted) {
+        showSnack(context, 'Upload failed: ${friendlyError(e)}', error: true);
+      }
     } finally {
       if (mounted) setState(() => _uploading = false);
     }
@@ -149,7 +161,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       stock: int.parse(_stock.text.trim()),
       categoryId: _categoryId,
       images: _images,
-      sizes: _sizes.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
+      sizes: _sizes.text
+          .split(',')
+          .map((s) => s.trim())
+          .where((s) => s.isNotEmpty)
+          .toList(),
       isFeatured: _featured,
       isActive: _active,
     );
@@ -175,7 +191,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Widget build(BuildContext context) {
     return AdminPage(
       title: _isEdit ? 'Edit product' : 'New product',
-      subtitle: _isEdit ? 'Update details, pricing and stock.' : 'Fill in the details and hit save.',
+      subtitle: _isEdit
+          ? 'Update details, pricing and stock.'
+          : 'Fill in the details and hit save.',
       actions: [
         AppButton(
           label: 'Cancel',
@@ -195,8 +213,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       child: _loading
           ? const LoadingView()
           : _loadError != null
-              ? ErrorView(message: _loadError!, onRetry: _load)
-              : _buildForm(),
+          ? ErrorView(message: _loadError!, onRetry: _load)
+          : _buildForm(),
     );
   }
 
@@ -215,7 +233,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             child: TextFormField(
               controller: _name,
               validator: (v) => Validators.notEmpty(v, 'Name'),
-              decoration: const InputDecoration(hintText: 'e.g. Vintage Wash Tee'),
+              decoration: const InputDecoration(
+                hintText: 'e.g. Vintage Wash Tee',
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -225,7 +245,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               controller: _description,
               minLines: 4,
               maxLines: 10,
-              decoration: const InputDecoration(hintText: 'Materials, fit, care, the vibe…'),
+              decoration: const InputDecoration(
+                hintText: 'Materials, fit, care, the vibe…',
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -236,8 +258,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               isExpanded: true,
               decoration: const InputDecoration(),
               items: [
-                const DropdownMenuItem<String?>(value: null, child: Text('Uncategorized')),
-                for (final c in _categories) DropdownMenuItem<String?>(value: c.id, child: Text(c.name)),
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('Uncategorized'),
+                ),
+                for (final c in _categories)
+                  DropdownMenuItem<String?>(value: c.id, child: Text(c.name)),
               ],
               onChanged: (value) => setState(() => _categoryId = value),
             ),
@@ -261,26 +287,34 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         children: [
           Text('Pricing & stock', style: AppText.display(22)),
           const SizedBox(height: 20),
-          FieldRow(children: [
-            LabeledField(
-              label: 'Price',
-              child: TextFormField(
-                controller: _price,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                validator: Validators.price,
-                decoration: const InputDecoration(hintText: '29.00'),
+          FieldRow(
+            children: [
+              LabeledField(
+                label: 'Price',
+                child: TextFormField(
+                  controller: _price,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  validator: Validators.price,
+                  decoration: const InputDecoration(hintText: '29.00'),
+                ),
               ),
-            ),
-            LabeledField(
-              label: 'Compare-at price',
-              child: TextFormField(
-                controller: _compareAt,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                validator: (v) => Validators.price(v, optional: true),
-                decoration: const InputDecoration(hintText: 'Shown struck-through'),
+              LabeledField(
+                label: 'Compare-at price',
+                child: TextFormField(
+                  controller: _compareAt,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  validator: (v) => Validators.price(v, optional: true),
+                  decoration: const InputDecoration(
+                    hintText: 'Shown struck-through',
+                  ),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
           const SizedBox(height: 16),
           LabeledField(
             label: 'Stock',
@@ -296,14 +330,20 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             contentPadding: EdgeInsets.zero,
             value: _active,
             onChanged: (v) => setState(() => _active = v),
-            title: Text('Visible in store', style: AppText.body(15, weight: FontWeight.w600)),
+            title: Text(
+              'Visible in store',
+              style: AppText.body(15, weight: FontWeight.w600),
+            ),
             subtitle: const Text('Hidden products are only visible to admins.'),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: _featured,
             onChanged: (v) => setState(() => _featured = v),
-            title: Text('Featured', style: AppText.body(15, weight: FontWeight.w600)),
+            title: Text(
+              'Featured',
+              style: AppText.body(15, weight: FontWeight.w600),
+            ),
             subtitle: const Text('Shows on the homepage “hot list”.'),
           ),
         ],
@@ -328,7 +368,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             ],
           ),
           const SizedBox(height: 6),
-          Text('The first image is the cover. Drag to reorder.', style: AppText.body(13, color: AppColors.muted)),
+          Text(
+            'The first image is the cover. Drag to reorder.',
+            style: AppText.body(13, color: AppColors.muted),
+          ),
           const SizedBox(height: 16),
           if (_images.isEmpty)
             Container(
@@ -339,7 +382,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppColors.line, width: 1.5),
               ),
-              child: Text('No images yet', style: AppText.body(14, color: AppColors.muted)),
+              child: Text(
+                'No images yet',
+                style: AppText.body(14, color: AppColors.muted),
+              ),
             )
           else
             SizedBox(
@@ -375,11 +421,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 child: TextField(
                   controller: _imageUrl,
                   onSubmitted: (_) => _addImageUrl(),
-                  decoration: const InputDecoration(hintText: '…or paste an image URL'),
+                  decoration: const InputDecoration(
+                    hintText: '…or paste an image URL',
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
-              AppButton(label: 'Add', variant: AppButtonVariant.outline, size: AppButtonSize.small, onPressed: _addImageUrl),
+              AppButton(
+                label: 'Add',
+                variant: AppButtonVariant.outline,
+                size: AppButtonSize.small,
+                onPressed: _addImageUrl,
+              ),
             ],
           ),
         ],
@@ -405,14 +458,24 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [details, const SizedBox(height: 20), pricing, const SizedBox(height: 20), media],
+              children: [
+                details,
+                const SizedBox(height: 20),
+                pricing,
+                const SizedBox(height: 20),
+                media,
+              ],
             ),
     );
   }
 }
 
 class _ImageThumb extends StatelessWidget {
-  const _ImageThumb({required this.url, required this.isCover, required this.onRemove});
+  const _ImageThumb({
+    required this.url,
+    required this.isCover,
+    required this.onRemove,
+  });
 
   final String url;
   final bool isCover;
@@ -428,9 +491,15 @@ class _ImageThumb extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: isCover ? AppColors.violet : AppColors.ink, width: isCover ? 3 : 1.5),
+                border: Border.all(
+                  color: isCover ? AppColors.violet : AppColors.ink,
+                  width: isCover ? 3 : 1.5,
+                ),
               ),
-              child: ClipRRect(borderRadius: BorderRadius.circular(11), child: NetImage(url)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(11),
+                child: NetImage(url),
+              ),
             ),
           ),
           if (isCover)
@@ -439,7 +508,10 @@ class _ImageThumb extends StatelessWidget {
               bottom: 8,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: AppColors.lime, borderRadius: BorderRadius.circular(99)),
+                decoration: BoxDecoration(
+                  color: AppColors.lime,
+                  borderRadius: BorderRadius.circular(99),
+                ),
                 child: Text('COVER', style: AppText.label(size: 9)),
               ),
             ),
@@ -448,11 +520,16 @@ class _ImageThumb extends StatelessWidget {
             top: 6,
             child: Material(
               color: AppColors.surface,
-              shape: const CircleBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+              shape: const CircleBorder(
+                side: BorderSide(color: AppColors.ink, width: 1.5),
+              ),
               child: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: onRemove,
-                child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.close_rounded, size: 16)),
+                child: const Padding(
+                  padding: EdgeInsets.all(4),
+                  child: Icon(Icons.close_rounded, size: 16),
+                ),
               ),
             ),
           ),

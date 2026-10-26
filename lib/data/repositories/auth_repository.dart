@@ -15,8 +15,6 @@ class AuthRepository {
     await _auth.signInWithPassword(email: email.trim(), password: password);
   }
 
-  /// Returns `true` when the user is signed in right away, `false` when
-  /// Supabase requires them to confirm their email first.
   Future<bool> signUp({
     required String email,
     required String password,
@@ -34,8 +32,10 @@ class AuthRepository {
   Future<void> sendPasswordReset(String email) async {
     await _auth.resetPasswordForEmail(
       email.trim(),
-      // On the app the link reopens Shopivo, which then shows /reset-password.
-      redirectTo: kIsWeb ? '${Uri.base.origin}/reset-password' : AppConfig.appAuthCallback,
+
+      redirectTo: kIsWeb
+          ? '${Uri.base.origin}/reset-password'
+          : AppConfig.appAuthCallback,
     );
   }
 

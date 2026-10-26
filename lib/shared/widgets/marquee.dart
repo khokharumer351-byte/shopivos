@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 
-/// Infinitely scrolling ticker strip.
 class Marquee extends StatefulWidget {
   const Marquee({
     super.key,
@@ -27,8 +26,10 @@ class Marquee extends StatefulWidget {
 }
 
 class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: widget.duration)..repeat();
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+  )..repeat();
 
   @override
   void dispose() {
@@ -38,7 +39,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final style = AppText.display(widget.fontSize, color: widget.foreground).copyWith(letterSpacing: 0.5);
+    final style = AppText.display(
+      widget.fontSize,
+      color: widget.foreground,
+    ).copyWith(letterSpacing: 0.5);
     final segment = '${widget.items.join('   ✦   ')}   ✦   ';
 
     return Container(
@@ -71,7 +75,12 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: List.generate(
                     copies,
-                    (_) => Text(segment, style: style, maxLines: 1, softWrap: false),
+                    (_) => Text(
+                      segment,
+                      style: style,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
                   ),
                 ),
               ),

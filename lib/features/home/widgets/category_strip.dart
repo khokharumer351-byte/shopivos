@@ -75,7 +75,10 @@ class _CategoryTileState extends State<_CategoryTile> {
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: AppColors.ink, width: 1.5),
             boxShadow: [
-              BoxShadow(color: AppColors.ink, offset: _hovered ? const Offset(6, 6) : const Offset(3, 3)),
+              BoxShadow(
+                color: AppColors.ink,
+                offset: _hovered ? const Offset(6, 6) : const Offset(3, 3),
+              ),
             ],
           ),
           child: Stack(

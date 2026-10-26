@@ -5,8 +5,6 @@ import '../../core/theme/app_text.dart';
 import '../../shared/widgets/app_logo.dart';
 import '../../shared/widgets/page_container.dart';
 
-/// Shown instead of the store when Supabase credentials are missing,
-/// so a fresh clone explains itself rather than crashing.
 class SetupRequiredScreen extends StatelessWidget {
   const SetupRequiredScreen({super.key});
 
@@ -38,7 +36,10 @@ class SetupRequiredScreen extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(color: AppColors.paperDark, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(
+                      color: AppColors.paperDark,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: SelectableText(
                       'flutter run -d chrome --web-port 5000 \\\n'
                       '  --dart-define=SUPABASE_URL=https://xxxx.supabase.co \\\n'
@@ -47,7 +48,10 @@ class SetupRequiredScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('See README.md for the full setup guide.', style: AppText.body(14)),
+                  Text(
+                    'See README.md for the full setup guide.',
+                    style: AppText.body(14),
+                  ),
                 ],
               ),
             ),

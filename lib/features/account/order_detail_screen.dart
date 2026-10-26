@@ -58,21 +58,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return StorePage(children: [ErrorView(message: friendlyError(snapshot.error!))]);
+          return StorePage(
+            children: [ErrorView(message: friendlyError(snapshot.error!))],
+          );
         }
-        if (snapshot.connectionState != ConnectionState.done && !snapshot.hasData) {
-          return const StorePage(showFooter: false, children: [LoadingView(padding: 160)]);
+        if (snapshot.connectionState != ConnectionState.done &&
+            !snapshot.hasData) {
+          return const StorePage(
+            showFooter: false,
+            children: [LoadingView(padding: 160)],
+          );
         }
         final order = snapshot.data;
         if (order == null) {
-          return StorePage(children: [
-            EmptyState(
-              title: 'Order not found',
-              message: 'We couldn’t find that order on your account.',
-              actionLabel: 'My orders',
-              onAction: () => context.go('/account/orders'),
-            ),
-          ]);
+          return StorePage(
+            children: [
+              EmptyState(
+                title: 'Order not found',
+                message: 'We couldn’t find that order on your account.',
+                actionLabel: 'My orders',
+                onAction: () => context.go('/account/orders'),
+              ),
+            ],
+          );
         }
 
         final items = InkCard(
@@ -99,7 +107,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 children: [
                   _Line('Subtotal', formatPrice(order.subtotal)),
                   const SizedBox(height: 8),
-                  _Line('Shipping', order.shippingFee == 0 ? 'Free' : formatPrice(order.shippingFee)),
+                  _Line(
+                    'Shipping',
+                    order.shippingFee == 0
+                        ? 'Free'
+                        : formatPrice(order.shippingFee),
+                  ),
                   const SizedBox(height: 12),
                   const Divider(),
                   const SizedBox(height: 12),
@@ -116,13 +129,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 children: [
                   Text('SHIP TO', style: AppText.label(size: 11)),
                   const SizedBox(height: 10),
-                  Text(order.fullName, style: AppText.body(15, weight: FontWeight.w700)),
-                  Text(order.phone, style: AppText.body(14, color: AppColors.muted)),
+                  Text(
+                    order.fullName,
+                    style: AppText.body(15, weight: FontWeight.w700),
+                  ),
+                  Text(
+                    order.phone,
+                    style: AppText.body(14, color: AppColors.muted),
+                  ),
                   const SizedBox(height: 4),
                   Text(order.shippingAddress, style: AppText.body(14)),
                   if ((order.notes ?? '').isNotEmpty) ...[
                     const SizedBox(height: 10),
-                    Text('“${order.notes}”', style: AppText.serif(16, color: AppColors.muted)),
+                    Text(
+                      '“${order.notes}”',
+                      style: AppText.serif(16, color: AppColors.muted),
+                    ),
                   ],
                 ],
               ),
@@ -151,8 +173,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     alignment: Alignment.centerLeft,
                     child: TextButton.icon(
                       onPressed: () => context.go('/account/orders'),
-                      icon: const Icon(Icons.arrow_back_rounded, color: AppColors.ink),
-                      label: Text('All orders', style: AppText.body(14, weight: FontWeight.w600)),
+                      icon: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: AppColors.ink,
+                      ),
+                      label: Text(
+                        'All orders',
+                        style: AppText.body(14, weight: FontWeight.w600),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -161,17 +189,26 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     spacing: 16,
                     runSpacing: 8,
                     children: [
-                      Text('Order ${orderRef(order.id)}', style: AppText.display(compact ? 32 : 44)),
+                      Text(
+                        'Order ${orderRef(order.id)}',
+                        style: AppText.display(compact ? 32 : 44),
+                      ),
                       StatusChip(order.status),
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text('Placed ${formatDate(order.createdAt)}', style: AppText.body(14, color: AppColors.muted)),
+                  Text(
+                    'Placed ${formatDate(order.createdAt)}',
+                    style: AppText.body(14, color: AppColors.muted),
+                  ),
                   const SizedBox(height: 28),
                   OrderProgress(status: order.status),
                   const SizedBox(height: 28),
-                  if (compact) ...[items, const SizedBox(height: 20), side]
-                  else
+                  if (compact) ...[
+                    items,
+                    const SizedBox(height: 20),
+                    side,
+                  ] else
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -201,14 +238,21 @@ class OrderItemRow extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: SizedBox(width: 56, height: 70, child: NetImage(item.productImage)),
+          child: SizedBox(
+            width: 56,
+            height: 70,
+            child: NetImage(item.productImage),
+          ),
         ),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.productName, style: AppText.body(15, weight: FontWeight.w600)),
+              Text(
+                item.productName,
+                style: AppText.body(15, weight: FontWeight.w600),
+              ),
               Text(
                 [
                   if (item.size != null) 'Size ${item.size}',
@@ -226,7 +270,6 @@ class OrderItemRow extends StatelessWidget {
   }
 }
 
-/// Horizontal tracker: pending → processing → shipped → delivered.
 class OrderProgress extends StatelessWidget {
   const OrderProgress({super.key, required this.status});
 
@@ -242,7 +285,12 @@ class OrderProgress extends StatelessWidget {
           children: [
             const Icon(Icons.cancel_outlined, color: AppColors.danger),
             const SizedBox(width: 12),
-            Expanded(child: Text('This order was cancelled.', style: AppText.body(15, weight: FontWeight.w600))),
+            Expanded(
+              child: Text(
+                'This order was cancelled.',
+                style: AppText.body(15, weight: FontWeight.w600),
+              ),
+            ),
           ],
         ),
       );
@@ -254,7 +302,10 @@ class OrderProgress extends StatelessWidget {
         for (var i = 0; i < OrderStatus.flow.length; i++) ...[
           if (i > 0)
             Expanded(
-              child: Container(height: 3, color: i <= current ? AppColors.ink : AppColors.line),
+              child: Container(
+                height: 3,
+                color: i <= current ? AppColors.ink : AppColors.line,
+              ),
             ),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -265,7 +316,10 @@ class OrderProgress extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: i <= current ? AppColors.lime : AppColors.surface,
                   shape: BoxShape.circle,
-                  border: Border.all(color: i <= current ? AppColors.ink : AppColors.line, width: 1.5),
+                  border: Border.all(
+                    color: i <= current ? AppColors.ink : AppColors.line,
+                    width: 1.5,
+                  ),
                 ),
                 child: Icon(
                   i < current ? Icons.check_rounded : _icons[i],
@@ -276,7 +330,11 @@ class OrderProgress extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 capitalize(OrderStatus.flow[i]),
-                style: AppText.body(12, weight: FontWeight.w600, color: i <= current ? AppColors.ink : AppColors.muted),
+                style: AppText.body(
+                  12,
+                  weight: FontWeight.w600,
+                  color: i <= current ? AppColors.ink : AppColors.muted,
+                ),
               ),
             ],
           ),
@@ -304,9 +362,19 @@ class _Line extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(label, style: bold ? AppText.display(18) : AppText.body(14, color: AppColors.muted)),
+        Text(
+          label,
+          style: bold
+              ? AppText.display(18)
+              : AppText.body(14, color: AppColors.muted),
+        ),
         const Spacer(),
-        Text(value, style: bold ? AppText.display(22) : AppText.body(14, weight: FontWeight.w600)),
+        Text(
+          value,
+          style: bold
+              ? AppText.display(22)
+              : AppText.body(14, weight: FontWeight.w600),
+        ),
       ],
     );
   }

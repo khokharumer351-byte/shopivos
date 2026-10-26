@@ -36,7 +36,9 @@ class _ProductGalleryState extends State<ProductGallery> {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(28),
               border: Border.all(color: AppColors.ink, width: 2),
-              boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(8, 8))],
+              boxShadow: const [
+                BoxShadow(color: AppColors.ink, offset: Offset(8, 8)),
+              ],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(26),

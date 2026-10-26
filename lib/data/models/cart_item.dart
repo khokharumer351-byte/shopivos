@@ -9,20 +9,24 @@ class CartItem {
 
   double get lineTotal => product.price * quantity;
 
-  bool matches(String productId, String? otherSize) => product.id == productId && size == otherSize;
+  bool matches(String productId, String? otherSize) =>
+      product.id == productId && size == otherSize;
 
-  CartItem copyWith({int? quantity}) =>
-      CartItem(product: product, quantity: quantity ?? this.quantity, size: size);
+  CartItem copyWith({int? quantity}) => CartItem(
+    product: product,
+    quantity: quantity ?? this.quantity,
+    size: size,
+  );
 
   Map<String, dynamic> toJson() => {
-        'product': product.toCacheMap(),
-        'quantity': quantity,
-        'size': size,
-      };
+    'product': product.toCacheMap(),
+    'quantity': quantity,
+    'size': size,
+  };
 
   factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
-        product: Product.fromMap(Map<String, dynamic>.from(json['product'] as Map)),
-        quantity: (json['quantity'] as num).toInt(),
-        size: json['size'] as String?,
-      );
+    product: Product.fromMap(Map<String, dynamic>.from(json['product'] as Map)),
+    quantity: (json['quantity'] as num).toInt(),
+    size: json['size'] as String?,
+  );
 }

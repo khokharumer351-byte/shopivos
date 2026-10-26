@@ -77,11 +77,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           final data = snapshot.data;
           if (data == null) return const LoadingView();
 
-          final activeOrders = data.orders.where((o) => o.status != OrderStatus.cancelled);
-          final revenue = activeOrders.fold<double>(0, (sum, o) => sum + o.total);
-          final pending = data.orders.where((o) => o.status == OrderStatus.pending).length;
-          final lowStock = data.products.where((p) => p.stock <= AppConfig.lowStockThreshold).toList()
-            ..sort((a, b) => a.stock.compareTo(b.stock));
+          final activeOrders = data.orders.where(
+            (o) => o.status != OrderStatus.cancelled,
+          );
+          final revenue = activeOrders.fold<double>(
+            0,
+            (sum, o) => sum + o.total,
+          );
+          final pending = data.orders
+              .where((o) => o.status == OrderStatus.pending)
+              .length;
+          final lowStock =
+              data.products
+                  .where((p) => p.stock <= AppConfig.lowStockThreshold)
+                  .toList()
+                ..sort((a, b) => a.stock.compareTo(b.stock));
           final recent = data.orders.take(6).toList();
 
           return Column(
@@ -89,11 +99,35 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             children: [
               ResponsiveGrid(
                 children: [
-                  StatCard(label: 'Revenue', value: formatPrice(revenue), icon: Icons.trending_up_rounded, color: AppColors.lime),
-                  StatCard(label: 'Orders', value: '${data.orders.length}', icon: Icons.receipt_long_outlined),
-                  StatCard(label: 'Pending', value: '$pending', icon: Icons.hourglass_top_rounded, color: AppColors.peach),
-                  StatCard(label: 'Products', value: '${data.products.length}', icon: Icons.checkroom_outlined, color: AppColors.sky),
-                  StatCard(label: 'Customers', value: '${data.customers.length}', icon: Icons.people_outline_rounded, color: AppColors.violet),
+                  StatCard(
+                    label: 'Revenue',
+                    value: formatPrice(revenue),
+                    icon: Icons.trending_up_rounded,
+                    color: AppColors.lime,
+                  ),
+                  StatCard(
+                    label: 'Orders',
+                    value: '${data.orders.length}',
+                    icon: Icons.receipt_long_outlined,
+                  ),
+                  StatCard(
+                    label: 'Pending',
+                    value: '$pending',
+                    icon: Icons.hourglass_top_rounded,
+                    color: AppColors.peach,
+                  ),
+                  StatCard(
+                    label: 'Products',
+                    value: '${data.products.length}',
+                    icon: Icons.checkroom_outlined,
+                    color: AppColors.sky,
+                  ),
+                  StatCard(
+                    label: 'Customers',
+                    value: '${data.customers.length}',
+                    icon: Icons.people_outline_rounded,
+                    color: AppColors.violet,
+                  ),
                 ],
               ),
               const SizedBox(height: 36),
@@ -102,11 +136,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   final wide = constraints.maxWidth > 900;
                   final ordersPanel = _Panel(
                     title: 'Recent orders',
-                    action: TextButton(onPressed: () => context.go('/admin/orders'), child: const Text('See all')),
+                    action: TextButton(
+                      onPressed: () => context.go('/admin/orders'),
+                      child: const Text('See all'),
+                    ),
                     child: recent.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(24),
-                            child: Text('No orders yet.', style: AppText.body(14, color: AppColors.muted)),
+                            child: Text(
+                              'No orders yet.',
+                              style: AppText.body(14, color: AppColors.muted),
+                            ),
                           )
                         : Column(
                             children: [
@@ -115,7 +155,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: OrderTile(
                                     order: order,
-                                    onTap: () => showAdminOrderDialog(context, order),
+                                    onTap: () =>
+                                        showAdminOrderDialog(context, order),
                                   ),
                                 ),
                             ],
@@ -123,35 +164,63 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   );
                   final stockPanel = _Panel(
                     title: 'Low stock',
-                    action: TextButton(onPressed: () => context.go('/admin/products'), child: const Text('Manage')),
+                    action: TextButton(
+                      onPressed: () => context.go('/admin/products'),
+                      child: const Text('Manage'),
+                    ),
                     child: lowStock.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(24),
-                            child: Text('All stocked up ✦', style: AppText.body(14, color: AppColors.muted)),
+                            child: Text(
+                              'All stocked up ✦',
+                              style: AppText.body(14, color: AppColors.muted),
+                            ),
                           )
                         : Column(
                             children: [
                               for (final p in lowStock.take(8))
                                 ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  onTap: () => context.go('/admin/products/${p.id}/edit'),
+                                  onTap: () => context.go(
+                                    '/admin/products/${p.id}/edit',
+                                  ),
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: SizedBox(width: 40, height: 48, child: NetImage(p.primaryImage)),
+                                    child: SizedBox(
+                                      width: 40,
+                                      height: 48,
+                                      child: NetImage(p.primaryImage),
+                                    ),
                                   ),
-                                  title: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                  title: Text(
+                                    p.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   trailing: Text(
-                                    p.stock == 0 ? 'Sold out' : '${p.stock} left',
-                                    style: AppText.body(13,
-                                        weight: FontWeight.w700,
-                                        color: p.stock == 0 ? AppColors.danger : AppColors.warning),
+                                    p.stock == 0
+                                        ? 'Sold out'
+                                        : '${p.stock} left',
+                                    style: AppText.body(
+                                      13,
+                                      weight: FontWeight.w700,
+                                      color: p.stock == 0
+                                          ? AppColors.danger
+                                          : AppColors.warning,
+                                    ),
                                   ),
                                 ),
                             ],
                           ),
                   );
                   if (!wide) {
-                    return Column(children: [ordersPanel, const SizedBox(height: 20), stockPanel]);
+                    return Column(
+                      children: [
+                        ordersPanel,
+                        const SizedBox(height: 20),
+                        stockPanel,
+                      ],
+                    );
                   }
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +256,7 @@ class _Panel extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(title, style: AppText.display(22))),
-              if (action != null) action!,
+              ?action,
             ],
           ),
           const SizedBox(height: 12),

@@ -41,11 +41,11 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() => _loading = true);
     try {
       final signedIn = await context.read<AuthProvider>().signUp(
-            email: _email.text,
-            password: _password.text,
-            fullName: _name.text,
-          );
-      // If signed in, the router redirects automatically.
+        email: _email.text,
+        password: _password.text,
+        fullName: _name.text,
+      );
+
       if (!signedIn && mounted) setState(() => _awaitingConfirmation = true);
     } catch (e) {
       if (mounted) showSnack(context, friendlyError(e), error: true);
@@ -60,7 +60,8 @@ class _SignupScreenState extends State<SignupScreen> {
       return AuthLayout(
         title: 'Check your',
         accent: 'inbox.',
-        subtitle: 'We sent a confirmation link to ${_email.text.trim()}. Tap it to activate your account.',
+        subtitle:
+            'We sent a confirmation link to ${_email.text.trim()}. Tap it to activate your account.',
         child: InkCard(
           color: AppColors.lime,
           child: Column(
@@ -68,9 +69,16 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               Text('📬  Almost there!', style: AppText.display(22)),
               const SizedBox(height: 8),
-              Text('Didn’t get it? Check spam or try signing up again in a minute.', style: AppText.body(14)),
+              Text(
+                'Didn’t get it? Check spam or try signing up again in a minute.',
+                style: AppText.body(14),
+              ),
               const SizedBox(height: 20),
-              AppButton(label: 'Go to sign in', expand: true, onPressed: () => context.go('/login')),
+              AppButton(
+                label: 'Go to sign in',
+                expand: true,
+                onPressed: () => context.go('/login'),
+              ),
             ],
           ),
         ),
@@ -80,7 +88,8 @@ class _SignupScreenState extends State<SignupScreen> {
     return AuthLayout(
       title: 'Join the',
       accent: 'club.',
-      subtitle: 'Create an account for member prices, a wishlist and order tracking.',
+      subtitle:
+          'Create an account for member prices, a wishlist and order tracking.',
       child: AutofillGroup(
         child: Form(
           key: _formKey,
@@ -106,7 +115,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.email],
                   validator: Validators.email,
-                  decoration: const InputDecoration(hintText: 'you@example.com'),
+                  decoration: const InputDecoration(
+                    hintText: 'you@example.com',
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
@@ -125,7 +136,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: PasswordField(
                   controller: _confirm,
                   textInputAction: TextInputAction.done,
-                  validator: (v) => v != _password.text ? 'Passwords don’t match' : null,
+                  validator: (v) =>
+                      v != _password.text ? 'Passwords don’t match' : null,
                   onSubmitted: (_) => _submit(),
                 ),
               ),
@@ -143,10 +155,16 @@ class _SignupScreenState extends State<SignupScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already a member?', style: AppText.body(14, color: AppColors.muted)),
+                  Text(
+                    'Already a member?',
+                    style: AppText.body(14, color: AppColors.muted),
+                  ),
                   TextButton(
                     onPressed: () => context.go('/login'),
-                    child: Text('Sign in', style: AppText.body(14, weight: FontWeight.w700)),
+                    child: Text(
+                      'Sign in',
+                      style: AppText.body(14, weight: FontWeight.w700),
+                    ),
                   ),
                 ],
               ),

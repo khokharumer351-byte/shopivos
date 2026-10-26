@@ -76,16 +76,24 @@ class NotificationsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: AppColors.ink, width: 1.5),
                   ),
-                  child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
+                  child: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.white,
+                  ),
                 ),
                 onDismissed: (_) async {
                   try {
                     await provider.remove(n);
                   } catch (e) {
-                    if (context.mounted) showSnack(context, friendlyError(e), error: true);
+                    if (context.mounted) {
+                      showSnack(context, friendlyError(e), error: true);
+                    }
                   }
                 },
-                child: _NotificationTile(notification: n, onTap: () => _open(context, n)),
+                child: _NotificationTile(
+                  notification: n,
+                  onTap: () => _open(context, n),
+                ),
               ),
             ),
         ],
@@ -103,10 +111,21 @@ class NotificationsScreen extends StatelessWidget {
               Text('✦ INBOX', style: AppText.label(color: AppColors.muted)),
               const SizedBox(height: 8),
               Text.rich(
-                TextSpan(children: [
-                  TextSpan(text: 'Notifi', style: AppText.display(compact ? 40 : 56)),
-                  TextSpan(text: 'cations', style: AppText.serif(compact ? 42 : 58, color: AppColors.violet)),
-                ]),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Notifi',
+                      style: AppText.display(compact ? 40 : 56),
+                    ),
+                    TextSpan(
+                      text: 'cations',
+                      style: AppText.serif(
+                        compact ? 42 : 58,
+                        color: AppColors.violet,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               if (items.isNotEmpty) ...[
@@ -119,7 +138,9 @@ class NotificationsScreen extends StatelessWidget {
                       icon: Icons.done_all_rounded,
                       size: AppButtonSize.small,
                       variant: AppButtonVariant.accent,
-                      onPressed: provider.unreadCount == 0 ? null : provider.markAllRead,
+                      onPressed: provider.unreadCount == 0
+                          ? null
+                          : provider.markAllRead,
                     ),
                     AppButton(
                       label: 'Clear all',
@@ -148,11 +169,11 @@ class _NotificationTile extends StatelessWidget {
   final VoidCallback onTap;
 
   (IconData, Color) get _style => switch (notification.kind) {
-        'order' => (Icons.local_shipping_outlined, AppColors.sky),
-        'admin' => (Icons.dashboard_customize_outlined, AppColors.peach),
-        'promo' => (Icons.local_fire_department_outlined, AppColors.pink),
-        _ => (Icons.auto_awesome_outlined, AppColors.lime),
-      };
+    'order' => (Icons.local_shipping_outlined, AppColors.sky),
+    'admin' => (Icons.dashboard_customize_outlined, AppColors.peach),
+    'promo' => (Icons.local_fire_department_outlined, AppColors.pink),
+    _ => (Icons.auto_awesome_outlined, AppColors.lime),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +215,12 @@ class _NotificationTile extends StatelessWidget {
                         Expanded(
                           child: Text(
                             notification.title,
-                            style: AppText.body(15, weight: unread ? FontWeight.w700 : FontWeight.w600),
+                            style: AppText.body(
+                              15,
+                              weight: unread
+                                  ? FontWeight.w700
+                                  : FontWeight.w600,
+                            ),
                           ),
                         ),
                         if (unread)
@@ -202,16 +228,25 @@ class _NotificationTile extends StatelessWidget {
                             width: 10,
                             height: 10,
                             margin: const EdgeInsets.only(left: 8),
-                            decoration: const BoxDecoration(color: AppColors.violet, shape: BoxShape.circle),
+                            decoration: const BoxDecoration(
+                              color: AppColors.violet,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                       ],
                     ),
                     if (notification.body.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(notification.body, style: AppText.body(14, color: AppColors.muted)),
+                      Text(
+                        notification.body,
+                        style: AppText.body(14, color: AppColors.muted),
+                      ),
                     ],
                     const SizedBox(height: 8),
-                    Text(_timeAgo(notification.createdAt), style: AppText.label(size: 10, color: AppColors.muted)),
+                    Text(
+                      _timeAgo(notification.createdAt),
+                      style: AppText.label(size: 10, color: AppColors.muted),
+                    ),
                   ],
                 ),
               ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_text.dart';
 
-/// Uppercase label stacked above any input.
 class LabeledField extends StatelessWidget {
   const LabeledField({super.key, required this.label, required this.child});
 
@@ -62,14 +61,18 @@ class _PasswordFieldState extends State<PasswordField> {
         suffixIcon: IconButton(
           tooltip: _obscure ? 'Show password' : 'Hide password',
           onPressed: () => setState(() => _obscure = !_obscure),
-          icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined, size: 20),
+          icon: Icon(
+            _obscure
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+            size: 20,
+          ),
         ),
       ),
     );
   }
 }
 
-/// Lays out form fields in two columns on wide screens, one on narrow.
 class FieldRow extends StatelessWidget {
   const FieldRow({super.key, required this.children, this.gap = 16});
 

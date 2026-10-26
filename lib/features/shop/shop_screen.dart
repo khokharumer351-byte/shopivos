@@ -14,10 +14,14 @@ import '../../shared/widgets/product_grid.dart';
 import '../../shared/widgets/state_views.dart';
 import 'widgets/shop_filters.dart';
 
-/// Product listing. All filters live in the URL so results are shareable:
-/// `/shop?category=<id>&q=<search>&sort=<key>&featured=1`
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key, this.categoryId, this.search, this.sortKey, this.featuredOnly = false});
+  const ShopScreen({
+    super.key,
+    this.categoryId,
+    this.search,
+    this.sortKey,
+    this.featuredOnly = false,
+  });
 
   final String? categoryId;
   final String? search;
@@ -31,7 +35,9 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   final _productRepo = ProductRepository();
   final _categoryRepo = CategoryRepository();
-  late final _searchController = TextEditingController(text: widget.search ?? '');
+  late final _searchController = TextEditingController(
+    text: widget.search ?? '',
+  );
 
   List<ProductCategory> _categories = const [];
   late Future<List<Product>> _future = _loadProducts();
@@ -48,9 +54,7 @@ class _ShopScreenState extends State<ShopScreen> {
     try {
       final categories = await _categoryRepo.fetchAll();
       if (mounted) setState(() => _categories = categories);
-    } catch (_) {
-      // Filters are optional; the product list shows its own error state.
-    }
+    } catch (_) {}
   }
 
   @override
@@ -72,13 +76,19 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Future<List<Product>> _loadProducts() => _productRepo.fetchProducts(
-        categoryId: widget.categoryId,
-        search: widget.search,
-        sort: _sort,
-        featuredOnly: widget.featuredOnly,
-      );
+    categoryId: widget.categoryId,
+    search: widget.search,
+    sort: _sort,
+    featuredOnly: widget.featuredOnly,
+  );
 
-  void _update({String? categoryId, String? search, ProductSort? sort, bool? featured, bool clearCategory = false}) {
+  void _update({
+    String? categoryId,
+    String? search,
+    ProductSort? sort,
+    bool? featured,
+    bool clearCategory = false,
+  }) {
     final params = <String, String>{};
     final category = clearCategory ? null : (categoryId ?? widget.categoryId);
     final term = search ?? widget.search;
@@ -90,7 +100,12 @@ class _ShopScreenState extends State<ShopScreen> {
     if (sortKey != ProductSort.newest.key) params['sort'] = sortKey;
     if (isFeatured) params['featured'] = '1';
 
-    context.go(Uri(path: '/shop', queryParameters: params.isEmpty ? null : params).toString());
+    context.go(
+      Uri(
+        path: '/shop',
+        queryParameters: params.isEmpty ? null : params,
+      ).toString(),
+    );
   }
 
   String get _title {
@@ -114,7 +129,8 @@ class _ShopScreenState extends State<ShopScreen> {
       sort: _sort,
       featuredOnly: widget.featuredOnly,
       compact: compact,
-      onCategory: (id) => id == null ? _update(clearCategory: true) : _update(categoryId: id),
+      onCategory: (id) =>
+          id == null ? _update(clearCategory: true) : _update(categoryId: id),
       onSort: (sort) => _update(sort: sort),
       onFeatured: (value) => _update(featured: value),
     );
@@ -128,7 +144,9 @@ class _ShopScreenState extends State<ShopScreen> {
             onRetry: () => setState(() => _future = _loadProducts()),
           );
         }
-        if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const LoadingView();
+        }
         final products = snapshot.data ?? const <Product>[];
         if (products.isEmpty) {
           return EmptyState(
@@ -170,20 +188,35 @@ class _ShopScreenState extends State<ShopScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('✦ THE COLLECTION', style: AppText.label(color: AppColors.muted)),
+                      Text(
+                        '✦ THE COLLECTION',
+                        style: AppText.label(color: AppColors.muted),
+                      ),
                       const SizedBox(height: 8),
                       Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: _title, style: AppText.display(compact ? 40 : 60)),
-                            TextSpan(text: '.', style: AppText.serif(compact ? 44 : 64, color: AppColors.violet)),
+                            TextSpan(
+                              text: _title,
+                              style: AppText.display(compact ? 40 : 60),
+                            ),
+                            TextSpan(
+                              text: '.',
+                              style: AppText.serif(
+                                compact ? 44 : 64,
+                                color: AppColors.violet,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       if (widget.search != null && widget.search!.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 6),
-                          child: Text('for “${widget.search}”', style: AppText.serif(22, color: AppColors.muted)),
+                          child: Text(
+                            'for “${widget.search}”',
+                            style: AppText.serif(22, color: AppColors.muted),
+                          ),
                         ),
                     ],
                   ),

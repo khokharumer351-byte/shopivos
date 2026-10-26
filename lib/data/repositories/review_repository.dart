@@ -11,7 +11,6 @@ class ReviewRepository {
     return rows.map(Review.fromMap).toList();
   }
 
-  /// One review per user per product — submitting again updates it.
   Future<void> submit({
     required String productId,
     required String userId,
@@ -19,16 +18,13 @@ class ReviewRepository {
     required String comment,
     required String authorName,
   }) async {
-    await supabase.from('reviews').upsert(
-      {
-        'product_id': productId,
-        'user_id': userId,
-        'rating': rating,
-        'comment': comment.trim(),
-        'author_name': authorName,
-      },
-      onConflict: 'product_id,user_id',
-    );
+    await supabase.from('reviews').upsert({
+      'product_id': productId,
+      'user_id': userId,
+      'rating': rating,
+      'comment': comment.trim(),
+      'author_name': authorName,
+    }, onConflict: 'product_id,user_id');
   }
 
   Future<void> delete(String reviewId) async {

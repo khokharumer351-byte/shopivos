@@ -19,7 +19,6 @@ class ReviewsSection extends StatefulWidget {
 
   final Product product;
 
-  /// Called after a review is saved so the parent can refresh the rating.
   final VoidCallback? onChanged;
 
   @override
@@ -87,7 +86,10 @@ class _ReviewsSectionState extends State<ReviewsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.product.ratingAvg.toStringAsFixed(1), style: AppText.display(64)),
+          Text(
+            widget.product.ratingAvg.toStringAsFixed(1),
+            style: AppText.display(64),
+          ),
           StarRating(rating: widget.product.ratingAvg, size: 22),
           const SizedBox(height: 6),
           Text(
@@ -97,20 +99,32 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           const SizedBox(height: 24),
           if (auth.isLoggedIn) ...[
             Text('RATE IT', style: AppText.label(size: 11)),
-            StarPicker(value: _rating, onChanged: (v) => setState(() => _rating = v)),
+            StarPicker(
+              value: _rating,
+              onChanged: (v) => setState(() => _rating = v),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _commentController,
               maxLines: 3,
-              decoration: const InputDecoration(hintText: 'How was the fit, quality, vibe?'),
+              decoration: const InputDecoration(
+                hintText: 'How was the fit, quality, vibe?',
+              ),
             ),
             const SizedBox(height: 12),
-            AppButton(label: 'Post review', expand: true, loading: _submitting, onPressed: _submit),
+            AppButton(
+              label: 'Post review',
+              expand: true,
+              loading: _submitting,
+              onPressed: _submit,
+            ),
           ] else
             AppButton(
               label: 'Sign in to review',
               expand: true,
-              onPressed: () => context.go('/login?from=${Uri.encodeComponent('/product/${widget.product.id}')}'),
+              onPressed: () => context.go(
+                '/login?from=${Uri.encodeComponent('/product/${widget.product.id}')}',
+              ),
             ),
         ],
       ),
@@ -120,13 +134,19 @@ class _ReviewsSectionState extends State<ReviewsSection> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Padding(padding: EdgeInsets.all(24), child: Center(child: CircularProgressIndicator()));
+          return const Padding(
+            padding: EdgeInsets.all(24),
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
         final reviews = snapshot.data ?? const <Review>[];
         if (reviews.isEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text('No reviews yet — be the first to spill the tea. ☕', style: AppText.body(15, color: AppColors.muted)),
+            child: Text(
+              'No reviews yet — be the first to spill the tea. ☕',
+              style: AppText.body(15, color: AppColors.muted),
+            ),
           );
         }
         return Column(
@@ -148,10 +168,17 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionTitle(kicker: 'Reviews', title: 'Real talk', accent: 'only.'),
+        const SectionTitle(
+          kicker: 'Reviews',
+          title: 'Real talk',
+          accent: 'only.',
+        ),
         const SizedBox(height: 28),
-        if (compact) ...[summary, const SizedBox(height: 24), list]
-        else
+        if (compact) ...[
+          summary,
+          const SizedBox(height: 24),
+          list,
+        ] else
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -166,7 +193,11 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 }
 
 class _ReviewTile extends StatelessWidget {
-  const _ReviewTile({required this.review, required this.canDelete, required this.onDelete});
+  const _ReviewTile({
+    required this.review,
+    required this.canDelete,
+    required this.onDelete,
+  });
 
   final Review review;
   final bool canDelete;
@@ -174,7 +205,9 @@ class _ReviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = (review.authorName ?? '').trim().isEmpty ? 'Shopper' : review.authorName!.trim();
+    final name = (review.authorName ?? '').trim().isEmpty
+        ? 'Shopper'
+        : review.authorName!.trim();
     return InkCard(
       padding: const EdgeInsets.all(18),
       child: Column(
@@ -185,15 +218,24 @@ class _ReviewTile extends StatelessWidget {
               CircleAvatar(
                 radius: 18,
                 backgroundColor: AppColors.sky,
-                child: Text(name[0].toUpperCase(), style: AppText.label(size: 14)),
+                child: Text(
+                  name[0].toUpperCase(),
+                  style: AppText.label(size: 14),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: AppText.body(14, weight: FontWeight.w700)),
-                    Text(formatDate(review.createdAt), style: AppText.body(12, color: AppColors.muted)),
+                    Text(
+                      name,
+                      style: AppText.body(14, weight: FontWeight.w700),
+                    ),
+                    Text(
+                      formatDate(review.createdAt),
+                      style: AppText.body(12, color: AppColors.muted),
+                    ),
                   ],
                 ),
               ),

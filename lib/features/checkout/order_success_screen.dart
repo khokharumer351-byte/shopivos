@@ -27,10 +27,15 @@ class OrderSuccessScreen extends StatelessWidget {
               const SizedBox(height: 40),
               Text.rich(
                 textAlign: TextAlign.center,
-                TextSpan(children: [
-                  TextSpan(text: 'It’s ', style: AppText.display(52)),
-                  TextSpan(text: 'official.', style: AppText.serif(56, color: AppColors.violet)),
-                ]),
+                TextSpan(
+                  children: [
+                    TextSpan(text: 'It’s ', style: AppText.display(52)),
+                    TextSpan(
+                      text: 'official.',
+                      style: AppText.serif(56, color: AppColors.violet),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               Text(

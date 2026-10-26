@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 
 import '../data/repositories/wishlist_repository.dart';
 
-/// Keeps the set of favourited product ids for the signed-in user.
 class WishlistProvider extends ChangeNotifier {
   WishlistProvider({WishlistRepository? repository})
-      : _repository = repository ?? WishlistRepository();
+    : _repository = repository ?? WishlistRepository();
 
   final WishlistRepository _repository;
   String? _userId;
@@ -15,12 +14,11 @@ class WishlistProvider extends ChangeNotifier {
   int get count => _ids.length;
   bool contains(String productId) => _ids.contains(productId);
 
-  /// Called by the provider tree whenever auth changes.
   void bindUser(String? userId) {
     if (userId == _userId) return;
     _userId = userId;
     _ids = {};
-    // Defer: this runs during a build, where notifying is not allowed.
+
     Future.microtask(_load);
   }
 
@@ -37,7 +35,6 @@ class WishlistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns `false` if the user must sign in first.
   Future<bool> toggle(String productId) async {
     final userId = _userId;
     if (userId == null) return false;

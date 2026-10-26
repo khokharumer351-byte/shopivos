@@ -37,7 +37,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
     final ok = await confirmDialog(
       context,
       title: 'Delete “${category.name}”?',
-      message: 'Products in this category become uncategorized. They won’t be deleted.',
+      message:
+          'Products in this category become uncategorized. They won’t be deleted.',
       confirmLabel: 'Delete',
       destructive: true,
     );
@@ -69,8 +70,15 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
       child: FutureBuilder<List<ProductCategory>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.hasError) return ErrorView(message: friendlyError(snapshot.error!), onRetry: _reload);
-          if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+          if (snapshot.hasError) {
+            return ErrorView(
+              message: friendlyError(snapshot.error!),
+              onRetry: _reload,
+            );
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const LoadingView();
+          }
           final categories = snapshot.data ?? const <ProductCategory>[];
           if (categories.isEmpty) {
             return EmptyState(
@@ -100,7 +108,12 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
 }
 
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({required this.category, required this.color, required this.onEdit, required this.onDelete});
+  const _CategoryCard({
+    required this.category,
+    required this.color,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   final ProductCategory category;
   final Color color;
@@ -129,9 +142,19 @@ class _CategoryCard extends StatelessWidget {
             child: ClipOval(child: NetImage(category.imageUrl)),
           ),
           const SizedBox(width: 14),
-          Expanded(child: Text(category.name, style: AppText.display(20, color: fg))),
-          IconButton(tooltip: 'Edit', onPressed: onEdit, icon: Icon(Icons.edit_outlined, color: fg)),
-          IconButton(tooltip: 'Delete', onPressed: onDelete, icon: Icon(Icons.delete_outline_rounded, color: fg)),
+          Expanded(
+            child: Text(category.name, style: AppText.display(20, color: fg)),
+          ),
+          IconButton(
+            tooltip: 'Edit',
+            onPressed: onEdit,
+            icon: Icon(Icons.edit_outlined, color: fg),
+          ),
+          IconButton(
+            tooltip: 'Delete',
+            onPressed: onDelete,
+            icon: Icon(Icons.delete_outline_rounded, color: fg),
+          ),
         ],
       ),
     );
@@ -151,7 +174,9 @@ class _CategoryDialog extends StatefulWidget {
 class _CategoryDialogState extends State<_CategoryDialog> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.category?.name ?? '');
-  late final _image = TextEditingController(text: widget.category?.imageUrl ?? '');
+  late final _image = TextEditingController(
+    text: widget.category?.imageUrl ?? '',
+  );
   bool _saving = false;
 
   @override
@@ -169,7 +194,11 @@ class _CategoryDialogState extends State<_CategoryDialog> {
       if (category == null) {
         await widget.repo.create(name: _name.text, imageUrl: _image.text);
       } else {
-        await widget.repo.update(category.id, name: _name.text, imageUrl: _image.text);
+        await widget.repo.update(
+          category.id,
+          name: _name.text,
+          imageUrl: _image.text,
+        );
       }
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
@@ -189,7 +218,10 @@ class _CategoryDialogState extends State<_CategoryDialog> {
         borderRadius: BorderRadius.circular(22),
         side: const BorderSide(color: AppColors.ink, width: 1.5),
       ),
-      title: Text(widget.category == null ? 'New category' : 'Edit category', style: AppText.display(24)),
+      title: Text(
+        widget.category == null ? 'New category' : 'Edit category',
+        style: AppText.display(24),
+      ),
       content: SizedBox(
         width: 420,
         child: Form(
@@ -220,8 +252,16 @@ class _CategoryDialogState extends State<_CategoryDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-        AppButton(label: 'Save', size: AppButtonSize.small, loading: _saving, onPressed: _save),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancel'),
+        ),
+        AppButton(
+          label: 'Save',
+          size: AppButtonSize.small,
+          loading: _saving,
+          onPressed: _save,
+        ),
       ],
     );
   }

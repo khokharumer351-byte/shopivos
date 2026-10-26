@@ -12,4 +12,5 @@ int toInt(dynamic value) {
 List<String> toStringList(dynamic value) =>
     value is List ? value.whereType<String>().toList() : const <String>[];
 
-DateTime? toDate(dynamic value) => value is String ? DateTime.tryParse(value)?.toLocal() : null;
+DateTime? toDate(dynamic value) =>
+    value is String ? DateTime.tryParse(value)?.toLocal() : null;

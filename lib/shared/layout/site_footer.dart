@@ -31,17 +31,23 @@ class SiteFooter extends StatelessWidget {
                   width: compact ? double.infinity : 380,
                   child: const _Newsletter(),
                 ),
-                _LinkColumn(title: 'Shop', links: {
-                  'All products': '/shop',
-                  'New in': '/shop?sort=newest',
-                  'Featured': '/shop?featured=1',
-                }),
-                _LinkColumn(title: 'Account', links: {
-                  'Sign in': '/login',
-                  'My orders': '/account/orders',
-                  'Wishlist': '/wishlist',
-                  'Bag': '/cart',
-                }),
+                _LinkColumn(
+                  title: 'Shop',
+                  links: {
+                    'All products': '/shop',
+                    'New in': '/shop?sort=newest',
+                    'Featured': '/shop?featured=1',
+                  },
+                ),
+                _LinkColumn(
+                  title: 'Account',
+                  links: {
+                    'Sign in': '/login',
+                    'My orders': '/account/orders',
+                    'Wishlist': '/wishlist',
+                    'Bag': '/cart',
+                  },
+                ),
                 const _InfoColumn(),
               ],
             ),
@@ -52,8 +58,20 @@ class SiteFooter extends StatelessWidget {
               child: Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'shopivo', style: AppText.display(compact ? 72 : 150, color: Colors.white)),
-                    TextSpan(text: '.', style: AppText.display(compact ? 72 : 150, color: AppColors.lime)),
+                    TextSpan(
+                      text: 'shopivo',
+                      style: AppText.display(
+                        compact ? 72 : 150,
+                        color: Colors.white,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '.',
+                      style: AppText.display(
+                        compact ? 72 : 150,
+                        color: AppColors.lime,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -63,7 +81,10 @@ class SiteFooter extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               '© ${DateTime.now().year} Shopivo. Made with love for the culture.',
-              style: AppText.body(13, color: Colors.white.withValues(alpha: 0.6)),
+              style: AppText.body(
+                13,
+                color: Colors.white.withValues(alpha: 0.6),
+              ),
             ),
           ],
         ),
@@ -91,7 +112,10 @@ class _LinkColumn extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: InkWell(
               onTap: () => context.go(entry.value),
-              child: Text(entry.key, style: AppText.body(15, color: Colors.white)),
+              child: Text(
+                entry.key,
+                style: AppText.body(15, color: Colors.white),
+              ),
             ),
           ),
       ],
@@ -155,8 +179,14 @@ class _NewsletterState extends State<_Newsletter> {
         Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: 'Join the ', style: AppText.display(30, color: Colors.white)),
-              TextSpan(text: 'inner circle', style: AppText.serif(32, color: AppColors.lime)),
+              TextSpan(
+                text: 'Join the ',
+                style: AppText.display(30, color: Colors.white),
+              ),
+              TextSpan(
+                text: 'inner circle',
+                style: AppText.serif(32, color: AppColors.lime),
+              ),
             ],
           ),
         ),
@@ -177,7 +207,11 @@ class _NewsletterState extends State<_Newsletter> {
               ),
             ),
             const SizedBox(width: 10),
-            AppButton(label: 'Join', variant: AppButtonVariant.accent, onPressed: _subscribe),
+            AppButton(
+              label: 'Join',
+              variant: AppButtonVariant.accent,
+              onPressed: _subscribe,
+            ),
           ],
         ),
       ],

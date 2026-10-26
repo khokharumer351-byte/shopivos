@@ -15,10 +15,8 @@ class AppNotification {
   final String title;
   final String body;
 
-  /// `info`, `order`, `admin` or `promo`.
   final String kind;
 
-  /// In-app route to open when tapped, e.g. `/account/orders/<id>`.
   final String? link;
   final DateTime? readAt;
   final DateTime? createdAt;
@@ -26,22 +24,22 @@ class AppNotification {
   bool get isRead => readAt != null;
 
   factory AppNotification.fromMap(Map<String, dynamic> map) => AppNotification(
-        id: map['id'] as String,
-        title: (map['title'] ?? '') as String,
-        body: (map['body'] ?? '') as String,
-        kind: (map['kind'] ?? 'info') as String,
-        link: map['link'] as String?,
-        readAt: toDate(map['read_at']),
-        createdAt: toDate(map['created_at']),
-      );
+    id: map['id'] as String,
+    title: (map['title'] ?? '') as String,
+    body: (map['body'] ?? '') as String,
+    kind: (map['kind'] ?? 'info') as String,
+    link: map['link'] as String?,
+    readAt: toDate(map['read_at']),
+    createdAt: toDate(map['created_at']),
+  );
 
   AppNotification markedRead() => AppNotification(
-        id: id,
-        title: title,
-        body: body,
-        kind: kind,
-        link: link,
-        readAt: readAt ?? DateTime.now(),
-        createdAt: createdAt,
-      );
+    id: id,
+    title: title,
+    body: body,
+    kind: kind,
+    link: link,
+    readAt: readAt ?? DateTime.now(),
+    createdAt: createdAt,
+  );
 }

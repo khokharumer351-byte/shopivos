@@ -63,11 +63,21 @@ class _HomeScreenState extends State<HomeScreen> {
         return StorePage(
           children: [
             HeroSection(
-              imageUrl: featured.isNotEmpty ? featured.first.primaryImage : null,
-              secondaryImageUrl: featured.length > 1 ? featured[1].primaryImage : null,
+              imageUrl: featured.isNotEmpty
+                  ? featured.first.primaryImage
+                  : null,
+              secondaryImageUrl: featured.length > 1
+                  ? featured[1].primaryImage
+                  : null,
             ),
             const Marquee(
-              items: ['NEW SEASON', 'LIMITED DROPS', 'FREE SHIPPING RS 14,000+', 'CLASSICS REMIXED', '30-DAY RETURNS'],
+              items: [
+                'NEW SEASON',
+                'LIMITED DROPS',
+                'FREE SHIPPING RS 14,000+',
+                'CLASSICS REMIXED',
+                '30-DAY RETURNS',
+              ],
             ),
             if (snapshot.hasError)
               ErrorView(
@@ -80,7 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
               if (data.categories.isNotEmpty) ...[
                 const SizedBox(height: 72),
                 PageContainer(
-                  child: SectionTitle(kicker: 'Shop by vibe', title: 'Find your', accent: 'lane.'),
+                  child: SectionTitle(
+                    kicker: 'Shop by vibe',
+                    title: 'Find your',
+                    accent: 'lane.',
+                  ),
                 ),
                 const SizedBox(height: 28),
                 CategoryStrip(categories: data.categories),
@@ -107,10 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       const EmptyState(
                         icon: Icons.inventory_2_outlined,
                         title: 'No products yet',
-                        message: 'Sign in as an admin and add your first product from the admin panel.',
+                        message:
+                            'Sign in as an admin and add your first product from the admin panel.',
                       )
                     else
-                      ProductGrid(products: featured.isNotEmpty ? featured : data.newest.take(4).toList()),
+                      ProductGrid(
+                        products: featured.isNotEmpty
+                            ? featured
+                            : data.newest.take(4).toList(),
+                      ),
                   ],
                 ),
               ),

@@ -16,7 +16,9 @@ abstract final class Validators {
   }
 
   static String? price(String? value, {bool optional = false}) {
-    if (value == null || value.trim().isEmpty) return optional ? null : 'Price is required';
+    if (value == null || value.trim().isEmpty) {
+      return optional ? null : 'Price is required';
+    }
     final parsed = double.tryParse(value.trim());
     if (parsed == null || parsed < 0) return 'Enter a valid amount';
     return null;

@@ -7,12 +7,9 @@ import '../core/notifications/local_notifications.dart';
 import '../data/models/app_notification.dart';
 import '../data/repositories/notification_repository.dart';
 
-/// The signed-in user's notification feed. Loads the latest messages, keeps
-/// the unread count for the bell badge, and listens to Supabase Realtime so new
-/// ones appear instantly — on the app they also pop up as system notifications.
 class NotificationProvider extends ChangeNotifier {
   NotificationProvider({NotificationRepository? repository})
-      : _repository = repository ?? NotificationRepository();
+    : _repository = repository ?? NotificationRepository();
 
   final NotificationRepository _repository;
   String? _userId;
@@ -26,14 +23,13 @@ class NotificationProvider extends ChangeNotifier {
   String? get error => _error;
   int get unreadCount => _items.where((n) => !n.isRead).length;
 
-  /// Called by the provider tree whenever auth changes.
   void bindUser(String? userId) {
     if (userId == _userId) return;
     _userId = userId;
     _items = [];
     _error = null;
     _stopListening();
-    // Defer: this runs during a build, where notifying is not allowed.
+
     Future.microtask(() async {
       await refresh();
       if (userId != null && userId == _userId) {
@@ -58,7 +54,6 @@ class NotificationProvider extends ChangeNotifier {
         _error = null;
       }
     } catch (e) {
-      // Most likely supabase/notifications.sql hasn't been run yet.
       debugPrint('Could not load notifications: $e');
       if (userId == _userId) _error = 'Could not load notifications.';
     } finally {

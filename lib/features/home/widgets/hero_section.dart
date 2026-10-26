@@ -19,8 +19,14 @@ class HeroSection extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final compact = width < Breakpoints.tablet;
 
-    final copy = _HeroCopy(compact: compact, mobile: width < Breakpoints.mobile);
-    final art = _HeroArt(imageUrl: imageUrl, secondaryImageUrl: secondaryImageUrl);
+    final copy = _HeroCopy(
+      compact: compact,
+      mobile: width < Breakpoints.mobile,
+    );
+    final art = _HeroArt(
+      imageUrl: imageUrl,
+      secondaryImageUrl: secondaryImageUrl,
+    );
 
     return PageContainer(
       verticalPadding: compact ? 40 : 72,
@@ -30,7 +36,12 @@ class HeroSection extends StatelessWidget {
               children: [
                 copy,
                 const SizedBox(height: 48),
-                Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 460), child: art)),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 460),
+                    child: art,
+                  ),
+                ),
               ],
             )
           : Row(
@@ -64,7 +75,10 @@ class _HeroCopy extends StatelessWidget {
           TextSpan(
             children: [
               TextSpan(text: 'Wear the ', style: AppText.display(size)),
-              TextSpan(text: 'vibe,', style: AppText.serif(size * 1.08, color: AppColors.violet)),
+              TextSpan(
+                text: 'vibe,',
+                style: AppText.serif(size * 1.08, color: AppColors.violet),
+              ),
               TextSpan(text: '\nnot the ', style: AppText.display(size)),
               WidgetSpan(
                 alignment: PlaceholderAlignment.baseline,
@@ -161,7 +175,6 @@ class _HeroArt extends StatelessWidget {
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              // Back card
               Positioned(
                 left: s * 0.12,
                 top: 0,
@@ -178,13 +191,16 @@ class _HeroArt extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: CustomPaint(
-                        painter: StripesPainter(color: Colors.white.withValues(alpha: 0.25), gap: 18),
+                        painter: StripesPainter(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          gap: 18,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-              // Main photo card
+
               Positioned(
                 left: 0,
                 top: s * 0.06,
@@ -195,15 +211,20 @@ class _HeroArt extends StatelessWidget {
                     color: AppColors.pink,
                     borderRadius: BorderRadius.circular(32),
                     border: Border.all(color: AppColors.ink, width: 2),
-                    boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(8, 8))],
+                    boxShadow: const [
+                      BoxShadow(color: AppColors.ink, offset: Offset(8, 8)),
+                    ],
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: NetImage(imageUrl, placeholder: const _ArtPlaceholder()),
+                    child: NetImage(
+                      imageUrl,
+                      placeholder: const _ArtPlaceholder(),
+                    ),
                   ),
                 ),
               ),
-              // Small polaroid
+
               if (secondaryImageUrl != null)
                 Positioned(
                   right: -s * 0.02,
@@ -218,7 +239,9 @@ class _HeroArt extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.ink, width: 2),
-                        boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(5, 5))],
+                        boxShadow: const [
+                          BoxShadow(color: AppColors.ink, offset: Offset(5, 5)),
+                        ],
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
@@ -230,14 +253,22 @@ class _HeroArt extends StatelessWidget {
               Positioned(
                 right: s * 0.04,
                 top: -s * 0.06,
-                child: Sticker(text: 'NEW\nDROP ✦', size: s * 0.26, angle: degrees(12)),
+                child: Sticker(
+                  text: 'NEW\nDROP ✦',
+                  size: s * 0.26,
+                  angle: degrees(12),
+                ),
               ),
               Positioned(
                 left: -s * 0.04,
                 bottom: s * 0.1,
                 child: Transform.rotate(
                   angle: degrees(-8),
-                  child: const Pill('100% that fit', color: AppColors.sky, icon: Icons.favorite_rounded),
+                  child: const Pill(
+                    '100% that fit',
+                    color: AppColors.sky,
+                    icon: Icons.favorite_rounded,
+                  ),
                 ),
               ),
             ],
@@ -262,7 +293,11 @@ class _ArtPlaceholder extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: Text('est.\n2026', textAlign: TextAlign.center, style: AppText.serif(64)),
+      child: Text(
+        'est.\n2026',
+        textAlign: TextAlign.center,
+        style: AppText.serif(64),
+      ),
     );
   }
 }

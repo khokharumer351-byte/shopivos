@@ -37,7 +37,8 @@ bool _requiresLogin(String path) =>
     path.startsWith('/order-success') ||
     path.startsWith('/admin');
 
-Page<void> _page(GoRouterState state, Widget child) => NoTransitionPage<void>(key: state.pageKey, child: child);
+Page<void> _page(GoRouterState state, Widget child) =>
+    NoTransitionPage<void>(key: state.pageKey, child: child);
 
 GoRouter createRouter(AuthProvider auth) {
   return GoRouter(
@@ -46,26 +47,35 @@ GoRouter createRouter(AuthProvider auth) {
     redirect: (context, state) {
       final path = state.matchedLocation;
 
-      // User arrived from a password reset email.
-      if (auth.isPasswordRecovery && path != '/reset-password') return '/reset-password';
+      if (auth.isPasswordRecovery && path != '/reset-password') {
+        return '/reset-password';
+      }
 
       if (auth.isLoggedIn && _authPages.contains(path)) {
         final from = state.uri.queryParameters['from'];
-        return (from != null && from.startsWith('/') && !from.startsWith('//')) ? from : '/';
+        return (from != null && from.startsWith('/') && !from.startsWith('//'))
+            ? from
+            : '/';
       }
 
       if (!auth.isLoggedIn && _requiresLogin(path)) {
-        return Uri(path: '/login', queryParameters: {'from': state.uri.toString()}).toString();
+        return Uri(
+          path: '/login',
+          queryParameters: {'from': state.uri.toString()},
+        ).toString();
       }
       return null;
     },
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      // ---------------------------------------------------------------- Store
       ShellRoute(
-        builder: (context, state, child) => StoreShell(location: state.uri.toString(), child: child),
+        builder: (context, state, child) =>
+            StoreShell(location: state.uri.toString(), child: child),
         routes: [
-          GoRoute(path: '/', pageBuilder: (context, state) => _page(state, const HomeScreen())),
+          GoRoute(
+            path: '/',
+            pageBuilder: (context, state) => _page(state, const HomeScreen()),
+          ),
           GoRoute(
             path: '/shop',
             pageBuilder: (context, state) {
@@ -83,88 +93,136 @@ GoRouter createRouter(AuthProvider auth) {
           ),
           GoRoute(
             path: '/product/:id',
-            pageBuilder: (context, state) =>
-                _page(state, ProductDetailScreen(productId: state.pathParameters['id']!)),
+            pageBuilder: (context, state) => _page(
+              state,
+              ProductDetailScreen(productId: state.pathParameters['id']!),
+            ),
           ),
-          GoRoute(path: '/cart', pageBuilder: (context, state) => _page(state, const CartScreen())),
-          GoRoute(path: '/checkout', pageBuilder: (context, state) => _page(state, const CheckoutScreen())),
+          GoRoute(
+            path: '/cart',
+            pageBuilder: (context, state) => _page(state, const CartScreen()),
+          ),
+          GoRoute(
+            path: '/checkout',
+            pageBuilder: (context, state) =>
+                _page(state, const CheckoutScreen()),
+          ),
           GoRoute(
             path: '/order-success/:id',
-            pageBuilder: (context, state) =>
-                _page(state, OrderSuccessScreen(orderId: state.pathParameters['id']!)),
+            pageBuilder: (context, state) => _page(
+              state,
+              OrderSuccessScreen(orderId: state.pathParameters['id']!),
+            ),
           ),
-          GoRoute(path: '/wishlist', pageBuilder: (context, state) => _page(state, const WishlistScreen())),
+          GoRoute(
+            path: '/wishlist',
+            pageBuilder: (context, state) =>
+                _page(state, const WishlistScreen()),
+          ),
           GoRoute(
             path: '/notifications',
-            pageBuilder: (context, state) => _page(state, const NotificationsScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const NotificationsScreen()),
           ),
           GoRoute(
             path: '/account',
-            pageBuilder: (context, state) => _page(state, const AccountScreen(section: AccountSection.profile)),
+            pageBuilder: (context, state) => _page(
+              state,
+              const AccountScreen(section: AccountSection.profile),
+            ),
             routes: [
               GoRoute(
                 path: 'orders',
-                pageBuilder: (context, state) => _page(state, const AccountScreen(section: AccountSection.orders)),
+                pageBuilder: (context, state) => _page(
+                  state,
+                  const AccountScreen(section: AccountSection.orders),
+                ),
                 routes: [
                   GoRoute(
                     path: ':id',
-                    pageBuilder: (context, state) =>
-                        _page(state, OrderDetailScreen(orderId: state.pathParameters['id']!)),
+                    pageBuilder: (context, state) => _page(
+                      state,
+                      OrderDetailScreen(orderId: state.pathParameters['id']!),
+                    ),
                   ),
                 ],
               ),
               GoRoute(
                 path: 'security',
-                pageBuilder: (context, state) =>
-                    _page(state, const AccountScreen(section: AccountSection.security)),
+                pageBuilder: (context, state) => _page(
+                  state,
+                  const AccountScreen(section: AccountSection.security),
+                ),
               ),
             ],
           ),
         ],
       ),
 
-      // ----------------------------------------------------------------- Auth
-      GoRoute(path: '/login', pageBuilder: (context, state) => _page(state, const LoginScreen())),
-      GoRoute(path: '/signup', pageBuilder: (context, state) => _page(state, const SignupScreen())),
+      GoRoute(
+        path: '/login',
+        pageBuilder: (context, state) => _page(state, const LoginScreen()),
+      ),
+      GoRoute(
+        path: '/signup',
+        pageBuilder: (context, state) => _page(state, const SignupScreen()),
+      ),
       GoRoute(
         path: '/forgot-password',
-        pageBuilder: (context, state) => _page(state, const ForgotPasswordScreen()),
+        pageBuilder: (context, state) =>
+            _page(state, const ForgotPasswordScreen()),
       ),
       GoRoute(
         path: '/reset-password',
-        pageBuilder: (context, state) => _page(state, const ResetPasswordScreen()),
+        pageBuilder: (context, state) =>
+            _page(state, const ResetPasswordScreen()),
       ),
 
-      // ---------------------------------------------------------------- Admin
       ShellRoute(
-        builder: (context, state, child) => AdminShell(location: state.uri.path, child: child),
+        builder: (context, state, child) =>
+            AdminShell(location: state.uri.path, child: child),
         routes: [
-          GoRoute(path: '/admin', pageBuilder: (context, state) => _page(state, const AdminDashboardScreen())),
+          GoRoute(
+            path: '/admin',
+            pageBuilder: (context, state) =>
+                _page(state, const AdminDashboardScreen()),
+          ),
           GoRoute(
             path: '/admin/products',
-            pageBuilder: (context, state) => _page(state, const AdminProductsScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const AdminProductsScreen()),
           ),
           GoRoute(
             path: '/admin/products/new',
-            pageBuilder: (context, state) => _page(state, const ProductFormScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const ProductFormScreen()),
           ),
           GoRoute(
             path: '/admin/products/:id/edit',
-            pageBuilder: (context, state) =>
-                _page(state, ProductFormScreen(productId: state.pathParameters['id'])),
+            pageBuilder: (context, state) => _page(
+              state,
+              ProductFormScreen(productId: state.pathParameters['id']),
+            ),
           ),
           GoRoute(
             path: '/admin/categories',
-            pageBuilder: (context, state) => _page(state, const AdminCategoriesScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const AdminCategoriesScreen()),
           ),
-          GoRoute(path: '/admin/orders', pageBuilder: (context, state) => _page(state, const AdminOrdersScreen())),
+          GoRoute(
+            path: '/admin/orders',
+            pageBuilder: (context, state) =>
+                _page(state, const AdminOrdersScreen()),
+          ),
           GoRoute(
             path: '/admin/customers',
-            pageBuilder: (context, state) => _page(state, const AdminCustomersScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const AdminCustomersScreen()),
           ),
           GoRoute(
             path: '/admin/notify',
-            pageBuilder: (context, state) => _page(state, const AdminBroadcastScreen()),
+            pageBuilder: (context, state) =>
+                _page(state, const AdminBroadcastScreen()),
           ),
         ],
       ),

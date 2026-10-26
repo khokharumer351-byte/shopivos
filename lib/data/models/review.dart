@@ -20,12 +20,12 @@ class Review {
   final DateTime? createdAt;
 
   factory Review.fromMap(Map<String, dynamic> map) => Review(
-        id: map['id'] as String,
-        productId: map['product_id'] as String,
-        userId: map['user_id'] as String,
-        rating: toInt(map['rating']),
-        comment: (map['comment'] ?? '') as String,
-        authorName: map['author_name'] as String?,
-        createdAt: toDate(map['created_at']),
-      );
+    id: map['id'] as String,
+    productId: map['product_id'] as String,
+    userId: map['user_id'] as String,
+    rating: toInt(map['rating']),
+    comment: (map['comment'] ?? '') as String,
+    authorName: map['author_name'] as String?,
+    createdAt: toDate(map['created_at']),
+  );
 }

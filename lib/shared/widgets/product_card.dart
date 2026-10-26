@@ -34,7 +34,10 @@ class _ProductCardState extends State<ProductCard> {
         showSnack(
           context,
           'Sign in to save your favorites ♡',
-          action: SnackBarAction(label: 'Sign in', onPressed: () => context.go('/login')),
+          action: SnackBarAction(
+            label: 'Sign in',
+            onPressed: () => context.go('/login'),
+          ),
         );
       }
     } catch (e) {
@@ -51,13 +54,18 @@ class _ProductCardState extends State<ProductCard> {
     showSnack(
       context,
       '${_product.name} added to your bag',
-      action: SnackBarAction(label: 'View bag', onPressed: () => context.go('/cart')),
+      action: SnackBarAction(
+        label: 'View bag',
+        onPressed: () => context.go('/cart'),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final saved = context.select<WishlistProvider, bool>((w) => w.contains(_product.id));
+    final saved = context.select<WishlistProvider, bool>(
+      (w) => w.contains(_product.id),
+    );
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -75,7 +83,10 @@ class _ProductCardState extends State<ProductCard> {
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: AppColors.ink, width: 1.5),
             boxShadow: [
-              BoxShadow(color: AppColors.ink, offset: _hovered ? const Offset(6, 6) : const Offset(0, 0)),
+              BoxShadow(
+                color: AppColors.ink,
+                offset: _hovered ? const Offset(6, 6) : const Offset(0, 0),
+              ),
             ],
           ),
           child: Column(
@@ -103,10 +114,18 @@ class _ProductCardState extends State<ProductCard> {
                           runSpacing: 6,
                           children: [
                             if (!_product.inStock)
-                              const Pill('Sold out', color: AppColors.ink, textColor: Colors.white)
+                              const Pill(
+                                'Sold out',
+                                color: AppColors.ink,
+                                textColor: Colors.white,
+                              )
                             else if (_product.onSale)
-                              Pill('-${_product.discountPercent}%', color: AppColors.pink),
-                            if (_product.isFeatured && _product.inStock) const Pill('Hot', icon: Icons.bolt_rounded),
+                              Pill(
+                                '-${_product.discountPercent}%',
+                                color: AppColors.pink,
+                              ),
+                            if (_product.isFeatured && _product.inStock)
+                              const Pill('Hot', icon: Icons.bolt_rounded),
                           ],
                         ),
                       ),
@@ -114,9 +133,13 @@ class _ProductCardState extends State<ProductCard> {
                         right: 10,
                         top: 10,
                         child: _CircleAction(
-                          icon: saved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                          icon: saved
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
                           color: saved ? AppColors.pink : AppColors.surface,
-                          tooltip: saved ? 'Remove from wishlist' : 'Save to wishlist',
+                          tooltip: saved
+                              ? 'Remove from wishlist'
+                              : 'Save to wishlist',
                           onTap: _toggleWishlist,
                         ),
                       ),
@@ -131,7 +154,9 @@ class _ProductCardState extends State<ProductCard> {
                             child: IgnorePointer(
                               ignoring: !_hovered,
                               child: _QuickAddBar(
-                                label: _product.sizes.isEmpty ? 'Quick add +' : 'Choose size →',
+                                label: _product.sizes.isEmpty
+                                    ? 'Quick add +'
+                                    : 'Choose size →',
                                 onTap: _quickAdd,
                               ),
                             ),
@@ -158,17 +183,28 @@ class _ProductCardState extends State<ProductCard> {
                       _product.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.body(15, weight: FontWeight.w600, height: 1.3),
+                      style: AppText.body(
+                        15,
+                        weight: FontWeight.w600,
+                        height: 1.3,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
                         Expanded(
-                          child: PriceTag(price: _product.price, compareAt: _product.compareAtPrice, size: 16),
+                          child: PriceTag(
+                            price: _product.price,
+                            compareAt: _product.compareAtPrice,
+                            size: 16,
+                          ),
                         ),
                         if (_product.ratingCount > 0) ...[
                           const Icon(Icons.star_rounded, size: 15),
-                          Text(_product.ratingAvg.toStringAsFixed(1), style: AppText.body(12, weight: FontWeight.w600)),
+                          Text(
+                            _product.ratingAvg.toStringAsFixed(1),
+                            style: AppText.body(12, weight: FontWeight.w600),
+                          ),
                         ],
                       ],
                     ),
@@ -185,7 +221,12 @@ class _ProductCardState extends State<ProductCard> {
 }
 
 class _CircleAction extends StatelessWidget {
-  const _CircleAction({required this.icon, required this.color, required this.onTap, required this.tooltip});
+  const _CircleAction({
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    required this.tooltip,
+  });
 
   final IconData icon;
   final Color color;
@@ -198,11 +239,17 @@ class _CircleAction extends StatelessWidget {
       message: tooltip,
       child: Material(
         color: color,
-        shape: const CircleBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+        shape: const CircleBorder(
+          side: BorderSide(color: AppColors.ink, width: 1.5),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          child: SizedBox(width: 38, height: 38, child: Icon(icon, size: 18, color: AppColors.ink)),
+          child: SizedBox(
+            width: 38,
+            height: 38,
+            child: Icon(icon, size: 18, color: AppColors.ink),
+          ),
         ),
       ),
     );
@@ -219,13 +266,17 @@ class _QuickAddBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.lime,
-      shape: const StadiumBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+      shape: const StadiumBorder(
+        side: BorderSide(color: AppColors.ink, width: 1.5),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: SizedBox(
           height: 40,
-          child: Center(child: Text(label.toUpperCase(), style: AppText.label(size: 12))),
+          child: Center(
+            child: Text(label.toUpperCase(), style: AppText.label(size: 12)),
+          ),
         ),
       ),
     );

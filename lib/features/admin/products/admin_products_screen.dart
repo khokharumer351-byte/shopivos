@@ -26,7 +26,8 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
   final _search = TextEditingController();
   late Future<List<Product>> _future = _load();
 
-  Future<List<Product>> _load() => _repo.fetchProducts(includeInactive: true, search: _search.text);
+  Future<List<Product>> _load() =>
+      _repo.fetchProducts(includeInactive: true, search: _search.text);
 
   void _reload() => setState(() => _future = _load());
 
@@ -40,7 +41,8 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
     final ok = await confirmDialog(
       context,
       title: 'Delete “${product.name}”?',
-      message: 'This removes the product from the store. Past orders keep their copy of it.',
+      message:
+          'This removes the product from the store. Past orders keep their copy of it.',
       confirmLabel: 'Delete',
       destructive: true,
     );
@@ -92,8 +94,15 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
           FutureBuilder<List<Product>>(
             future: _future,
             builder: (context, snapshot) {
-              if (snapshot.hasError) return ErrorView(message: friendlyError(snapshot.error!), onRetry: _reload);
-              if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+              if (snapshot.hasError) {
+                return ErrorView(
+                  message: friendlyError(snapshot.error!),
+                  onRetry: _reload,
+                );
+              }
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const LoadingView();
+              }
               final products = snapshot.data ?? const <Product>[];
               if (products.isEmpty) {
                 return EmptyState(
@@ -111,7 +120,8 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: _ProductRow(
                         product: product,
-                        onEdit: () => context.go('/admin/products/${product.id}/edit'),
+                        onEdit: () =>
+                            context.go('/admin/products/${product.id}/edit'),
                         onDelete: () => _delete(product),
                       ),
                     ),
@@ -126,7 +136,11 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
 }
 
 class _ProductRow extends StatelessWidget {
-  const _ProductRow({required this.product, required this.onEdit, required this.onDelete});
+  const _ProductRow({
+    required this.product,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   final Product product;
   final VoidCallback onEdit;
@@ -137,7 +151,9 @@ class _ProductRow extends StatelessWidget {
     final compact = MediaQuery.sizeOf(context).width < 700;
     final stockColor = product.stock == 0
         ? AppColors.danger
-        : (product.stock <= AppConfig.lowStockThreshold ? AppColors.warning : AppColors.success);
+        : (product.stock <= AppConfig.lowStockThreshold
+              ? AppColors.warning
+              : AppColors.success);
 
     return Material(
       color: AppColors.surface,
@@ -154,31 +170,54 @@ class _ProductRow extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: SizedBox(width: 56, height: 68, child: NetImage(product.primaryImage)),
+                child: SizedBox(
+                  width: 56,
+                  height: 68,
+                  child: NetImage(product.primaryImage),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.name,
-                        maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body(15, weight: FontWeight.w700)),
+                    Text(
+                      product.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.body(15, weight: FontWeight.w700),
+                    ),
                     const SizedBox(height: 4),
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Text(product.categoryName ?? 'Uncategorized', style: AppText.body(13, color: AppColors.muted)),
-                        if (!product.isActive) const Pill('Hidden', color: AppColors.paperDark),
-                        if (product.isFeatured) const Pill('Featured', icon: Icons.bolt_rounded),
-                        if (product.onSale) Pill('-${product.discountPercent}%', color: AppColors.pink),
+                        Text(
+                          product.categoryName ?? 'Uncategorized',
+                          style: AppText.body(13, color: AppColors.muted),
+                        ),
+                        if (!product.isActive)
+                          const Pill('Hidden', color: AppColors.paperDark),
+                        if (product.isFeatured)
+                          const Pill('Featured', icon: Icons.bolt_rounded),
+                        if (product.onSale)
+                          Pill(
+                            '-${product.discountPercent}%',
+                            color: AppColors.pink,
+                          ),
                       ],
                     ),
                     if (compact) ...[
                       const SizedBox(height: 4),
-                      Text('${formatPrice(product.price)} · ${product.stock} in stock',
-                          style: AppText.body(13, weight: FontWeight.w600, color: stockColor)),
+                      Text(
+                        '${formatPrice(product.price)} · ${product.stock} in stock',
+                        style: AppText.body(
+                          13,
+                          weight: FontWeight.w600,
+                          color: stockColor,
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -186,7 +225,10 @@ class _ProductRow extends StatelessWidget {
               if (!compact) ...[
                 SizedBox(
                   width: 110,
-                  child: Text(formatPrice(product.price), style: AppText.display(16)),
+                  child: Text(
+                    formatPrice(product.price),
+                    style: AppText.display(16),
+                  ),
                 ),
                 SizedBox(
                   width: 110,
@@ -195,19 +237,32 @@ class _ProductRow extends StatelessWidget {
                       Container(
                         width: 8,
                         height: 8,
-                        decoration: BoxDecoration(color: stockColor, shape: BoxShape.circle),
+                        decoration: BoxDecoration(
+                          color: stockColor,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                       const SizedBox(width: 6),
-                      Text('${product.stock} in stock', style: AppText.body(13, weight: FontWeight.w600)),
+                      Text(
+                        '${product.stock} in stock',
+                        style: AppText.body(13, weight: FontWeight.w600),
+                      ),
                     ],
                   ),
                 ),
               ],
-              IconButton(tooltip: 'Edit', onPressed: onEdit, icon: const Icon(Icons.edit_outlined)),
+              IconButton(
+                tooltip: 'Edit',
+                onPressed: onEdit,
+                icon: const Icon(Icons.edit_outlined),
+              ),
               IconButton(
                 tooltip: 'Delete',
                 onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline_rounded, color: AppColors.danger),
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppColors.danger,
+                ),
               ),
             ],
           ),

@@ -48,7 +48,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
-  void _reload() => setState(() => _future = _repo.fetchProduct(widget.productId));
+  void _reload() =>
+      setState(() => _future = _repo.fetchProduct(widget.productId));
 
   void _addToCart(Product product) {
     if (product.sizes.isNotEmpty && _size == null) {
@@ -59,7 +60,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     showSnack(
       context,
       'Added to your bag',
-      action: SnackBarAction(label: 'View bag', onPressed: () => context.go('/cart')),
+      action: SnackBarAction(
+        label: 'View bag',
+        onPressed: () => context.go('/cart'),
+      ),
     );
   }
 
@@ -70,7 +74,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         showSnack(
           context,
           'Sign in to save your favorites ♡',
-          action: SnackBarAction(label: 'Sign in', onPressed: () => context.go('/login')),
+          action: SnackBarAction(
+            label: 'Sign in',
+            onPressed: () => context.go('/login'),
+          ),
         );
       }
     } catch (e) {
@@ -86,10 +93,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return StorePage(children: [ErrorView(message: friendlyError(snapshot.error!), onRetry: _reload)]);
+          return StorePage(
+            children: [
+              ErrorView(
+                message: friendlyError(snapshot.error!),
+                onRetry: _reload,
+              ),
+            ],
+          );
         }
-        if (snapshot.connectionState != ConnectionState.done && !snapshot.hasData) {
-          return const StorePage(showFooter: false, children: [LoadingView(padding: 160)]);
+        if (snapshot.connectionState != ConnectionState.done &&
+            !snapshot.hasData) {
+          return const StorePage(
+            showFooter: false,
+            children: [LoadingView(padding: 160)],
+          );
         }
         final product = snapshot.data;
         if (product == null) {
@@ -106,10 +124,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           );
         }
 
-        _related ??= _repo.fetchProducts(categoryId: product.categoryId, excludeId: product.id, limit: 4);
+        _related ??= _repo.fetchProducts(
+          categoryId: product.categoryId,
+          excludeId: product.id,
+          limit: 4,
+        );
         final compact = MediaQuery.sizeOf(context).width < Breakpoints.tablet;
         final gallery = ProductGallery(images: product.images);
-        final info = _buildInfo(product, compact, saved: wishlist.contains(product.id));
+        final info = _buildInfo(
+          product,
+          compact,
+          saved: wishlist.contains(product.id),
+        );
 
         return StorePage(
           children: [
@@ -120,8 +146,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   _Breadcrumbs(product: product),
                   const SizedBox(height: 24),
-                  if (compact) ...[gallery, const SizedBox(height: 32), info]
-                  else
+                  if (compact) ...[
+                    gallery,
+                    const SizedBox(height: 32),
+                    info,
+                  ] else
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -141,7 +170,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SectionTitle(kicker: 'Complete the look', title: 'You might', accent: 'also like.'),
+                          const SectionTitle(
+                            kicker: 'Complete the look',
+                            title: 'You might',
+                            accent: 'also like.',
+                          ),
                           const SizedBox(height: 28),
                           ProductGrid(products: related),
                         ],
@@ -165,9 +198,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            if (product.categoryName != null) Pill(product.categoryName!, color: AppColors.sky),
-            if (product.isFeatured) const Pill('Hot right now', icon: Icons.bolt_rounded),
-            if (product.onSale) Pill('Save ${product.discountPercent}%', color: AppColors.pink),
+            if (product.categoryName != null)
+              Pill(product.categoryName!, color: AppColors.sky),
+            if (product.isFeatured)
+              const Pill('Hot right now', icon: Icons.bolt_rounded),
+            if (product.onSale)
+              Pill('Save ${product.discountPercent}%', color: AppColors.pink),
           ],
         ),
         const SizedBox(height: 20),
@@ -186,7 +222,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
         const SizedBox(height: 24),
-        PriceTag(price: product.price, compareAt: product.compareAtPrice, size: 34),
+        PriceTag(
+          price: product.price,
+          compareAt: product.compareAtPrice,
+          size: 34,
+        ),
         const SizedBox(height: 12),
         _StockLine(stock: product.stock),
         if (product.sizes.isNotEmpty) ...[
@@ -195,7 +235,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Text('SIZE', style: AppText.label()),
               const Spacer(),
-              if (_size != null) Text('Selected: $_size', style: AppText.body(13, color: AppColors.muted)),
+              if (_size != null)
+                Text(
+                  'Selected: $_size',
+                  style: AppText.body(13, color: AppColors.muted),
+                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -204,7 +248,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             runSpacing: 10,
             children: [
               for (final size in product.sizes)
-                _SizeChip(label: size, selected: _size == size, onTap: () => setState(() => _size = size)),
+                _SizeChip(
+                  label: size,
+                  selected: _size == size,
+                  onTap: () => setState(() => _size = size),
+                ),
             ],
           ),
         ],
@@ -230,7 +278,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               const SizedBox(width: 12),
               AppIconButton(
-                icon: saved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                icon: saved
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
                 background: saved ? AppColors.pink : AppColors.surface,
                 size: 56,
                 tooltip: saved ? 'Remove from wishlist' : 'Save to wishlist',
@@ -242,11 +292,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Row(
             children: [
               const Expanded(
-                child: AppButton(label: 'Sold out', onPressed: null, size: AppButtonSize.large, expand: true),
+                child: AppButton(
+                  label: 'Sold out',
+                  onPressed: null,
+                  size: AppButtonSize.large,
+                  expand: true,
+                ),
               ),
               const SizedBox(width: 12),
               AppIconButton(
-                icon: saved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                icon: saved
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
                 background: saved ? AppColors.pink : AppColors.surface,
                 size: 56,
                 onPressed: () => _toggleWishlist(product),
@@ -261,12 +318,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               _Perk(
                 icon: Icons.local_shipping_outlined,
-                text: 'Free shipping on orders over ${formatPrice(AppConfig.freeShippingThreshold)}',
+                text:
+                    'Free shipping on orders over ${formatPrice(AppConfig.freeShippingThreshold)}',
               ),
               const SizedBox(height: 12),
-              const _Perk(icon: Icons.autorenew_rounded, text: '30-day returns, no questions asked'),
+              const _Perk(
+                icon: Icons.autorenew_rounded,
+                text: '30-day returns, no questions asked',
+              ),
               const SizedBox(height: 12),
-              const _Perk(icon: Icons.payments_outlined, text: 'Cash on delivery available'),
+              const _Perk(
+                icon: Icons.payments_outlined,
+                text: 'Cash on delivery available',
+              ),
             ],
           ),
         ),
@@ -293,9 +357,15 @@ class _Breadcrumbs extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 6,
       children: [
-        InkWell(onTap: () => context.go('/'), child: Text('Home', style: style)),
+        InkWell(
+          onTap: () => context.go('/'),
+          child: Text('Home', style: style),
+        ),
         Text('/', style: style),
-        InkWell(onTap: () => context.go('/shop'), child: Text('Shop', style: style)),
+        InkWell(
+          onTap: () => context.go('/shop'),
+          child: Text('Shop', style: style),
+        ),
         if (product.categoryId != null && product.categoryName != null) ...[
           Text('/', style: style),
           InkWell(
@@ -320,11 +390,15 @@ class _StockLine extends StatelessWidget {
     final (color, text) = stock <= 0
         ? (AppColors.danger, 'Sold out — check back soon')
         : stock <= AppConfig.lowStockThreshold
-            ? (AppColors.warning, 'Only $stock left — move fast')
-            : (AppColors.success, 'In stock, ready to ship');
+        ? (AppColors.warning, 'Only $stock left — move fast')
+        : (AppColors.success, 'In stock, ready to ship');
     return Row(
       children: [
-        Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 8),
         Text(text, style: AppText.body(14, weight: FontWeight.w600)),
       ],
@@ -333,7 +407,11 @@ class _StockLine extends StatelessWidget {
 }
 
 class _SizeChip extends StatelessWidget {
-  const _SizeChip({required this.label, required this.selected, required this.onTap});
+  const _SizeChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -355,7 +433,13 @@ class _SizeChip extends StatelessWidget {
           height: 48,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           alignment: Alignment.center,
-          child: Text(label, style: AppText.display(15, color: selected ? Colors.white : AppColors.ink)),
+          child: Text(
+            label,
+            style: AppText.display(
+              15,
+              color: selected ? Colors.white : AppColors.ink,
+            ),
+          ),
         ),
       ),
     );

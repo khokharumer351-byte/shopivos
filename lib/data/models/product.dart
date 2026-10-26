@@ -38,8 +38,9 @@ class Product {
   String? get primaryImage => images.isNotEmpty ? images.first : null;
   bool get inStock => stock > 0;
   bool get onSale => compareAtPrice != null && compareAtPrice! > price;
-  int get discountPercent =>
-      onSale ? (((compareAtPrice! - price) / compareAtPrice!) * 100).round() : 0;
+  int get discountPercent => onSale
+      ? (((compareAtPrice! - price) / compareAtPrice!) * 100).round()
+      : 0;
 
   factory Product.fromMap(Map<String, dynamic> map) {
     final category = map['categories'];
@@ -48,10 +49,14 @@ class Product {
       name: (map['name'] ?? '') as String,
       description: (map['description'] ?? '') as String,
       price: toDouble(map['price']),
-      compareAtPrice: map['compare_at_price'] == null ? null : toDouble(map['compare_at_price']),
+      compareAtPrice: map['compare_at_price'] == null
+          ? null
+          : toDouble(map['compare_at_price']),
       stock: toInt(map['stock']),
       categoryId: map['category_id'] as String?,
-      categoryName: category is Map ? category['name'] as String? : map['category_name'] as String?,
+      categoryName: category is Map
+          ? category['name'] as String?
+          : map['category_name'] as String?,
       images: toStringList(map['images']),
       sizes: toStringList(map['sizes']),
       isFeatured: map['is_featured'] == true,
@@ -62,28 +67,26 @@ class Product {
     );
   }
 
-  /// Columns written by the admin product form.
   Map<String, dynamic> toRow() => {
-        'name': name,
-        'description': description,
-        'price': price,
-        'compare_at_price': compareAtPrice,
-        'stock': stock,
-        'category_id': categoryId,
-        'images': images,
-        'sizes': sizes,
-        'is_featured': isFeatured,
-        'is_active': isActive,
-      };
+    'name': name,
+    'description': description,
+    'price': price,
+    'compare_at_price': compareAtPrice,
+    'stock': stock,
+    'category_id': categoryId,
+    'images': images,
+    'sizes': sizes,
+    'is_featured': isFeatured,
+    'is_active': isActive,
+  };
 
-  /// Snapshot stored in the local cart.
   Map<String, dynamic> toCacheMap() => {
-        ...toRow(),
-        'id': id,
-        'category_name': categoryName,
-        'rating_avg': ratingAvg,
-        'rating_count': ratingCount,
-      };
+    ...toRow(),
+    'id': id,
+    'category_name': categoryName,
+    'rating_avg': ratingAvg,
+    'rating_count': ratingCount,
+  };
 }
 
 enum ProductSort {
@@ -99,6 +102,8 @@ enum ProductSort {
   final String column;
   final bool ascending;
 
-  static ProductSort fromKey(String? key) =>
-      ProductSort.values.firstWhere((s) => s.key == key, orElse: () => ProductSort.newest);
+  static ProductSort fromKey(String? key) => ProductSort.values.firstWhere(
+    (s) => s.key == key,
+    orElse: () => ProductSort.newest,
+  );
 }

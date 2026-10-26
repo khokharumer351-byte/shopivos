@@ -7,12 +7,12 @@ import '../data/models/profile.dart';
 import '../data/repositories/auth_repository.dart';
 import '../data/repositories/profile_repository.dart';
 
-/// Single source of truth for "who is signed in". The router listens to this
-/// to guard pages, so every auth change triggers a redirect check.
 class AuthProvider extends ChangeNotifier {
-  AuthProvider({AuthRepository? authRepository, ProfileRepository? profileRepository})
-      : _auth = authRepository ?? AuthRepository(),
-        _profiles = profileRepository ?? ProfileRepository() {
+  AuthProvider({
+    AuthRepository? authRepository,
+    ProfileRepository? profileRepository,
+  }) : _auth = authRepository ?? AuthRepository(),
+       _profiles = profileRepository ?? ProfileRepository() {
     _user = _auth.currentUser;
     if (_user != null) _loadProfile();
     _subscription = _auth.onAuthStateChange.listen(_onAuthStateChange);
@@ -33,18 +33,20 @@ class AuthProvider extends ChangeNotifier {
   bool get isAdmin => _profile?.isAdmin ?? false;
   bool get profileLoading => _profileLoading;
 
-  /// True after the user opened a password-reset link from their email.
   bool get isPasswordRecovery => _isPasswordRecovery;
 
   void _onAuthStateChange(AuthState state) {
     final previousId = _user?.id;
     _user = state.session?.user;
 
-    if (state.event == AuthChangeEvent.passwordRecovery) _isPasswordRecovery = true;
+    if (state.event == AuthChangeEvent.passwordRecovery) {
+      _isPasswordRecovery = true;
+    }
     if (_user == null) {
       _profile = null;
       _isPasswordRecovery = false;
-    } else if (_user!.id != previousId || (_profile == null && !_profileLoading)) {
+    } else if (_user!.id != previousId ||
+        (_profile == null && !_profileLoading)) {
       _loadProfile();
     }
     notifyListeners();
@@ -71,10 +73,14 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signIn(String email, String password) =>
       _auth.signIn(email: email, password: password);
 
-  Future<bool> signUp({required String email, required String password, required String fullName}) =>
-      _auth.signUp(email: email, password: password, fullName: fullName);
+  Future<bool> signUp({
+    required String email,
+    required String password,
+    required String fullName,
+  }) => _auth.signUp(email: email, password: password, fullName: fullName);
 
-  Future<void> sendPasswordReset(String email) => _auth.sendPasswordReset(email);
+  Future<void> sendPasswordReset(String email) =>
+      _auth.sendPasswordReset(email);
 
   Future<void> updatePassword(String newPassword) async {
     await _auth.updatePassword(newPassword);

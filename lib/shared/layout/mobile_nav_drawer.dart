@@ -54,7 +54,11 @@ class MobileNavDrawer extends StatelessWidget {
                 },
               ),
             ] else ...[
-              AppButton(label: 'Sign in', expand: true, onPressed: () => go('/login')),
+              AppButton(
+                label: 'Sign in',
+                expand: true,
+                onPressed: () => go('/login'),
+              ),
               const SizedBox(height: 12),
               AppButton(
                 label: 'Create account',

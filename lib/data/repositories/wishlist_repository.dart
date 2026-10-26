@@ -3,7 +3,10 @@ import '../supabase_client.dart';
 
 class WishlistRepository {
   Future<Set<String>> fetchIds(String userId) async {
-    final rows = await supabase.from('wishlist').select('product_id').eq('user_id', userId);
+    final rows = await supabase
+        .from('wishlist')
+        .select('product_id')
+        .eq('user_id', userId);
     return rows.map((row) => row['product_id'] as String).toSet();
   }
 
@@ -21,10 +24,17 @@ class WishlistRepository {
   }
 
   Future<void> add(String userId, String productId) async {
-    await supabase.from('wishlist').insert({'user_id': userId, 'product_id': productId});
+    await supabase.from('wishlist').insert({
+      'user_id': userId,
+      'product_id': productId,
+    });
   }
 
   Future<void> remove(String userId, String productId) async {
-    await supabase.from('wishlist').delete().eq('user_id', userId).eq('product_id', productId);
+    await supabase
+        .from('wishlist')
+        .delete()
+        .eq('user_id', userId)
+        .eq('product_id', productId);
   }
 }

@@ -1,14 +1,14 @@
--- =============================================================================
--- Shopivo — Supabase schema
--- Run this whole file once in Supabase Dashboard → SQL Editor → New query.
--- It is safe to re-run (idempotent where possible).
--- =============================================================================
+
+
+
+
+
 
 create extension if not exists "pgcrypto";
 
--- -----------------------------------------------------------------------------
--- Tables
--- -----------------------------------------------------------------------------
+
+
+
 
 create table if not exists public.profiles (
   id          uuid primary key references auth.users (id) on delete cascade,
@@ -103,9 +103,9 @@ create table if not exists public.reviews (
   unique (product_id, user_id)
 );
 
--- -----------------------------------------------------------------------------
--- Helper functions & triggers
--- -----------------------------------------------------------------------------
+
+
+
 
 create or replace function public.is_admin()
 returns boolean
@@ -117,7 +117,7 @@ as $$
   select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
 $$;
 
--- Create a profile row whenever someone signs up.
+
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -137,8 +137,8 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- Customers can edit their own profile but never promote themselves.
--- (Running SQL from the dashboard has no auth.uid(), so you can still make the first admin.)
+
+
 create or replace function public.protect_profile_role()
 returns trigger
 language plpgsql
@@ -173,7 +173,7 @@ create trigger products_touch_updated_at
   before update on public.products
   for each row execute function public.touch_updated_at();
 
--- Keep products.rating_avg / rating_count in sync with reviews.
+
 create or replace function public.refresh_product_rating()
 returns trigger
 language plpgsql
@@ -203,7 +203,7 @@ create trigger reviews_refresh_rating
   after insert or update or delete on public.reviews
   for each row execute function public.refresh_product_rating();
 
--- Put stock back when an order gets cancelled (by the customer or an admin).
+
 create or replace function public.restock_cancelled_order()
 returns trigger
 language plpgsql
@@ -231,10 +231,10 @@ create trigger orders_restock
   after update of status on public.orders
   for each row execute function public.restock_cancelled_order();
 
--- -----------------------------------------------------------------------------
--- Checkout RPC: prices and stock are validated on the server, never trusted
--- from the client. Shipping rules must match lib/core/config/app_config.dart.
--- -----------------------------------------------------------------------------
+
+
+
+
 
 create or replace function public.place_order(p_items jsonb, p_shipping jsonb)
 returns uuid
@@ -337,9 +337,9 @@ revoke execute on function public.cancel_order(uuid) from public, anon;
 grant execute on function public.place_order(jsonb, jsonb) to authenticated;
 grant execute on function public.cancel_order(uuid) to authenticated;
 
--- -----------------------------------------------------------------------------
--- Row Level Security
--- -----------------------------------------------------------------------------
+
+
+
 
 alter table public.profiles    enable row level security;
 alter table public.categories  enable row level security;
@@ -349,7 +349,7 @@ alter table public.orders      enable row level security;
 alter table public.order_items enable row level security;
 alter table public.reviews     enable row level security;
 
--- profiles
+
 drop policy if exists "profiles: read own or admin" on public.profiles;
 create policy "profiles: read own or admin" on public.profiles
   for select using (id = auth.uid() or public.is_admin());
@@ -358,7 +358,7 @@ drop policy if exists "profiles: update own or admin" on public.profiles;
 create policy "profiles: update own or admin" on public.profiles
   for update using (id = auth.uid() or public.is_admin());
 
--- categories
+
 drop policy if exists "categories: public read" on public.categories;
 create policy "categories: public read" on public.categories
   for select using (true);
@@ -367,7 +367,7 @@ drop policy if exists "categories: admin write" on public.categories;
 create policy "categories: admin write" on public.categories
   for all using (public.is_admin()) with check (public.is_admin());
 
--- products
+
 drop policy if exists "products: public read active" on public.products;
 create policy "products: public read active" on public.products
   for select using (is_active or public.is_admin());
@@ -376,12 +376,12 @@ drop policy if exists "products: admin write" on public.products;
 create policy "products: admin write" on public.products
   for all using (public.is_admin()) with check (public.is_admin());
 
--- wishlist
+
 drop policy if exists "wishlist: own rows" on public.wishlist;
 create policy "wishlist: own rows" on public.wishlist
   for all using (user_id = auth.uid()) with check (user_id = auth.uid());
 
--- orders (customers create orders only through place_order)
+
 drop policy if exists "orders: read own or admin" on public.orders;
 create policy "orders: read own or admin" on public.orders
   for select using (user_id = auth.uid() or public.is_admin());
@@ -394,7 +394,7 @@ drop policy if exists "orders: admin delete" on public.orders;
 create policy "orders: admin delete" on public.orders
   for delete using (public.is_admin());
 
--- order items
+
 drop policy if exists "order_items: read own or admin" on public.order_items;
 create policy "order_items: read own or admin" on public.order_items
   for select using (
@@ -402,7 +402,7 @@ create policy "order_items: read own or admin" on public.order_items
     or exists (select 1 from public.orders o where o.id = order_id and o.user_id = auth.uid())
   );
 
--- reviews
+
 drop policy if exists "reviews: public read" on public.reviews;
 create policy "reviews: public read" on public.reviews
   for select using (true);
@@ -419,9 +419,9 @@ drop policy if exists "reviews: delete own or admin" on public.reviews;
 create policy "reviews: delete own or admin" on public.reviews
   for delete using (user_id = auth.uid() or public.is_admin());
 
--- -----------------------------------------------------------------------------
--- Storage: public bucket for product images, only admins can write
--- -----------------------------------------------------------------------------
+
+
+
 
 insert into storage.buckets (id, name, public)
 values ('product-images', 'product-images', true)

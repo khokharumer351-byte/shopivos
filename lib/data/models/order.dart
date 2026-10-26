@@ -9,7 +9,6 @@ abstract final class OrderStatus {
 
   static const all = [pending, processing, shipped, delivered, cancelled];
 
-  /// The happy path, used for the progress tracker.
   static const flow = [pending, processing, shipped, delivered];
 }
 
@@ -33,13 +32,13 @@ class OrderItem {
   double get lineTotal => unitPrice * quantity;
 
   factory OrderItem.fromMap(Map<String, dynamic> map) => OrderItem(
-        productId: map['product_id'] as String?,
-        productName: (map['product_name'] ?? '') as String,
-        productImage: map['product_image'] as String?,
-        unitPrice: toDouble(map['unit_price']),
-        quantity: toInt(map['quantity']),
-        size: map['size'] as String?,
-      );
+    productId: map['product_id'] as String?,
+    productName: (map['product_name'] ?? '') as String,
+    productImage: map['product_image'] as String?,
+    unitPrice: toDouble(map['unit_price']),
+    quantity: toInt(map['quantity']),
+    size: map['size'] as String?,
+  );
 }
 
 class ShopOrder {
@@ -84,12 +83,15 @@ class ShopOrder {
   int get itemCount => items.fold<int>(0, (sum, item) => sum + item.quantity);
   bool get canCancel => status == OrderStatus.pending;
 
-  String get paymentLabel => paymentMethod == 'cod' ? 'Cash on delivery' : paymentMethod;
+  String get paymentLabel =>
+      paymentMethod == 'cod' ? 'Cash on delivery' : paymentMethod;
 
-  String get shippingAddress => [address, city, postalCode, country]
-      .whereType<String>()
-      .where((part) => part.trim().isNotEmpty)
-      .join(', ');
+  String get shippingAddress => [
+    address,
+    city,
+    postalCode,
+    country,
+  ].whereType<String>().where((part) => part.trim().isNotEmpty).join(', ');
 
   factory ShopOrder.fromMap(Map<String, dynamic> map) {
     final rawItems = map['order_items'];
@@ -112,9 +114,11 @@ class ShopOrder {
       createdAt: toDate(map['created_at']),
       items: rawItems is List
           ? rawItems
-              .whereType<Map>()
-              .map((item) => OrderItem.fromMap(Map<String, dynamic>.from(item)))
-              .toList()
+                .whereType<Map>()
+                .map(
+                  (item) => OrderItem.fromMap(Map<String, dynamic>.from(item)),
+                )
+                .toList()
           : const [],
       customerEmail: profile is Map ? profile['email'] as String? : null,
     );
@@ -143,13 +147,13 @@ class ShippingDetails {
   final String paymentMethod;
 
   Map<String, dynamic> toMap() => {
-        'full_name': fullName,
-        'phone': phone,
-        'address': address,
-        'city': city,
-        'postal_code': postalCode,
-        'country': country,
-        'notes': notes,
-        'payment_method': paymentMethod,
-      };
+    'full_name': fullName,
+    'phone': phone,
+    'address': address,
+    'city': city,
+    'postal_code': postalCode,
+    'country': country,
+    'notes': notes,
+    'payment_method': paymentMethod,
+  };
 }

@@ -37,29 +37,39 @@ class NotificationRepository {
     await supabase.from('notifications').delete().eq('user_id', userId);
   }
 
-  /// Admin only (checked inside the RPC). Returns how many customers got it.
-  Future<int> broadcast({required String title, required String body, String? link}) async {
-    final result = await supabase.rpc('broadcast_notification', params: {
-      'p_title': title,
-      'p_body': body,
-      'p_link': link,
-    });
+  Future<int> broadcast({
+    required String title,
+    required String body,
+    String? link,
+  }) async {
+    final result = await supabase.rpc(
+      'broadcast_notification',
+      params: {'p_title': title, 'p_body': body, 'p_link': link},
+    );
     return (result as num?)?.toInt() ?? 0;
   }
 
-  /// Live feed of new notifications for [userId] via Supabase Realtime.
-  RealtimeChannel subscribe(String userId, void Function(AppNotification notification) onInsert) {
+  RealtimeChannel subscribe(
+    String userId,
+    void Function(AppNotification notification) onInsert,
+  ) {
     return supabase
         .channel('notifications:$userId')
         .onPostgresChanges(
           event: PostgresChangeEvent.insert,
           schema: 'public',
           table: 'notifications',
-          filter: PostgresChangeFilter(type: PostgresChangeFilterType.eq, column: 'user_id', value: userId),
-          callback: (payload) => onInsert(AppNotification.fromMap(payload.newRecord)),
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'user_id',
+            value: userId,
+          ),
+          callback: (payload) =>
+              onInsert(AppNotification.fromMap(payload.newRecord)),
         )
         .subscribe();
   }
 
-  Future<void> unsubscribe(RealtimeChannel channel) => supabase.removeChannel(channel);
+  Future<void> unsubscribe(RealtimeChannel channel) =>
+      supabase.removeChannel(channel);
 }

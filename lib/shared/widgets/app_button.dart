@@ -7,8 +7,6 @@ enum AppButtonVariant { primary, accent, outline, ghost, danger }
 
 enum AppButtonSize { small, medium, large }
 
-/// Pill button with a hard offset shadow that "lifts" on hover and
-/// "presses" on tap — the signature neo-brutalist touch of the UI.
 class AppButton extends StatefulWidget {
   const AppButton({
     super.key,
@@ -65,7 +63,10 @@ class _AppButtonState extends State<AppButton> {
         ? SizedBox(
             width: 20,
             height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2.2, color: foreground),
+            child: CircularProgressIndicator(
+              strokeWidth: 2.2,
+              color: foreground,
+            ),
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
@@ -81,7 +82,11 @@ class _AppButtonState extends State<AppButton> {
               ),
               if (widget.trailingIcon != null) ...[
                 const SizedBox(width: 8),
-                Icon(widget.trailingIcon, size: fontSize + 4, color: foreground),
+                Icon(
+                  widget.trailingIcon,
+                  size: fontSize + 4,
+                  color: foreground,
+                ),
               ],
             ],
           );
@@ -115,7 +120,12 @@ class _AppButtonState extends State<AppButton> {
                   ? null
                   : Border.all(color: AppColors.ink, width: 1.5),
               boxShadow: hasShadow && _enabled && shadowOffset > 0
-                  ? [BoxShadow(color: AppColors.ink, offset: Offset(shadowOffset, shadowOffset))]
+                  ? [
+                      BoxShadow(
+                        color: AppColors.ink,
+                        offset: Offset(shadowOffset, shadowOffset),
+                      ),
+                    ]
                   : null,
             ),
             alignment: Alignment.center,
@@ -125,11 +135,12 @@ class _AppButtonState extends State<AppButton> {
       ),
     );
 
-    return widget.expand ? SizedBox(width: double.infinity, child: button) : button;
+    return widget.expand
+        ? SizedBox(width: double.infinity, child: button)
+        : button;
   }
 }
 
-/// Round icon button with the same bordered look.
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
     super.key,
@@ -154,7 +165,9 @@ class AppIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget child = Material(
       color: background,
-      shape: const CircleBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+      shape: const CircleBorder(
+        side: BorderSide(color: AppColors.ink, width: 1.5),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,

@@ -1,12 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Android back button for the mobile app.
-///
-/// The store navigates with `context.go(...)` (URL style, like the website),
-/// which replaces the page instead of stacking it, so the system back button
-/// would close the app from anywhere. This keeps a small history of visited
-/// locations and walks back through it; dialogs and sheets still close first.
 class AppBackHandler {
   AppBackHandler(this._router) {
     instance = this;
@@ -25,10 +19,8 @@ class AppBackHandler {
 
   static const _maxHistory = 40;
 
-  /// Set while the mobile app is running (null on the web).
   static AppBackHandler? instance;
 
-  /// Pages you shouldn't land on again by pressing back.
   static bool _skip(String location) {
     final path = Uri.parse(location).path;
     return path == '/login' ||
@@ -41,7 +33,8 @@ class AppBackHandler {
         path.endsWith('/edit');
   }
 
-  String get _location => _router.routerDelegate.currentConfiguration.uri.toString();
+  String get _location =>
+      _router.routerDelegate.currentConfiguration.uri.toString();
 
   void _onRouteChanged() {
     final next = _location;
@@ -55,13 +48,10 @@ class AppBackHandler {
   }
 
   Future<bool> _onBack() async {
-    // Let dialogs, bottom sheets and pushed pages close normally.
     if (_router.canPop()) return false;
     return goBack();
   }
 
-  /// Goes to the previous page (or up to home). Returns `false` when there is
-  /// nowhere left to go, i.e. on the home screen.
   bool goBack() {
     while (_history.isNotEmpty && _history.last == _current) {
       _history.removeLast();
@@ -74,10 +64,12 @@ class AppBackHandler {
     final path = Uri.parse(_current).path;
     if (path != '/') {
       _goingBack = true;
-      _router.go(path.startsWith('/admin') && path != '/admin' ? '/admin' : '/');
+      _router.go(
+        path.startsWith('/admin') && path != '/admin' ? '/admin' : '/',
+      );
       return true;
     }
-    // On the home tab with nothing behind it: let Android close the app.
+
     return false;
   }
 

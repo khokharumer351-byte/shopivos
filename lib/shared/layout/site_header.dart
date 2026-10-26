@@ -17,7 +17,6 @@ import '../widgets/page_container.dart';
 class SiteHeader extends StatelessWidget {
   const SiteHeader({super.key, required this.location});
 
-  /// Current URL, used to highlight the active nav link.
   final String location;
 
   @override
@@ -46,7 +45,9 @@ class SiteHeader extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             color: AppColors.paper,
-            border: Border(bottom: BorderSide(color: AppColors.ink, width: 1.5)),
+            border: Border(
+              bottom: BorderSide(color: AppColors.ink, width: 1.5),
+            ),
           ),
           child: PageContainer(
             child: SizedBox(
@@ -66,12 +67,27 @@ class SiteHeader extends StatelessWidget {
                   if (!compact) ...[
                     const SizedBox(width: 40),
                     _NavLink(label: 'Home', path: '/', active: location == '/'),
-                    _NavLink(label: 'Shop all', path: '/shop', active: location == '/shop'),
-                    _NavLink(label: 'New in', path: '/shop?sort=newest', active: location == '/shop?sort=newest'),
-                    _NavLink(label: 'Featured', path: '/shop?featured=1', active: location == '/shop?featured=1'),
+                    _NavLink(
+                      label: 'Shop all',
+                      path: '/shop',
+                      active: location == '/shop',
+                    ),
+                    _NavLink(
+                      label: 'New in',
+                      path: '/shop?sort=newest',
+                      active: location == '/shop?sort=newest',
+                    ),
+                    _NavLink(
+                      label: 'Featured',
+                      path: '/shop?featured=1',
+                      active: location == '/shop?featured=1',
+                    ),
                   ],
                   const Spacer(),
-                  if (!compact) ...[const _HeaderSearch(), const SizedBox(width: 12)],
+                  if (!compact) ...[
+                    const _HeaderSearch(),
+                    const SizedBox(width: 12),
+                  ],
                   if (compact) ...[
                     AppIconButton(
                       icon: Icons.search_rounded,
@@ -130,7 +146,11 @@ class SiteHeader extends StatelessWidget {
 }
 
 class _NavLink extends StatefulWidget {
-  const _NavLink({required this.label, required this.path, required this.active});
+  const _NavLink({
+    required this.label,
+    required this.path,
+    required this.active,
+  });
 
   final String label;
   final String path;
@@ -158,12 +178,18 @@ class _NavLinkState extends State<_NavLink> {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: active ? AppColors.ink : (_hovered ? AppColors.lime : Colors.transparent),
+            color: active
+                ? AppColors.ink
+                : (_hovered ? AppColors.lime : Colors.transparent),
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
             widget.label,
-            style: AppText.body(14, weight: FontWeight.w600, color: active ? Colors.white : AppColors.ink),
+            style: AppText.body(
+              14,
+              weight: FontWeight.w600,
+              color: active ? Colors.white : AppColors.ink,
+            ),
           ),
         ),
       ),
@@ -189,7 +215,9 @@ class _HeaderSearchState extends State<_HeaderSearch> {
 
   void _submit(String value) {
     final term = value.trim();
-    context.go(term.isEmpty ? '/shop' : '/shop?q=${Uri.encodeQueryComponent(term)}');
+    context.go(
+      term.isEmpty ? '/shop' : '/shop?q=${Uri.encodeQueryComponent(term)}',
+    );
   }
 
   @override
@@ -204,7 +232,10 @@ class _HeaderSearchState extends State<_HeaderSearch> {
         style: AppText.body(14),
         decoration: InputDecoration(
           hintText: 'Search the drop…',
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
           prefixIcon: const Icon(Icons.search_rounded, size: 20),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(999),
@@ -230,7 +261,9 @@ class _AccountMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final initials = auth.profile?.initials ?? (auth.user?.email?.substring(0, 1).toUpperCase() ?? '?');
+    final initials =
+        auth.profile?.initials ??
+        (auth.user?.email?.substring(0, 1).toUpperCase() ?? '?');
 
     return PopupMenuButton<String>(
       tooltip: 'Account',
@@ -248,18 +281,40 @@ class _AccountMenu extends StatelessWidget {
           enabled: false,
           child: Text(
             auth.profile?.displayName ?? auth.user?.email ?? '',
-            style: AppText.body(13, weight: FontWeight.w600, color: AppColors.muted),
+            style: AppText.body(
+              13,
+              weight: FontWeight.w600,
+              color: AppColors.muted,
+            ),
           ),
         ),
         const PopupMenuDivider(),
-        const PopupMenuItem(value: '/account', child: _MenuRow(Icons.person_outline_rounded, 'My profile')),
-        const PopupMenuItem(value: '/account/orders', child: _MenuRow(Icons.receipt_long_outlined, 'My orders')),
-        const PopupMenuItem(value: '/wishlist', child: _MenuRow(Icons.favorite_border_rounded, 'Wishlist')),
-        const PopupMenuItem(value: '/notifications', child: _MenuRow(Icons.notifications_none_rounded, 'Notifications')),
+        const PopupMenuItem(
+          value: '/account',
+          child: _MenuRow(Icons.person_outline_rounded, 'My profile'),
+        ),
+        const PopupMenuItem(
+          value: '/account/orders',
+          child: _MenuRow(Icons.receipt_long_outlined, 'My orders'),
+        ),
+        const PopupMenuItem(
+          value: '/wishlist',
+          child: _MenuRow(Icons.favorite_border_rounded, 'Wishlist'),
+        ),
+        const PopupMenuItem(
+          value: '/notifications',
+          child: _MenuRow(Icons.notifications_none_rounded, 'Notifications'),
+        ),
         if (auth.isAdmin)
-          const PopupMenuItem(value: '/admin', child: _MenuRow(Icons.dashboard_customize_outlined, 'Admin panel')),
+          const PopupMenuItem(
+            value: '/admin',
+            child: _MenuRow(Icons.dashboard_customize_outlined, 'Admin panel'),
+          ),
         const PopupMenuDivider(),
-        const PopupMenuItem(value: 'signout', child: _MenuRow(Icons.logout_rounded, 'Sign out')),
+        const PopupMenuItem(
+          value: 'signout',
+          child: _MenuRow(Icons.logout_rounded, 'Sign out'),
+        ),
       ],
       child: Container(
         width: 40,
@@ -270,7 +325,10 @@ class _AccountMenu extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(color: AppColors.ink, width: 1.5),
         ),
-        child: Text(initials, style: AppText.label(size: 13, color: Colors.white)),
+        child: Text(
+          initials,
+          style: AppText.label(size: 13, color: Colors.white),
+        ),
       ),
     );
   }
@@ -285,11 +343,7 @@ class _MenuRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        Icon(icon, size: 18),
-        const SizedBox(width: 12),
-        Text(label),
-      ],
+      children: [Icon(icon, size: 18), const SizedBox(width: 12), Text(label)],
     );
   }
 }

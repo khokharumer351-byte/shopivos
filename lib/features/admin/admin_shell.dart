@@ -27,8 +27,6 @@ const _entries = [
   _AdminNavEntry('Notify', Icons.campaign_outlined, '/admin/notify'),
 ];
 
-/// Frame for the admin panel. Also acts as the access gate: only profiles
-/// with role = 'admin' get past it (and RLS enforces the same on the server).
 class AdminShell extends StatelessWidget {
   const AdminShell({super.key, required this.location, required this.child});
 
@@ -47,7 +45,8 @@ class AdminShell extends StatelessWidget {
         body: EmptyState(
           icon: Icons.lock_outline_rounded,
           title: 'Admins only',
-          message: 'Your account doesn’t have access to the admin panel. '
+          message:
+              'Your account doesn’t have access to the admin panel. '
               'Ask an existing admin to promote you, or see README → "Make yourself admin".',
           actionLabel: 'Back to store',
           onAction: () => context.go('/'),
@@ -65,7 +64,10 @@ class AdminShell extends StatelessWidget {
           ? AppBar(
               backgroundColor: AppColors.ink,
               foregroundColor: Colors.white,
-              title: Text('Admin', style: AppText.display(20, color: Colors.white)),
+              title: Text(
+                'Admin',
+                style: AppText.display(20, color: Colors.white),
+              ),
               actions: const [NotificationBell(size: 36), SizedBox(width: 12)],
             )
           : null,
@@ -86,7 +88,8 @@ class _Sidebar extends StatelessWidget {
 
   final String location;
 
-  bool _isActive(String path) => path == '/admin' ? location == '/admin' : location.startsWith(path);
+  bool _isActive(String path) =>
+      path == '/admin' ? location == '/admin' : location.startsWith(path);
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +114,14 @@ class _Sidebar extends StatelessWidget {
                   const AppLogo(light: true, size: 24),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(color: AppColors.lime, borderRadius: BorderRadius.circular(99)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.lime,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
                     child: Text('ADMIN', style: AppText.label(size: 9)),
                   ),
                 ],
@@ -129,7 +138,12 @@ class _Sidebar extends StatelessWidget {
                   ),
                 ),
               const Spacer(),
-              _SidebarItem(label: 'View store', icon: Icons.storefront_outlined, active: false, onTap: () => go('/')),
+              _SidebarItem(
+                label: 'View store',
+                icon: Icons.storefront_outlined,
+                active: false,
+                onTap: () => go('/'),
+              ),
               const SizedBox(height: 6),
               _SidebarItem(
                 label: 'Sign out',
@@ -144,7 +158,10 @@ class _Sidebar extends StatelessWidget {
                 auth.profile?.email ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppText.body(12, color: Colors.white.withValues(alpha: 0.5)),
+                style: AppText.body(
+                  12,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
               ),
             ],
           ),
@@ -155,7 +172,12 @@ class _Sidebar extends StatelessWidget {
 }
 
 class _SidebarItem extends StatelessWidget {
-  const _SidebarItem({required this.label, required this.icon, required this.active, required this.onTap});
+  const _SidebarItem({
+    required this.label,
+    required this.icon,
+    required this.active,
+    required this.onTap,
+  });
 
   final String label;
   final IconData icon;
@@ -178,7 +200,10 @@ class _SidebarItem extends StatelessWidget {
             children: [
               Icon(icon, size: 20, color: fg),
               const SizedBox(width: 12),
-              Text(label, style: AppText.body(15, weight: FontWeight.w600, color: fg)),
+              Text(
+                label,
+                style: AppText.body(15, weight: FontWeight.w600, color: fg),
+              ),
             ],
           ),
         ),

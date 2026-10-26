@@ -50,7 +50,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       return AuthLayout(
         title: 'Link',
         accent: 'sent.',
-        subtitle: 'If an account exists for ${_email.text.trim()}, a reset link is on its way.',
+        subtitle:
+            'If an account exists for ${_email.text.trim()}, a reset link is on its way.',
         child: InkCard(
           color: AppColors.lime,
           child: Column(
@@ -63,7 +64,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 style: AppText.body(14),
               ),
               const SizedBox(height: 20),
-              AppButton(label: 'Back to sign in', expand: true, onPressed: () => context.go('/login')),
+              AppButton(
+                label: 'Back to sign in',
+                expand: true,
+                onPressed: () => context.go('/login'),
+              ),
               const SizedBox(height: 8),
               AppButton(
                 label: 'Resend link',
@@ -81,7 +86,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return AuthLayout(
       title: 'Forgot',
       accent: 'it?',
-      subtitle: 'It happens to the best of us. Enter your email and we’ll send you a reset link.',
+      subtitle:
+          'It happens to the best of us. Enter your email and we’ll send you a reset link.',
       child: Form(
         key: _formKey,
         child: Column(
@@ -110,7 +116,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Center(
               child: TextButton(
                 onPressed: () => context.go('/login'),
-                child: Text('Back to sign in', style: AppText.body(14, weight: FontWeight.w700)),
+                child: Text(
+                  'Back to sign in',
+                  style: AppText.body(14, weight: FontWeight.w700),
+                ),
               ),
             ),
           ],

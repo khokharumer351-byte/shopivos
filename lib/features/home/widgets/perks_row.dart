@@ -12,18 +12,33 @@ class PerksRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final perks = [
-      (Icons.local_shipping_outlined, 'Free shipping', 'On orders over ${formatPrice(AppConfig.freeShippingThreshold)}'),
-      (Icons.autorenew_rounded, '30-day returns', 'Changed your mind? No drama.'),
+      (
+        Icons.local_shipping_outlined,
+        'Free shipping',
+        'On orders over ${formatPrice(AppConfig.freeShippingThreshold)}',
+      ),
+      (
+        Icons.autorenew_rounded,
+        '30-day returns',
+        'Changed your mind? No drama.',
+      ),
       (Icons.lock_outline_rounded, 'Secure checkout', 'Your data stays yours.'),
-      (Icons.support_agent_rounded, 'Real humans', 'Support that actually replies.'),
+      (
+        Icons.support_agent_rounded,
+        'Real humans',
+        'Support that actually replies.',
+      ),
     ];
 
     return PageContainer(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final columns = constraints.maxWidth >= 1000 ? 4 : (constraints.maxWidth >= 560 ? 2 : 1);
+          final columns = constraints.maxWidth >= 1000
+              ? 4
+              : (constraints.maxWidth >= 560 ? 2 : 1);
           const gap = 16.0;
-          final itemWidth = (constraints.maxWidth - gap * (columns - 1)) / columns;
+          final itemWidth =
+              (constraints.maxWidth - gap * (columns - 1)) / columns;
           return Wrap(
             spacing: gap,
             runSpacing: gap,
@@ -46,7 +61,10 @@ class PerksRow extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.lime,
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppColors.ink, width: 1.5),
+                            border: Border.all(
+                              color: AppColors.ink,
+                              width: 1.5,
+                            ),
                           ),
                           child: Icon(icon, size: 22),
                         ),
@@ -57,7 +75,10 @@ class PerksRow extends StatelessWidget {
                             children: [
                               Text(title, style: AppText.display(17)),
                               const SizedBox(height: 2),
-                              Text(subtitle, style: AppText.body(13, color: AppColors.muted)),
+                              Text(
+                                subtitle,
+                                style: AppText.body(13, color: AppColors.muted),
+                              ),
                             ],
                           ),
                         ),

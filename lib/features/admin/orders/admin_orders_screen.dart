@@ -61,29 +61,45 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _StatusFilter(label: 'All', selected: _status == null, onTap: () {
-                _status = null;
-                _reload();
-              }),
-              for (final s in OrderStatus.all)
-                _StatusFilter(label: capitalize(s), selected: _status == s, onTap: () {
-                  _status = s;
+              _StatusFilter(
+                label: 'All',
+                selected: _status == null,
+                onTap: () {
+                  _status = null;
                   _reload();
-                }),
+                },
+              ),
+              for (final s in OrderStatus.all)
+                _StatusFilter(
+                  label: capitalize(s),
+                  selected: _status == s,
+                  onTap: () {
+                    _status = s;
+                    _reload();
+                  },
+                ),
             ],
           ),
           const SizedBox(height: 20),
           FutureBuilder<List<ShopOrder>>(
             future: _future,
             builder: (context, snapshot) {
-              if (snapshot.hasError) return ErrorView(message: friendlyError(snapshot.error!), onRetry: _reload);
-              if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+              if (snapshot.hasError) {
+                return ErrorView(
+                  message: friendlyError(snapshot.error!),
+                  onRetry: _reload,
+                );
+              }
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const LoadingView();
+              }
               final orders = snapshot.data ?? const <ShopOrder>[];
               if (orders.isEmpty) {
                 return const EmptyState(
                   icon: Icons.receipt_long_outlined,
                   title: 'No orders here',
-                  message: 'Orders will show up as soon as customers check out.',
+                  message:
+                      'Orders will show up as soon as customers check out.',
                 );
               }
               return Column(
@@ -108,7 +124,11 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
 }
 
 class _StatusFilter extends StatelessWidget {
-  const _StatusFilter({required this.label, required this.selected, required this.onTap});
+  const _StatusFilter({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -118,14 +138,22 @@ class _StatusFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected ? AppColors.ink : AppColors.surface,
-      shape: const StadiumBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+      shape: const StadiumBorder(
+        side: BorderSide(color: AppColors.ink, width: 1.5),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          child: Text(label,
-              style: AppText.body(13, weight: FontWeight.w600, color: selected ? Colors.white : AppColors.ink)),
+          child: Text(
+            label,
+            style: AppText.body(
+              13,
+              weight: FontWeight.w600,
+              color: selected ? Colors.white : AppColors.ink,
+            ),
+          ),
         ),
       ),
     );
@@ -133,7 +161,11 @@ class _StatusFilter extends StatelessWidget {
 }
 
 class _AdminOrderRow extends StatelessWidget {
-  const _AdminOrderRow({required this.order, required this.onOpen, required this.onStatus});
+  const _AdminOrderRow({
+    required this.order,
+    required this.onOpen,
+    required this.onStatus,
+  });
 
   final ShopOrder order;
   final VoidCallback onOpen;
@@ -175,7 +207,13 @@ class _AdminOrderRow extends StatelessWidget {
                 ),
               ),
               if (!compact)
-                SizedBox(width: 120, child: Text(formatPrice(order.total), style: AppText.display(17))),
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    formatPrice(order.total),
+                    style: AppText.display(17),
+                  ),
+                ),
               PopupMenuButton<String>(
                 tooltip: 'Change status',
                 onSelected: onStatus,
@@ -188,18 +226,27 @@ class _AdminOrderRow extends StatelessWidget {
                           Container(
                             width: 10,
                             height: 10,
-                            decoration: BoxDecoration(color: StatusChip.colorFor(s), shape: BoxShape.circle),
+                            decoration: BoxDecoration(
+                              color: StatusChip.colorFor(s),
+                              shape: BoxShape.circle,
+                            ),
                           ),
                           const SizedBox(width: 10),
                           Text(capitalize(s)),
-                          if (s == order.status) ...[const SizedBox(width: 10), const Icon(Icons.check_rounded, size: 18)],
+                          if (s == order.status) ...[
+                            const SizedBox(width: 10),
+                            const Icon(Icons.check_rounded, size: 18),
+                          ],
                         ],
                       ),
                     ),
                 ],
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [StatusChip(order.status), const Icon(Icons.expand_more_rounded)],
+                  children: [
+                    StatusChip(order.status),
+                    const Icon(Icons.expand_more_rounded),
+                  ],
                 ),
               ),
             ],
@@ -210,7 +257,6 @@ class _AdminOrderRow extends StatelessWidget {
   }
 }
 
-/// Order detail popup shared by the orders page and the dashboard.
 Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
   return showDialog<void>(
     context: context,
@@ -231,8 +277,16 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text('Order ${orderRef(order.id)}', style: AppText.display(26))),
-                  IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close_rounded)),
+                  Expanded(
+                    child: Text(
+                      'Order ${orderRef(order.id)}',
+                      style: AppText.display(26),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
                 ],
               ),
               const SizedBox(height: 6),
@@ -240,27 +294,48 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
                 children: [
                   StatusChip(order.status),
                   const SizedBox(width: 10),
-                  Text(formatDate(order.createdAt), style: AppText.body(13, color: AppColors.muted)),
+                  Text(
+                    formatDate(order.createdAt),
+                    style: AppText.body(13, color: AppColors.muted),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
               Text('CUSTOMER', style: AppText.label(size: 11)),
               const SizedBox(height: 8),
-              Text(order.fullName, style: AppText.body(15, weight: FontWeight.w700)),
-              if (order.customerEmail != null) Text(order.customerEmail!, style: AppText.body(14)),
+              Text(
+                order.fullName,
+                style: AppText.body(15, weight: FontWeight.w700),
+              ),
+              if (order.customerEmail != null)
+                Text(order.customerEmail!, style: AppText.body(14)),
               Text(order.phone, style: AppText.body(14)),
-              Text(order.shippingAddress, style: AppText.body(14, color: AppColors.muted)),
+              Text(
+                order.shippingAddress,
+                style: AppText.body(14, color: AppColors.muted),
+              ),
               if ((order.notes ?? '').isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Text('Note: ${order.notes}', style: AppText.serif(15, color: AppColors.muted)),
+                Text(
+                  'Note: ${order.notes}',
+                  style: AppText.serif(15, color: AppColors.muted),
+                ),
               ],
               const SizedBox(height: 24),
               Text('ITEMS', style: AppText.label(size: 11)),
               const SizedBox(height: 12),
-              for (final item in order.items) ...[OrderItemRow(item: item), const SizedBox(height: 10)],
+              for (final item in order.items) ...[
+                OrderItemRow(item: item),
+                const SizedBox(height: 10),
+              ],
               const Divider(height: 28),
               _Row('Subtotal', formatPrice(order.subtotal)),
-              _Row('Shipping', order.shippingFee == 0 ? 'Free' : formatPrice(order.shippingFee)),
+              _Row(
+                'Shipping',
+                order.shippingFee == 0
+                    ? 'Free'
+                    : formatPrice(order.shippingFee),
+              ),
               _Row('Payment', order.paymentLabel),
               const SizedBox(height: 6),
               Row(

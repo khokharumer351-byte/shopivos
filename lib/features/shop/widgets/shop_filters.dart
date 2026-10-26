@@ -31,9 +31,17 @@ class ShopFilters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryChips = [
-      _FilterChip(label: 'All', selected: selectedCategoryId == null, onTap: () => onCategory(null)),
+      _FilterChip(
+        label: 'All',
+        selected: selectedCategoryId == null,
+        onTap: () => onCategory(null),
+      ),
       for (final c in categories)
-        _FilterChip(label: c.name, selected: selectedCategoryId == c.id, onTap: () => onCategory(c.id)),
+        _FilterChip(
+          label: c.name,
+          selected: selectedCategoryId == c.id,
+          onTap: () => onCategory(c.id),
+        ),
     ];
 
     final sortMenu = PopupMenuButton<ProductSort>(
@@ -41,7 +49,8 @@ class ShopFilters extends StatelessWidget {
       initialValue: sort,
       onSelected: onSort,
       itemBuilder: (context) => [
-        for (final option in ProductSort.values) PopupMenuItem(value: option, child: Text(option.label)),
+        for (final option in ProductSort.values)
+          PopupMenuItem(value: option, child: Text(option.label)),
       ],
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -75,7 +84,11 @@ class ShopFilters extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (final chip in categoryChips) Padding(padding: const EdgeInsets.only(right: 8), child: chip),
+                for (final chip in categoryChips)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: chip,
+                  ),
               ],
             ),
           ),
@@ -107,7 +120,11 @@ class ShopFilters extends StatelessWidget {
 }
 
 class _FilterChip extends StatelessWidget {
-  const _FilterChip({required this.label, required this.selected, required this.onTap});
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -117,7 +134,9 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected ? AppColors.ink : AppColors.surface,
-      shape: const StadiumBorder(side: BorderSide(color: AppColors.ink, width: 1.5)),
+      shape: const StadiumBorder(
+        side: BorderSide(color: AppColors.ink, width: 1.5),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -125,7 +144,11 @@ class _FilterChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Text(
             label,
-            style: AppText.body(13, weight: FontWeight.w600, color: selected ? Colors.white : AppColors.ink),
+            style: AppText.body(
+              13,
+              weight: FontWeight.w600,
+              color: selected ? Colors.white : AppColors.ink,
+            ),
           ),
         ),
       ),

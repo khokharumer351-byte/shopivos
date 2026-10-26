@@ -18,6 +18,5 @@ abstract final class AppColors {
   static const danger = Color(0xFFE5484D);
   static const warning = Color(0xFFF5A524);
 
-  /// Rotating pastel palette for category tiles, stickers, etc.
   static const playful = [lime, pink, sky, peach, violet];
 }

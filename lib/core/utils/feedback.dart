@@ -21,7 +21,6 @@ void showSnack(
     );
 }
 
-/// Turns Supabase/network exceptions into something a shopper can read.
 String friendlyError(Object error) {
   if (error is AuthException) return error.message;
   if (error is PostgrestException) return error.message;

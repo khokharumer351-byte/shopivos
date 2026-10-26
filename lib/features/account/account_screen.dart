@@ -50,20 +50,34 @@ class AccountScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('✦ YOUR SPACE', style: AppText.label(color: AppColors.muted)),
+              Text(
+                '✦ YOUR SPACE',
+                style: AppText.label(color: AppColors.muted),
+              ),
               const SizedBox(height: 8),
               Text.rich(
-                TextSpan(children: [
-                  TextSpan(text: 'Hey, ', style: AppText.display(compact ? 40 : 60)),
-                  TextSpan(
-                    text: '${name.split(' ').first}.',
-                    style: AppText.serif(compact ? 44 : 64, color: AppColors.violet),
-                  ),
-                ]),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Hey, ',
+                      style: AppText.display(compact ? 40 : 60),
+                    ),
+                    TextSpan(
+                      text: '${name.split(' ').first}.',
+                      style: AppText.serif(
+                        compact ? 44 : 64,
+                        color: AppColors.violet,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 32),
-              if (compact) ...[nav, const SizedBox(height: 24), content]
-              else
+              if (compact) ...[
+                nav,
+                const SizedBox(height: 24),
+                content,
+              ] else
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -115,7 +129,6 @@ class _AccountNav extends StatelessWidget {
     ];
 
     if (compact) {
-      // No sidebar (or website drawer in the app), so sign-out lives here too.
       final signOut = _NavItem(
         label: 'Sign out',
         icon: Icons.logout_rounded,
@@ -146,7 +159,8 @@ class _AccountNav extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final item in items) Padding(padding: const EdgeInsets.only(bottom: 6), child: item),
+          for (final item in items)
+            Padding(padding: const EdgeInsets.only(bottom: 6), child: item),
           const SizedBox(height: 12),
           AppButton(
             label: 'Sign out',
@@ -182,7 +196,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected ? AppColors.ink : (highlight ? AppColors.lime : Colors.transparent);
+    final bg = selected
+        ? AppColors.ink
+        : (highlight ? AppColors.lime : Colors.transparent);
     final fg = selected ? Colors.white : AppColors.ink;
     return Material(
       color: bg,
@@ -197,7 +213,10 @@ class _NavItem extends StatelessWidget {
             children: [
               Icon(icon, size: 20, color: fg),
               const SizedBox(width: 12),
-              Text(label, style: AppText.body(15, weight: FontWeight.w600, color: fg)),
+              Text(
+                label,
+                style: AppText.body(15, weight: FontWeight.w600, color: fg),
+              ),
             ],
           ),
         ),

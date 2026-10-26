@@ -51,12 +51,18 @@ class EmptyState extends StatelessWidget {
                   color: AppColors.lime,
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.ink, width: 1.5),
-                  boxShadow: const [BoxShadow(color: AppColors.ink, offset: Offset(4, 4))],
+                  boxShadow: const [
+                    BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
+                  ],
                 ),
                 child: Icon(icon, size: 40, color: AppColors.ink),
               ),
               const SizedBox(height: 24),
-              Text(title, textAlign: TextAlign.center, style: AppText.display(28)),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: AppText.display(28),
+              ),
               const SizedBox(height: 8),
               Text(
                 message,
@@ -65,7 +71,11 @@ class EmptyState extends StatelessWidget {
               ),
               if (actionLabel != null && onAction != null) ...[
                 const SizedBox(height: 24),
-                AppButton(label: actionLabel!, onPressed: onAction, trailingIcon: Icons.arrow_forward),
+                AppButton(
+                  label: actionLabel!,
+                  onPressed: onAction,
+                  trailingIcon: Icons.arrow_forward,
+                ),
               ],
             ],
           ),

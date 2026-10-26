@@ -8,10 +8,17 @@ class CategoryRepository {
   }
 
   Future<void> create({required String name, String? imageUrl}) async {
-    await supabase.from('categories').insert({'name': name.trim(), 'image_url': _blankToNull(imageUrl)});
+    await supabase.from('categories').insert({
+      'name': name.trim(),
+      'image_url': _blankToNull(imageUrl),
+    });
   }
 
-  Future<void> update(String id, {required String name, String? imageUrl}) async {
+  Future<void> update(
+    String id, {
+    required String name,
+    String? imageUrl,
+  }) async {
     await supabase
         .from('categories')
         .update({'name': name.trim(), 'image_url': _blankToNull(imageUrl)})

@@ -6,18 +6,19 @@ import 'app_text.dart';
 
 abstract final class AppTheme {
   static ThemeData get light {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.violet,
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: AppColors.ink,
-      onPrimary: Colors.white,
-      secondary: AppColors.lime,
-      onSecondary: AppColors.ink,
-      surface: AppColors.surface,
-      onSurface: AppColors.ink,
-      error: AppColors.danger,
-    );
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.violet,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: AppColors.ink,
+          onPrimary: Colors.white,
+          secondary: AppColors.lime,
+          onSecondary: AppColors.ink,
+          surface: AppColors.surface,
+          onSurface: AppColors.ink,
+          error: AppColors.danger,
+        );
 
     return ThemeData(
       useMaterial3: true,
@@ -31,7 +32,10 @@ abstract final class AppTheme {
         filled: true,
         fillColor: AppColors.surface,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         hintStyle: AppText.body(14, color: AppColors.muted),
         border: _border(AppColors.ink),
         enabledBorder: _border(AppColors.ink),
@@ -40,7 +44,11 @@ abstract final class AppTheme {
         focusedErrorBorder: _border(AppColors.danger, width: 2),
         disabledBorder: _border(AppColors.line),
       ),
-      dividerTheme: const DividerThemeData(color: AppColors.line, thickness: 1, space: 1),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.line,
+        thickness: 1,
+        space: 1,
+      ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.ink,
@@ -48,14 +56,19 @@ abstract final class AppTheme {
         actionTextColor: AppColors.lime,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.ink),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: AppColors.ink,
+      ),
       textSelectionTheme: const TextSelectionThemeData(
         cursorColor: AppColors.ink,
         selectionColor: AppColors.lime,
         selectionHandleColor: AppColors.ink,
       ),
       tooltipTheme: TooltipThemeData(
-        decoration: BoxDecoration(color: AppColors.ink, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+          color: AppColors.ink,
+          borderRadius: BorderRadius.circular(8),
+        ),
         textStyle: AppText.body(12, color: Colors.white),
       ),
       popupMenuTheme: PopupMenuThemeData(
@@ -70,7 +83,8 @@ abstract final class AppTheme {
     );
   }
 
-  static OutlineInputBorder _border(Color color, {double width = 1.5}) => OutlineInputBorder(
+  static OutlineInputBorder _border(Color color, {double width = 1.5}) =>
+      OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(color: color, width: width),
       );

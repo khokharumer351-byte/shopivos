@@ -8,9 +8,14 @@ import '../../../shared/widgets/bits.dart';
 import '../../../shared/widgets/marquee.dart';
 import '../../../shared/widgets/page_container.dart';
 
-/// Split-screen layout for all auth pages: bold art panel + form.
 class AuthLayout extends StatelessWidget {
-  const AuthLayout({super.key, required this.title, required this.subtitle, required this.child, this.accent});
+  const AuthLayout({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.child,
+    this.accent,
+  });
 
   final String title;
   final String? accent;
@@ -32,8 +37,15 @@ class AuthLayout extends StatelessWidget {
                 const Spacer(),
                 TextButton.icon(
                   onPressed: () => context.go('/'),
-                  icon: const Icon(Icons.arrow_back_rounded, size: 18, color: AppColors.ink),
-                  label: Text('Back to store', style: AppText.body(14, weight: FontWeight.w600)),
+                  icon: const Icon(
+                    Icons.arrow_back_rounded,
+                    size: 18,
+                    color: AppColors.ink,
+                  ),
+                  label: Text(
+                    'Back to store',
+                    style: AppText.body(14, weight: FontWeight.w600),
+                  ),
                 ),
               ],
             ),
@@ -41,21 +53,35 @@ class AuthLayout extends StatelessWidget {
           Expanded(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 32,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 420),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text.rich(
-                        TextSpan(children: [
-                          TextSpan(text: title, style: AppText.display(44)),
-                          if (accent != null)
-                            TextSpan(text: ' $accent', style: AppText.serif(48, color: AppColors.violet)),
-                        ]),
+                        TextSpan(
+                          children: [
+                            TextSpan(text: title, style: AppText.display(44)),
+                            if (accent != null)
+                              TextSpan(
+                                text: ' $accent',
+                                style: AppText.serif(
+                                  48,
+                                  color: AppColors.violet,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
-                      Text(subtitle, style: AppText.body(15, color: AppColors.muted)),
+                      Text(
+                        subtitle,
+                        style: AppText.body(15, color: AppColors.muted),
+                      ),
                       const SizedBox(height: 32),
                       child,
                     ],
@@ -96,7 +122,10 @@ class _ArtPanel extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: CustomPaint(
-                    painter: StripesPainter(color: Colors.white.withValues(alpha: 0.05), gap: 22),
+                    painter: StripesPainter(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      gap: 22,
+                    ),
                   ),
                 ),
                 Padding(
@@ -107,16 +136,30 @@ class _ArtPanel extends StatelessWidget {
                       const AppLogo(light: true),
                       const Spacer(),
                       Text.rich(
-                        TextSpan(children: [
-                          TextSpan(text: 'Your next\nfavorite ', style: AppText.display(64, color: Colors.white)),
-                          TextSpan(text: 'fit', style: AppText.serif(70, color: AppColors.lime)),
-                          TextSpan(text: '\nis one click\naway.', style: AppText.display(64, color: Colors.white)),
-                        ]),
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Your next\nfavorite ',
+                              style: AppText.display(64, color: Colors.white),
+                            ),
+                            TextSpan(
+                              text: 'fit',
+                              style: AppText.serif(70, color: AppColors.lime),
+                            ),
+                            TextSpan(
+                              text: '\nis one click\naway.',
+                              style: AppText.display(64, color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 24),
                       Text(
                         'Classic pieces. Loud energy. Zero gatekeeping.',
-                        style: AppText.body(16, color: Colors.white.withValues(alpha: 0.7)),
+                        style: AppText.body(
+                          16,
+                          color: Colors.white.withValues(alpha: 0.7),
+                        ),
                       ),
                       const Spacer(),
                     ],
@@ -125,18 +168,32 @@ class _ArtPanel extends StatelessWidget {
                 Positioned(
                   right: 48,
                   top: 120,
-                  child: Sticker(text: 'MEMBERS\nGET 10%\nOFF', size: 140, angle: degrees(14)),
+                  child: Sticker(
+                    text: 'MEMBERS\nGET 10%\nOFF',
+                    size: 140,
+                    angle: degrees(14),
+                  ),
                 ),
                 Positioned(
                   right: 120,
                   bottom: 80,
-                  child: Sticker(text: '♡', size: 80, color: AppColors.pink, angle: degrees(-10)),
+                  child: Sticker(
+                    text: '♡',
+                    size: 80,
+                    color: AppColors.pink,
+                    angle: degrees(-10),
+                  ),
                 ),
               ],
             ),
           ),
           const Marquee(
-            items: ['NEW DROPS WEEKLY', 'FREE SHIPPING RS 14,000+', '30-DAY RETURNS', 'MEMBER PRICES'],
+            items: [
+              'NEW DROPS WEEKLY',
+              'FREE SHIPPING RS 14,000+',
+              '30-DAY RETURNS',
+              'MEMBER PRICES',
+            ],
             background: AppColors.lime,
             foreground: AppColors.ink,
           ),

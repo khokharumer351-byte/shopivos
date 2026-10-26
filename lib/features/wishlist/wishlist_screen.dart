@@ -29,12 +29,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final userId = context.read<AuthProvider>().user?.id;
-    if (_future == null && userId != null) _future = _repo.fetchProducts(userId);
+    if (_future == null && userId != null) {
+      _future = _repo.fetchProducts(userId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Rebuild when hearts are toggled so removed items disappear instantly.
     final wishlist = context.watch<WishlistProvider>();
     final compact = MediaQuery.sizeOf(context).width < Breakpoints.tablet;
 
@@ -46,10 +47,21 @@ class _WishlistScreenState extends State<WishlistScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text.rich(
-                TextSpan(children: [
-                  TextSpan(text: 'Saved ', style: AppText.display(compact ? 40 : 60)),
-                  TextSpan(text: 'for later.', style: AppText.serif(compact ? 44 : 64, color: AppColors.violet)),
-                ]),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Saved ',
+                      style: AppText.display(compact ? 40 : 60),
+                    ),
+                    TextSpan(
+                      text: 'for later.',
+                      style: AppText.serif(
+                        compact ? 44 : 64,
+                        color: AppColors.violet,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 32),
               FutureBuilder<List<Product>>(
@@ -58,7 +70,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   if (snapshot.hasError) {
                     return ErrorView(message: friendlyError(snapshot.error!));
                   }
-                  if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const LoadingView();
+                  }
                   final products = (snapshot.data ?? const <Product>[])
                       .where((p) => wishlist.contains(p.id))
                       .toList();
@@ -66,7 +80,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     return EmptyState(
                       icon: Icons.favorite_border_rounded,
                       title: 'No favorites yet',
-                      message: 'Tap the heart on anything you love and it will live here.',
+                      message:
+                          'Tap the heart on anything you love and it will live here.',
                       actionLabel: 'Browse the shop',
                       onAction: () => context.go('/shop'),
                     );

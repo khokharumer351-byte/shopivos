@@ -11,8 +11,6 @@ import 'core/utils/platform.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Clean URLs (/shop instead of /#/shop) — also needed for the
-  // password-reset link to land on /reset-password. No-op in the app.
   usePathUrlStrategy();
 
   if (isMobileApp) {
@@ -24,8 +22,6 @@ Future<void> main() async {
     return;
   }
 
-  // On the app this also handles the io.shopivo.app://login-callback deep link
-  // from sign-up and password-reset emails.
   await Supabase.initialize(
     url: Env.supabaseUrl,
     publishableKey: Env.supabaseAnonKey,

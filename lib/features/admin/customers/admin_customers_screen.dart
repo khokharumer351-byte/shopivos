@@ -42,7 +42,9 @@ class _AdminCustomersScreenState extends State<AdminCustomersScreen> {
     final makeAdmin = !profile.isAdmin;
     final ok = await confirmDialog(
       context,
-      title: makeAdmin ? 'Make ${profile.displayName} an admin?' : 'Remove admin access?',
+      title: makeAdmin
+          ? 'Make ${profile.displayName} an admin?'
+          : 'Remove admin access?',
       message: makeAdmin
           ? 'Admins can manage products, orders and other customers.'
           : '${profile.displayName} will lose access to the admin panel.',
@@ -66,7 +68,8 @@ class _AdminCustomersScreenState extends State<AdminCustomersScreen> {
 
     return AdminPage(
       title: 'Customers',
-      subtitle: 'Everyone who has signed up, and who can access the admin panel.',
+      subtitle:
+          'Everyone who has signed up, and who can access the admin panel.',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -81,14 +84,23 @@ class _AdminCustomersScreenState extends State<AdminCustomersScreen> {
           FutureBuilder<List<Profile>>(
             future: _future,
             builder: (context, snapshot) {
-              if (snapshot.hasError) return ErrorView(message: friendlyError(snapshot.error!), onRetry: _reload);
-              if (snapshot.connectionState != ConnectionState.done) return const LoadingView();
+              if (snapshot.hasError) {
+                return ErrorView(
+                  message: friendlyError(snapshot.error!),
+                  onRetry: _reload,
+                );
+              }
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const LoadingView();
+              }
               final term = _search.text.trim().toLowerCase();
               final people = (snapshot.data ?? const <Profile>[])
-                  .where((p) =>
-                      term.isEmpty ||
-                      p.displayName.toLowerCase().contains(term) ||
-                      (p.email ?? '').toLowerCase().contains(term))
+                  .where(
+                    (p) =>
+                        term.isEmpty ||
+                        p.displayName.toLowerCase().contains(term) ||
+                        (p.email ?? '').toLowerCase().contains(term),
+                  )
                   .toList();
               if (people.isEmpty) {
                 return const EmptyState(
@@ -119,7 +131,11 @@ class _AdminCustomersScreenState extends State<AdminCustomersScreen> {
 }
 
 class _CustomerRow extends StatelessWidget {
-  const _CustomerRow({required this.profile, required this.isMe, required this.onToggleRole});
+  const _CustomerRow({
+    required this.profile,
+    required this.isMe,
+    required this.onToggleRole,
+  });
 
   final Profile profile;
   final bool isMe;
@@ -156,18 +172,28 @@ class _CustomerRow extends StatelessWidget {
                   spacing: 8,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Text(profile.displayName, style: AppText.body(15, weight: FontWeight.w700)),
-                    if (profile.isAdmin) const Pill('Admin', color: AppColors.lime),
+                    Text(
+                      profile.displayName,
+                      style: AppText.body(15, weight: FontWeight.w700),
+                    ),
+                    if (profile.isAdmin)
+                      const Pill('Admin', color: AppColors.lime),
                     if (isMe) const Pill('You', color: AppColors.paperDark),
                   ],
                 ),
                 Text(
-                  [profile.email ?? '', if ((profile.phone ?? '').isNotEmpty) profile.phone!].join(' · '),
+                  [
+                    profile.email ?? '',
+                    if ((profile.phone ?? '').isNotEmpty) profile.phone!,
+                  ].join(' · '),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppText.body(13, color: AppColors.muted),
                 ),
-                Text('Joined ${formatDate(profile.createdAt)}', style: AppText.body(12, color: AppColors.muted)),
+                Text(
+                  'Joined ${formatDate(profile.createdAt)}',
+                  style: AppText.body(12, color: AppColors.muted),
+                ),
               ],
             ),
           ),
@@ -176,8 +202,11 @@ class _CustomerRow extends StatelessWidget {
               onPressed: onToggleRole,
               child: Text(
                 profile.isAdmin ? 'Remove admin' : 'Make admin',
-                style: AppText.body(13,
-                    weight: FontWeight.w700, color: profile.isAdmin ? AppColors.danger : AppColors.violet),
+                style: AppText.body(
+                  13,
+                  weight: FontWeight.w700,
+                  color: profile.isAdmin ? AppColors.danger : AppColors.violet,
+                ),
               ),
             ),
         ],

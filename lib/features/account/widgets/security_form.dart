@@ -56,8 +56,10 @@ class _SecurityFormState extends State<SecurityForm> {
           children: [
             Text('Change password', style: AppText.display(24)),
             const SizedBox(height: 6),
-            Text('Pick something long and unique. Your future self says thanks.',
-                style: AppText.body(14, color: AppColors.muted)),
+            Text(
+              'Pick something long and unique. Your future self says thanks.',
+              style: AppText.body(14, color: AppColors.muted),
+            ),
             const SizedBox(height: 24),
             LabeledField(
               label: 'New password',
@@ -72,14 +74,19 @@ class _SecurityFormState extends State<SecurityForm> {
               label: 'Confirm new password',
               child: PasswordField(
                 controller: _confirm,
-                validator: (v) => v != _password.text ? 'Passwords don’t match' : null,
+                validator: (v) =>
+                    v != _password.text ? 'Passwords don’t match' : null,
                 onSubmitted: (_) => _submit(),
               ),
             ),
             const SizedBox(height: 24),
             Align(
               alignment: Alignment.centerLeft,
-              child: AppButton(label: 'Update password', loading: _saving, onPressed: _submit),
+              child: AppButton(
+                label: 'Update password',
+                loading: _saving,
+                onPressed: _submit,
+              ),
             ),
           ],
         ),
