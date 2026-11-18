@@ -11,35 +11,38 @@ class Pill extends StatelessWidget {
   const Pill(
     this.text, {
     super.key,
-    this.color = AppColors.lime,
-    this.textColor = AppColors.ink,
+    this.color,
+    this.textColor,
     this.icon,
   });
 
   final String text;
-  final Color color;
-  final Color textColor;
+  final Color? color;
+  final Color? textColor;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final bg = color ?? scheme.secondary;
+    final fg = textColor ?? scheme.onSecondary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color,
+        color: bg,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.ink, width: 1.5),
+        border: Border.all(color: scheme.outline),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 13, color: textColor),
+            Icon(icon, size: 13, color: fg),
             const SizedBox(width: 4),
           ],
           Text(
             text.toUpperCase(),
-            style: AppText.label(size: 10.5, color: textColor),
+            style: AppText.label(size: 10.5, color: fg),
           ),
         ],
       ),

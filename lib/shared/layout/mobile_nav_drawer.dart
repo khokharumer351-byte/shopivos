@@ -43,14 +43,20 @@ class MobileNavDrawer extends StatelessWidget {
               _DrawerLink('My orders', () => go('/account/orders')),
               _DrawerLink('Notifications', () => go('/notifications')),
               if (auth.isAdmin) _DrawerLink('Admin panel', () => go('/admin')),
+              const SizedBox(height: 24),
+              const Divider(),
               const SizedBox(height: 16),
               AppButton(
-                label: 'Sign out',
+                label: 'Log out',
+                icon: Icons.logout_rounded,
                 variant: AppButtonVariant.outline,
                 expand: true,
                 onPressed: () async {
                   Scaffold.of(context).closeDrawer();
                   await context.read<AuthProvider>().signOut();
+                  if (context.mounted) {
+                    context.go('/login');
+                  }
                 },
               ),
             ] else ...[

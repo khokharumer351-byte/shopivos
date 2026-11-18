@@ -7,12 +7,18 @@ import '../../core/config/app_config.dart';
 import '../supabase_client.dart';
 
 class StorageRepository {
+  StorageRepository();
+
+  static const _allowedExtensions = {'jpg', 'jpeg', 'png', 'webp', 'gif'};
   final _random = Random();
 
   Future<String> uploadProductImage(Uint8List bytes, String fileName) async {
     final ext = fileName.contains('.')
         ? fileName.split('.').last.toLowerCase()
         : 'jpg';
+    if (!_allowedExtensions.contains(ext)) {
+      throw ArgumentError('Unsupported image type: $ext');
+    }
     final path =
         'products/${DateTime.now().millisecondsSinceEpoch}-${_random.nextInt(0x7fffffff).toRadixString(16)}.$ext';
     final bucket = supabase.storage.from(AppConfig.productImagesBucket);

@@ -10,6 +10,7 @@ class Profile {
     this.city,
     this.postalCode,
     this.country,
+    this.avatarUrl,
     this.role = 'customer',
     this.createdAt,
   });
@@ -22,6 +23,7 @@ class Profile {
   final String? city;
   final String? postalCode;
   final String? country;
+  final String? avatarUrl;
   final String role;
   final DateTime? createdAt;
 
@@ -52,6 +54,7 @@ class Profile {
     city: map['city'] as String?,
     postalCode: map['postal_code'] as String?,
     country: map['country'] as String?,
+    avatarUrl: (map['avatar_url'] ?? map['avatarUrl']) as String?,
     role: (map['role'] ?? 'customer') as String,
     createdAt: toDate(map['created_at']),
   );
@@ -63,6 +66,7 @@ class Profile {
     String? city,
     String? postalCode,
     String? country,
+    String? avatarUrl,
     String? role,
   }) => Profile(
     id: id,
@@ -73,6 +77,7 @@ class Profile {
     city: city ?? this.city,
     postalCode: postalCode ?? this.postalCode,
     country: country ?? this.country,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
     role: role ?? this.role,
     createdAt: createdAt,
   );
@@ -84,5 +89,6 @@ class Profile {
     'city': city,
     'postal_code': postalCode,
     'country': country,
+    if (avatarUrl != null && avatarUrl!.isNotEmpty) 'avatar_url': avatarUrl,
   };
 }

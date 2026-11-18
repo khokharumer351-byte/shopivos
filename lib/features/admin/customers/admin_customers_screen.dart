@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../data/models/profile.dart';
@@ -146,9 +145,9 @@ class _CustomerRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AdminColors.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.ink, width: 1.5),
+        border: Border.all(color: AdminColors.line),
       ),
       child: Row(
         children: [
@@ -157,11 +156,11 @@ class _CustomerRow extends StatelessWidget {
             height: 44,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: profile.isAdmin ? AppColors.lime : AppColors.sky,
+              color: profile.isAdmin ? AdminColors.lime : AdminColors.sky,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.ink, width: 1.5),
+              border: Border.all(color: AdminColors.line),
             ),
-            child: Text(profile.initials, style: AppText.label(size: 13)),
+            child: Text(profile.initials, style: AdminText.label(size: 13)),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -174,11 +173,11 @@ class _CustomerRow extends StatelessWidget {
                   children: [
                     Text(
                       profile.displayName,
-                      style: AppText.body(15, weight: FontWeight.w700),
+                      style: AdminText.body(15, weight: FontWeight.w700),
                     ),
                     if (profile.isAdmin)
-                      const Pill('Admin', color: AppColors.lime),
-                    if (isMe) const Pill('You', color: AppColors.paperDark),
+                      const Pill('Admin', color: AdminColors.lime),
+                    if (isMe) const Pill('You', color: AdminColors.paperDark),
                   ],
                 ),
                 Text(
@@ -188,11 +187,11 @@ class _CustomerRow extends StatelessWidget {
                   ].join(' · '),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppText.body(13, color: AppColors.muted),
+                  style: AdminText.body(13, color: AdminColors.muted),
                 ),
                 Text(
                   'Joined ${formatDate(profile.createdAt)}',
-                  style: AppText.body(12, color: AppColors.muted),
+                  style: AdminText.body(12, color: AdminColors.muted),
                 ),
               ],
             ),
@@ -202,10 +201,10 @@ class _CustomerRow extends StatelessWidget {
               onPressed: onToggleRole,
               child: Text(
                 profile.isAdmin ? 'Remove admin' : 'Make admin',
-                style: AppText.body(
+                style: AdminText.body(
                   13,
                   weight: FontWeight.w700,
-                  color: profile.isAdmin ? AppColors.danger : AppColors.violet,
+                  color: profile.isAdmin ? AdminColors.danger : AdminColors.violet,
                 ),
               ),
             ),

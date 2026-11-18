@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/validators.dart';
 import '../../../data/models/product_category.dart';
@@ -95,7 +94,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
               for (var i = 0; i < categories.length; i++)
                 _CategoryCard(
                   category: categories[i],
-                  color: AppColors.playful[i % AppColors.playful.length],
+                  color: AdminColors.playful[i % AdminColors.playful.length],
                   onEdit: () => _openEditor(categories[i]),
                   onDelete: () => _delete(categories[i]),
                 ),
@@ -122,13 +121,13 @@ class _CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = color == AppColors.violet ? Colors.white : AppColors.ink;
+    final fg = color == AdminColors.violet ? Colors.white : AdminColors.ink;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.ink, width: 1.5),
+        border: Border.all(color: AdminColors.line),
       ),
       child: Row(
         children: [
@@ -137,13 +136,13 @@ class _CategoryCard extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.ink, width: 1.5),
+              border: Border.all(color: AdminColors.line),
             ),
             child: ClipOval(child: NetImage(category.imageUrl)),
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Text(category.name, style: AppText.display(20, color: fg)),
+            child: Text(category.name, style: AdminText.display(20, color: fg)),
           ),
           IconButton(
             tooltip: 'Edit',
@@ -212,15 +211,15 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AdminColors.surface,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(22),
-        side: const BorderSide(color: AppColors.ink, width: 1.5),
+        side: const BorderSide(color: AdminColors.line),
       ),
       title: Text(
         widget.category == null ? 'New category' : 'Edit category',
-        style: AppText.display(24),
+        style: AdminText.display(24),
       ),
       content: SizedBox(
         width: 420,

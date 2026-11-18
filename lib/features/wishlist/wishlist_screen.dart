@@ -12,7 +12,6 @@ import '../../shared/widgets/page_container.dart';
 import '../../shared/widgets/product_grid.dart';
 import '../../shared/widgets/state_views.dart';
 import '../../state/auth_provider.dart';
-import '../../state/wishlist_provider.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -36,7 +35,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final wishlist = context.watch<WishlistProvider>();
     final compact = MediaQuery.sizeOf(context).width < Breakpoints.tablet;
 
     return StorePage(
@@ -73,9 +71,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return const LoadingView();
                   }
-                  final products = (snapshot.data ?? const <Product>[])
-                      .where((p) => wishlist.contains(p.id))
-                      .toList();
+                  final products = snapshot.data ?? const <Product>[];
                   if (products.isEmpty) {
                     return EmptyState(
                       icon: Icons.favorite_border_rounded,

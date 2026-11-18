@@ -33,7 +33,53 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final compact = MediaQuery.sizeOf(context).width < Breakpoints.tablet;
+    if (!auth.isLoggedIn) {
+      return StorePage(
+        showFooter: false,
+        children: [
+          PageContainer(
+            verticalPadding: compact ? 48 : 80,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Sign in to view your account',
+                      style: AppText.display(compact ? 28 : 36),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Track orders, manage your profile and more.',
+                      style: AppText.body(15, color: AppColors.muted),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    AppButton(
+                      label: 'Sign in',
+                      size: AppButtonSize.large,
+                      onPressed: () => context.go('/login'),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () => context.go('/signup'),
+                      child: Text(
+                        'Create account',
+                        style: AppText.body(15, weight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
     final name = auth.profile?.displayName ?? auth.user?.email ?? '';
+    final email = auth.user?.email ?? '';
 
     final content = switch (section) {
       AccountSection.profile => const ProfileForm(),
@@ -46,33 +92,56 @@ class AccountScreen extends StatelessWidget {
     return StorePage(
       children: [
         PageContainer(
-          verticalPadding: 40,
+          verticalPadding: compact ? 24 : 40,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                '✦ YOUR SPACE',
-                style: AppText.label(color: AppColors.muted),
-              ),
-              const SizedBox(height: 8),
-              Text.rich(
-                TextSpan(
+              Container(
+                padding: EdgeInsets.all(compact ? 20 : 28),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppColors.ink, width: 1.5),
+                ),
+                child: Row(
                   children: [
-                    TextSpan(
-                      text: 'Hey, ',
-                      style: AppText.display(compact ? 40 : 60),
+                    CircleAvatar(
+                      radius: compact ? 28 : 34,
+                      backgroundColor: AppColors.ink,
+                      child: Text(
+                        _initials(name),
+                        style: AppText.display(
+                          compact ? 18 : 22,
+                          color: Colors.white,
+                          weight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                    TextSpan(
-                      text: '${name.split(' ').first}.',
-                      style: AppText.serif(
-                        compact ? 44 : 64,
-                        color: AppColors.violet,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name.isEmpty ? 'Your account' : name,
+                            style: AppText.display(compact ? 22 : 28),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            email,
+                            style: AppText.body(14, color: AppColors.muted),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               if (compact) ...[
                 nav,
                 const SizedBox(height: 24),
@@ -81,7 +150,7 @@ class AccountScreen extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: 260, child: nav),
+                    SizedBox(width: 280, child: nav),
                     const SizedBox(width: 36),
                     Expanded(child: content),
                   ],
@@ -91,6 +160,16 @@ class AccountScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _initials(String name) {
+    if (name.isEmpty) return 'S';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length == 1) {
+      return parts.first.substring(0, 1).toUpperCase();
+    }
+    return (parts.first.substring(0, 1) + parts.last.substring(0, 1))
+        .toUpperCase();
   }
 }
 
@@ -130,17 +209,18 @@ class _AccountNav extends StatelessWidget {
 
     if (compact) {
       final signOut = _NavItem(
-        label: 'Sign out',
+        label: 'Log out',
         icon: Icons.logout_rounded,
         selected: false,
         onTap: () async {
           await context.read<AuthProvider>().signOut();
-          if (context.mounted) context.go('/');
+          if (context.mounted) context.go('/login');
         },
       );
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             for (final item in [...items, signOut])
               Padding(padding: const EdgeInsets.only(right: 8), child: item),
@@ -150,10 +230,10 @@ class _AccountNav extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.ink, width: 1.5),
       ),
       child: Column(
@@ -162,15 +242,17 @@ class _AccountNav extends StatelessWidget {
           for (final item in items)
             Padding(padding: const EdgeInsets.only(bottom: 6), child: item),
           const SizedBox(height: 12),
+          const Divider(height: 1),
+          const SizedBox(height: 12),
           AppButton(
-            label: 'Sign out',
+            label: 'Log out',
             icon: Icons.logout_rounded,
             variant: AppButtonVariant.outline,
             size: AppButtonSize.small,
             expand: true,
             onPressed: () async {
               await context.read<AuthProvider>().signOut();
-              if (context.mounted) context.go('/');
+              if (context.mounted) context.go('/login');
             },
           ),
         ],
@@ -202,21 +284,23 @@ class _NavItem extends StatelessWidget {
     final fg = selected ? Colors.white : AppColors.ink;
     return Material(
       color: bg,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 20, color: fg),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Text(
                 label,
-                style: AppText.body(15, weight: FontWeight.w600, color: fg),
+                style: AppText.body(14, weight: FontWeight.w600, color: fg),
               ),
+              const SizedBox(width: 6),
+              Icon(Icons.chevron_right_rounded, size: 16, color: fg),
             ],
           ),
         ),

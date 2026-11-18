@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -52,31 +53,83 @@ int _tabIndexFor(String path) {
   return -1;
 }
 
-class AppShell extends StatelessWidget {
+class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.location, required this.child});
 
   final String location;
   final Widget child;
 
   @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  bool _navVisible = true;
+
+  void _handleScroll(UserScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) return;
+    if (notification.direction == ScrollDirection.reverse && _navVisible) {
+      setState(() => _navVisible = false);
+    } else if (notification.direction == ScrollDirection.forward &&
+        !_navVisible) {
+      setState(() => _navVisible = true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final path = Uri.parse(location).path;
+    final path = Uri.parse(widget.location).path;
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+    final navSpace = 74.0 + bottomInset;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: AppColors.surface,
+        systemNavigationBarColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: AppColors.paper,
-        body: Column(
+        body: Stack(
+          fit: StackFit.expand,
           children: [
-            _TopBar(showBack: !_tabRoots.contains(path)),
-            Expanded(child: child),
+            Column(
+              children: [
+                _TopBar(showBack: !_tabRoots.contains(path)),
+                Expanded(
+                  child: NotificationListener<UserScrollNotification>(
+                    onNotification: (n) {
+                      _handleScroll(n);
+                      return false;
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: navSpace),
+                      child: widget.child,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: AnimatedSlide(
+                duration: const Duration(milliseconds: 240),
+                curve: Curves.easeOutCubic,
+                offset: _navVisible ? Offset.zero : const Offset(0, 1.15),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 180),
+                  opacity: _navVisible ? 1 : 0,
+                  child: IgnorePointer(
+                    ignoring: !_navVisible,
+                    child: _TabBar(currentIndex: _tabIndexFor(path)),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-        bottomNavigationBar: _TabBar(currentIndex: _tabIndexFor(path)),
       ),
     );
   }
@@ -149,35 +202,50 @@ class _TabBar extends StatelessWidget {
     final wishCount = context.select<WishlistProvider, int>((w) => w.count);
     final loggedIn = context.select<AuthProvider, bool>((a) => a.isLoggedIn);
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.ink, width: 1.5)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 66,
-          child: Row(
-            children: [
-              for (var i = 0; i < _tabs.length; i++)
-                Expanded(
-                  child: _TabItem(
-                    tab: _tabs[i],
-                    label: i == 4 && !loggedIn ? 'Sign in' : _tabs[i].label,
-                    active: i == currentIndex,
-                    badge: switch (i) {
-                      2 => wishCount,
-                      3 => cartCount,
-                      _ => 0,
-                    },
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      context.go(_tabs[i].path);
-                    },
-                  ),
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+      child: Center(
+        heightFactor: 1,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Container(
+            height: 58,
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            decoration: BoxDecoration(
+              color: AppColors.surface.withValues(alpha: 0.98),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: AppColors.ink, width: 1.5),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  blurRadius: 20,
+                  offset: Offset(0, 8),
                 ),
-            ],
+                BoxShadow(color: AppColors.ink, offset: Offset(0, 2)),
+              ],
+            ),
+            child: Row(
+              children: [
+                for (var i = 0; i < _tabs.length; i++)
+                  Expanded(
+                    child: _TabItem(
+                      tab: _tabs[i],
+                      label: i == 4 && !loggedIn ? 'Sign in' : _tabs[i].label,
+                      active: i == currentIndex,
+                      badge: switch (i) {
+                        2 => wishCount,
+                        3 => cartCount,
+                        _ => 0,
+                      },
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        context.go(_tabs[i].path);
+                      },
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -202,77 +270,67 @@ class _TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOut,
-      width: 54,
-      height: 32,
-      decoration: BoxDecoration(
-        color: active ? AppColors.lime : Colors.transparent,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: active ? AppColors.ink : Colors.transparent,
-          width: 1.5,
-        ),
-        boxShadow: active
-            ? const [BoxShadow(color: AppColors.ink, offset: Offset(2, 2))]
-            : null,
-      ),
-      child: Icon(
-        active ? tab.activeIcon : tab.icon,
-        size: 22,
-        color: AppColors.ink,
-      ),
-    );
-
     return Semantics(
       button: true,
       selected: active,
       label: label,
-      child: InkResponse(
+      child: InkWell(
         onTap: onTap,
-        radius: 36,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
+        borderRadius: BorderRadius.circular(999),
+        child: Center(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 240),
+            curve: Curves.easeOutCubic,
+            width: active ? 46 : 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: active ? AppColors.lime : Colors.transparent,
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: active ? AppColors.ink : Colors.transparent,
+                width: 1.5,
+              ),
+              boxShadow: active
+                  ? const [BoxShadow(color: AppColors.ink, offset: Offset(1.5, 1.5))]
+                  : null,
+            ),
+            child: Stack(
               clipBehavior: Clip.none,
+              alignment: Alignment.center,
               children: [
-                icon,
+                AnimatedScale(
+                  scale: active ? 1.0 : 0.94,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOutCubic,
+                  child: Icon(
+                    active ? tab.activeIcon : tab.icon,
+                    size: 22,
+                    color: active ? AppColors.ink : AppColors.muted,
+                  ),
+                ),
                 if (badge > 0)
                   Positioned(
                     right: 2,
-                    top: -6,
+                    top: 2,
                     child: Container(
-                      constraints: const BoxConstraints(minWidth: 18),
-                      height: 18,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      constraints: const BoxConstraints(minWidth: 15),
+                      height: 15,
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: AppColors.violet,
-                        borderRadius: BorderRadius.circular(9),
-                        border: Border.all(color: AppColors.ink, width: 1.5),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.ink, width: 1.2),
                       ),
                       child: Text(
-                        badge > 99 ? '99+' : '$badge',
-                        style: AppText.label(size: 9, color: Colors.white),
+                        badge > 99 ? '9+' : '$badge',
+                        style: AppText.label(size: 8, color: Colors.white),
                       ),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppText.body(
-                11,
-                weight: active ? FontWeight.w700 : FontWeight.w500,
-                height: 1.2,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

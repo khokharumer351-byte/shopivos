@@ -1,65 +1,52 @@
-
-
-
-
-
-
-
-
-
 update public.products set images = array[
-  'https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_t.png'
+  'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Y2K Baby Tee';
 
 update public.products set images = array[
-  'https://upload.wikimedia.org/wikipedia/commons/c/cd/Cargo_pants_001.jpg'
+  'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Wide Leg Cargo Pants';
 
 update public.products set images = array[
-  'https://cdn.stocksnap.io/img-thumbs/960w/BCRQWOTPWM.jpg'
+  'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Baggy Denim';
 
 update public.products set images = array[
-  'https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/1.webp',
-  'https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/2.webp'
+  'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Retro Court Sneakers';
 
 update public.products set images = array[
-  'https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/1.webp',
-  'https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/2.webp'
+  'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Chunky Runner';
 
 update public.products set images = array[
-  'https://upload.wikimedia.org/wikipedia/commons/3/36/Cebu_Tote_Bag.jpg'
+  'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Canvas Tote Bag';
 
 update public.products set images = array[
-  'https://cdn.stocksnap.io/img-thumbs/960w/B3FWPBJURM.jpg'
+  'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Silver Chain Necklace';
 
 update public.products set images = array[
-  'https://upload.wikimedia.org/wikipedia/commons/3/32/Polo_Bucket_Hat.jpg'
+  'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Washed Bucket Hat';
 
 update public.products set images = array[
-  'https://fakestoreapi.com/img/51Y5NI-I5jL._AC_UX679_t.png'
+  'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Cloud Puffer Jacket';
 
 update public.products set images = array[
-  'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png'
+  'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80'
 ] where name = 'Vintage Wash Tee';
 
-
-update public.categories set image_url = 'https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_t.png'
+update public.categories set image_url = 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80'
   where name = 'Tops';
-update public.categories set image_url = 'https://cdn.stocksnap.io/img-thumbs/960w/BCRQWOTPWM.jpg'
+update public.categories set image_url = 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=80'
   where name = 'Bottoms';
-update public.categories set image_url = 'https://fakestoreapi.com/img/51Y5NI-I5jL._AC_UX679_t.png'
+update public.categories set image_url = 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80'
   where name = 'Outerwear';
-update public.categories set image_url = 'https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/1.webp'
+update public.categories set image_url = 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80'
   where name = 'Sneakers';
-update public.categories set image_url = 'https://cdn.stocksnap.io/img-thumbs/960w/B3FWPBJURM.jpg'
+update public.categories set image_url = 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80'
   where name = 'Accessories';
-
 
 select name, images from public.products order by name;

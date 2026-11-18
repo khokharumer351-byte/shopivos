@@ -19,6 +19,7 @@ create table if not exists public.profiles (
   city        text,
   postal_code text,
   country     text,
+  avatar_url  text,
   role        text not null default 'customer' check (role in ('customer', 'admin')),
   created_at  timestamptz not null default now()
 );
@@ -74,6 +75,7 @@ create table if not exists public.orders (
   country        text,
   notes          text,
   payment_method text not null default 'cod',
+  stock_restored boolean not null default false,
   created_at     timestamptz not null default now()
 );
 
@@ -117,6 +119,15 @@ as $$
   select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
 $$;
 
+create or replace function public.format_pkr(p_amount numeric)
+returns text
+language sql
+immutable
+set search_path = public
+as $$
+  select 'Rs ' || to_char(coalesce(p_amount, 0) * 280, 'FM999,999,999,990.00');
+$$;
+
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -148,6 +159,9 @@ as $$
 begin
   if new.role is distinct from old.role and auth.uid() is not null and not public.is_admin() then
     raise exception 'Only admins can change roles';
+  end if;
+  if new.role is distinct from old.role and old.id = auth.uid() and new.role <> 'admin' then
+    raise exception 'You cannot remove your own admin access';
   end if;
   return new;
 end;
@@ -203,6 +217,28 @@ create trigger reviews_refresh_rating
   after insert or update or delete on public.reviews
   for each row execute function public.refresh_product_rating();
 
+create or replace function public.set_review_author_name()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if new.user_id is not null then
+    select coalesce(nullif(trim(full_name), ''), split_part(email, '@', 1), 'Shopper')
+    into new.author_name
+    from public.profiles
+    where id = new.user_id;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists reviews_set_author on public.reviews;
+create trigger reviews_set_author
+  before insert or update of user_id, author_name on public.reviews
+  for each row execute function public.set_review_author_name();
+
 
 create or replace function public.restock_cancelled_order()
 returns trigger
@@ -211,7 +247,9 @@ security definer
 set search_path = public
 as $$
 begin
-  if new.status = 'cancelled' and old.status <> 'cancelled' then
+  if new.status = 'cancelled'
+     and old.status <> 'cancelled'
+     and not coalesce(old.stock_restored, false) then
     update public.products p
     set stock = p.stock + x.qty
     from (
@@ -221,6 +259,7 @@ begin
       group by product_id
     ) x
     where p.id = x.product_id;
+    new.stock_restored := true;
   end if;
   return new;
 end;
@@ -228,7 +267,7 @@ $$;
 
 drop trigger if exists orders_restock on public.orders;
 create trigger orders_restock
-  after update of status on public.orders
+  before update of status on public.orders
   for each row execute function public.restock_cancelled_order();
 
 
@@ -358,6 +397,10 @@ drop policy if exists "profiles: update own or admin" on public.profiles;
 create policy "profiles: update own or admin" on public.profiles
   for update using (id = auth.uid() or public.is_admin());
 
+drop policy if exists "profiles: insert own" on public.profiles;
+create policy "profiles: insert own" on public.profiles
+  for insert to authenticated with check (id = auth.uid() and role = 'customer');
+
 
 drop policy if exists "categories: public read" on public.categories;
 create policy "categories: public read" on public.categories
@@ -442,3 +485,31 @@ create policy "product-images: admin update" on storage.objects
 drop policy if exists "product-images: admin delete" on storage.objects;
 create policy "product-images: admin delete" on storage.objects
   for delete to authenticated using (bucket_id = 'product-images' and public.is_admin());
+
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+drop policy if exists "avatars: public read" on storage.objects;
+create policy "avatars: public read" on storage.objects
+  for select using (bucket_id = 'avatars');
+
+drop policy if exists "avatars: owner insert" on storage.objects;
+create policy "avatars: owner insert" on storage.objects
+  for insert to authenticated with check (
+    bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "avatars: owner update" on storage.objects;
+create policy "avatars: owner update" on storage.objects
+  for update to authenticated using (
+    bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  ) with check (
+    bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "avatars: owner delete" on storage.objects;
+create policy "avatars: owner delete" on storage.objects
+  for delete to authenticated using (
+    bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  );

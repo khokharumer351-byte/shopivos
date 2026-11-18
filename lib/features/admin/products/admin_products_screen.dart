@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/config/app_config.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../data/models/product.dart';
@@ -150,16 +149,16 @@ class _ProductRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 700;
     final stockColor = product.stock == 0
-        ? AppColors.danger
+        ? AdminColors.danger
         : (product.stock <= AppConfig.lowStockThreshold
-              ? AppColors.warning
-              : AppColors.success);
+              ? AdminColors.warning
+              : AdminColors.success);
 
     return Material(
-      color: AppColors.surface,
+      color: AdminColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: AppColors.ink, width: 1.5),
+        side: const BorderSide(color: AdminColors.line),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -185,7 +184,7 @@ class _ProductRow extends StatelessWidget {
                       product.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.body(15, weight: FontWeight.w700),
+                      style: AdminText.body(15, weight: FontWeight.w700),
                     ),
                     const SizedBox(height: 4),
                     Wrap(
@@ -195,16 +194,16 @@ class _ProductRow extends StatelessWidget {
                       children: [
                         Text(
                           product.categoryName ?? 'Uncategorized',
-                          style: AppText.body(13, color: AppColors.muted),
+                          style: AdminText.body(13, color: AdminColors.muted),
                         ),
                         if (!product.isActive)
-                          const Pill('Hidden', color: AppColors.paperDark),
+                          const Pill('Hidden', color: AdminColors.paperDark),
                         if (product.isFeatured)
                           const Pill('Featured', icon: Icons.bolt_rounded),
                         if (product.onSale)
                           Pill(
                             '-${product.discountPercent}%',
-                            color: AppColors.pink,
+                            color: AdminColors.pink,
                           ),
                       ],
                     ),
@@ -212,7 +211,7 @@ class _ProductRow extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         '${formatPrice(product.price)} · ${product.stock} in stock',
-                        style: AppText.body(
+                        style: AdminText.body(
                           13,
                           weight: FontWeight.w600,
                           color: stockColor,
@@ -227,7 +226,7 @@ class _ProductRow extends StatelessWidget {
                   width: 110,
                   child: Text(
                     formatPrice(product.price),
-                    style: AppText.display(16),
+                    style: AdminText.display(16),
                   ),
                 ),
                 SizedBox(
@@ -245,7 +244,7 @@ class _ProductRow extends StatelessWidget {
                       const SizedBox(width: 6),
                       Text(
                         '${product.stock} in stock',
-                        style: AppText.body(13, weight: FontWeight.w600),
+                        style: AdminText.body(13, weight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -261,7 +260,7 @@ class _ProductRow extends StatelessWidget {
                 onPressed: onDelete,
                 icon: const Icon(
                   Icons.delete_outline_rounded,
-                  color: AppColors.danger,
+                  color: AdminColors.danger,
                 ),
               ),
             ],

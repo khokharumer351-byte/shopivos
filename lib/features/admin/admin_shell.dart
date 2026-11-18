@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text.dart';
+import 'widgets/admin_theme.dart';
 import '../../shared/widgets/app_logo.dart';
 import '../../shared/widgets/notification_bell.dart';
 import '../../shared/widgets/page_container.dart';
@@ -35,6 +34,10 @@ class AdminShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Theme(data: AdminTheme.light, child: _build(context));
+  }
+
+  Widget _build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
     if (auth.profile == null && auth.profileLoading) {
@@ -58,15 +61,16 @@ class AdminShell extends StatelessWidget {
     final sidebar = _Sidebar(location: location);
 
     return Scaffold(
-      backgroundColor: AppColors.paper,
+      backgroundColor: AdminColors.paper,
       drawer: compact ? Drawer(width: 270, child: sidebar) : null,
       appBar: compact
           ? AppBar(
-              backgroundColor: AppColors.ink,
-              foregroundColor: Colors.white,
+              backgroundColor: AdminColors.surface,
+              foregroundColor: AdminColors.ink,
+              surfaceTintColor: Colors.transparent,
               title: Text(
                 'Admin',
-                style: AppText.display(20, color: Colors.white),
+                style: AdminText.display(20, color: AdminColors.ink),
               ),
               actions: const [NotificationBell(size: 36), SizedBox(width: 12)],
             )
@@ -102,7 +106,10 @@ class _Sidebar extends StatelessWidget {
     }
 
     return Container(
-      color: AppColors.ink,
+      color: AdminColors.surface,
+      decoration: const BoxDecoration(
+        border: Border(right: BorderSide(color: AdminColors.line)),
+      ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -111,7 +118,7 @@ class _Sidebar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const AppLogo(light: true, size: 24),
+                  const AppLogo(light: false, size: 24),
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -119,10 +126,13 @@ class _Sidebar extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.lime,
+                      color: AdminColors.lime,
                       borderRadius: BorderRadius.circular(99),
                     ),
-                    child: Text('ADMIN', style: AppText.label(size: 9)),
+                    child: Text(
+                      'ADMIN',
+                      style: AdminText.label(size: 9, color: AdminColors.violet),
+                    ),
                   ),
                 ],
               ),
@@ -158,10 +168,7 @@ class _Sidebar extends StatelessWidget {
                 auth.profile?.email ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppText.body(
-                  12,
-                  color: Colors.white.withValues(alpha: 0.5),
-                ),
+                style: AdminText.body(12, color: AdminColors.muted),
               ),
             ],
           ),
@@ -186,14 +193,14 @@ class _SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = active ? AppColors.ink : Colors.white;
+    final fg = active ? AdminColors.violet : AdminColors.muted;
     return Material(
-      color: active ? AppColors.lime : Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      color: active ? AdminColors.lime : Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        hoverColor: Colors.white.withValues(alpha: 0.08),
+        hoverColor: AdminColors.paperDark,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
@@ -202,7 +209,7 @@ class _SidebarItem extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 label,
-                style: AppText.body(15, weight: FontWeight.w600, color: fg),
+                style: AdminText.body(15, weight: FontWeight.w600, color: fg),
               ),
             ],
           ),

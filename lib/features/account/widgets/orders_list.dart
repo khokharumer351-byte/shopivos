@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/formatters.dart';
@@ -69,23 +68,25 @@ class _OrdersListState extends State<OrdersList> {
 }
 
 class OrderTile extends StatelessWidget {
-  const OrderTile({super.key, required this.order, this.onTap});
+  const OrderTile({super.key, required this.order, this.onTap, this.status});
 
   final ShopOrder order;
   final VoidCallback? onTap;
+  final Widget? status;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final thumbs = order.items
         .where((i) => i.productImage != null)
         .take(3)
         .toList();
 
     return Material(
-      color: AppColors.surface,
+      color: scheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(color: AppColors.ink, width: 1.5),
+        side: BorderSide(color: scheme.outline),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -105,9 +106,9 @@ class OrderTile extends StatelessWidget {
                         width: 56,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: AppColors.paperDark,
+                          color: scheme.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.ink, width: 1.5),
+                          border: Border.all(color: scheme.outline),
                         ),
                         child: const Icon(Icons.inventory_2_outlined),
                       ),
@@ -119,10 +120,7 @@ class OrderTile extends StatelessWidget {
                           height: 64,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColors.ink,
-                              width: 1.5,
-                            ),
+                            border: Border.all(color: scheme.outline),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -143,7 +141,7 @@ class OrderTile extends StatelessWidget {
                     Text(
                       '${formatDate(order.createdAt)} · ${order.itemCount} item${order.itemCount == 1 ? '' : 's'}'
                       '${order.customerEmail != null && onTap != null ? ' · ${order.customerEmail}' : ''}',
-                      style: AppText.body(13, color: AppColors.muted),
+                      style: AppText.body(13, color: scheme.onSurface.withValues(alpha: 0.65)),
                     ),
                   ],
                 ),
@@ -153,7 +151,7 @@ class OrderTile extends StatelessWidget {
                 children: [
                   Text(formatPrice(order.total), style: AppText.display(18)),
                   const SizedBox(height: 6),
-                  StatusChip(order.status),
+                  status ?? StatusChip(order.status),
                 ],
               ),
               const SizedBox(width: 8),

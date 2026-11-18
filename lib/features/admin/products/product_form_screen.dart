@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/validators.dart';
 import '../../../data/models/product.dart';
@@ -226,7 +225,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Details', style: AppText.display(22)),
+          Text('Details', style: AdminText.display(22)),
           const SizedBox(height: 20),
           LabeledField(
             label: 'Name',
@@ -285,7 +284,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Pricing & stock', style: AppText.display(22)),
+          Text('Pricing & stock', style: AdminText.display(22)),
           const SizedBox(height: 20),
           FieldRow(
             children: [
@@ -332,7 +331,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             onChanged: (v) => setState(() => _active = v),
             title: Text(
               'Visible in store',
-              style: AppText.body(15, weight: FontWeight.w600),
+              style: AdminText.body(15, weight: FontWeight.w600),
             ),
             subtitle: const Text('Hidden products are only visible to admins.'),
           ),
@@ -342,7 +341,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             onChanged: (v) => setState(() => _featured = v),
             title: Text(
               'Featured',
-              style: AppText.body(15, weight: FontWeight.w600),
+              style: AdminText.body(15, weight: FontWeight.w600),
             ),
             subtitle: const Text('Shows on the homepage “hot list”.'),
           ),
@@ -357,7 +356,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         children: [
           Row(
             children: [
-              Expanded(child: Text('Images', style: AppText.display(22))),
+              Expanded(child: Text('Images', style: AdminText.display(22))),
               AppButton(
                 label: 'Upload',
                 icon: Icons.upload_rounded,
@@ -370,7 +369,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           const SizedBox(height: 6),
           Text(
             'The first image is the cover. Drag to reorder.',
-            style: AppText.body(13, color: AppColors.muted),
+            style: AdminText.body(13, color: AdminColors.muted),
           ),
           const SizedBox(height: 16),
           if (_images.isEmpty)
@@ -378,13 +377,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               height: 120,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppColors.paper,
+                color: AdminColors.paper,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.line, width: 1.5),
+                border: Border.all(color: AdminColors.line, width: 1.5),
               ),
               child: Text(
                 'No images yet',
-                style: AppText.body(14, color: AppColors.muted),
+                style: AdminText.body(14, color: AdminColors.muted),
               ),
             )
           else
@@ -492,7 +491,7 @@ class _ImageThumb extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: isCover ? AppColors.violet : AppColors.ink,
+                  color: isCover ? AdminColors.violet : AdminColors.line,
                   width: isCover ? 3 : 1.5,
                 ),
               ),
@@ -509,19 +508,19 @@ class _ImageThumb extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.lime,
+                  color: AdminColors.lime,
                   borderRadius: BorderRadius.circular(99),
                 ),
-                child: Text('COVER', style: AppText.label(size: 9)),
+                child: Text('COVER', style: AdminText.label(size: 9)),
               ),
             ),
           Positioned(
             right: 6,
             top: 6,
             child: Material(
-              color: AppColors.surface,
+              color: AdminColors.surface,
               shape: const CircleBorder(
-                side: BorderSide(color: AppColors.ink, width: 1.5),
+                side: BorderSide(color: AdminColors.line),
               ),
               child: InkWell(
                 customBorder: const CircleBorder(),

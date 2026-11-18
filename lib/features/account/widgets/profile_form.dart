@@ -1,11 +1,17 @@
+import 'dart:io' show File;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../data/models/profile.dart';
+import '../../../data/supabase_client.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/form_fields.dart';
 import '../../../shared/widgets/page_container.dart';
@@ -30,15 +36,61 @@ class _ProfileFormState extends State<ProfileForm> {
 
   String? _loadedFor;
   bool _saving = false;
+  bool _uploadingAvatar = false;
+  XFile? _pickedAvatar;
 
-  void _fill(Profile profile) {
-    _loadedFor = profile.id;
-    _name.text = profile.fullName ?? '';
-    _phone.text = profile.phone ?? '';
-    _address.text = profile.address ?? '';
-    _city.text = profile.city ?? '';
-    _postal.text = profile.postalCode ?? '';
-    _country.text = profile.country ?? '';
+  Future<void> _pickAvatar(Profile profile) async {
+    try {
+      final picker = ImagePicker();
+      final file = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        imageQuality: 85,
+      );
+      if (file == null || !mounted) return;
+      setState(() => _pickedAvatar = file);
+      setState(() => _uploadingAvatar = true);
+      final bytes = await file.readAsBytes();
+      final ext = file.name.contains('.') ? file.name.split('.').last : 'jpg';
+      final path =
+          '${profile.id}/avatar_${DateTime.now().millisecondsSinceEpoch}.$ext';
+      try {
+        await supabase.storage.from('avatars').uploadBinary(
+              path,
+              bytes,
+              fileOptions: const FileOptions(upsert: true),
+            );
+        final url = supabase.storage.from('avatars').getPublicUrl(path);
+        try {
+          await supabase
+              .from('profiles')
+              .update({'avatar_url': url}).eq('id', profile.id);
+          if (!mounted) return;
+          await context.read<AuthProvider>().refreshProfile();
+          if (!mounted) return;
+          showSnack(context, 'Profile photo updated');
+        } catch (_) {
+          if (mounted) {
+            showSnack(
+              context,
+              'Photo selected. Upload saved, but avatar_url is not enabled in profile yet.',
+              error: true,
+            );
+          }
+        }
+      } catch (_) {
+        if (mounted) {
+          showSnack(
+            context,
+            'Photo selected (preview only). Cloud upload/storage is not configured yet.',
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) showSnack(context, friendlyError(e), error: true);
+    } finally {
+      if (mounted) setState(() => _uploadingAvatar = false);
+    }
   }
 
   @override
@@ -74,17 +126,35 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final profile = auth.profile;
+    var profile = auth.profile;
+    if (profile == null && auth.profileLoading) {
+      return const LoadingView();
+    }
     if (profile == null) {
-      return auth.profileLoading
-          ? const LoadingView()
-          : const ErrorView(
-              message:
-                  'We could not load your profile. Refresh the page to try again.',
-            );
+      final user = auth.user;
+      if (user == null) {
+        return ErrorView(
+          message: 'Please sign in to view your profile.',
+          onRetry: () => context.read<AuthProvider>().refreshProfile(),
+        );
+      }
+      profile = Profile(
+        id: user.id,
+        email: user.email,
+        fullName: user.userMetadata?['full_name'] as String?,
+      );
     }
 
-    if (_loadedFor != profile.id) _fill(profile);
+    final profileKey = '${profile.id}:${auth.profile != null}';
+    if (_loadedFor != profileKey) {
+      _loadedFor = profileKey;
+      _name.text = profile.fullName ?? '';
+      _phone.text = profile.phone ?? '';
+      _address.text = profile.address ?? '';
+      _city.text = profile.city ?? '';
+      _postal.text = profile.postalCode ?? '';
+      _country.text = profile.country ?? '';
+    }
 
     return InkCard(
       padding: const EdgeInsets.all(28),
@@ -93,20 +163,80 @@ class _ProfileFormState extends State<ProfileForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text('My Profile', style: AppText.display(24)),
+            const SizedBox(height: 6),
+            Text(
+              'Your account information and details',
+              style: AppText.body(14, color: AppColors.muted),
+            ),
+            const SizedBox(height: 20),
             Row(
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.violet,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.ink, width: 1.5),
-                  ),
-                  child: Text(
-                    profile.initials,
-                    style: AppText.display(22, color: Colors.white),
+                GestureDetector(
+                  onTap: _uploadingAvatar ? null : () => _pickAvatar(profile!),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: 76,
+                        height: 76,
+                        decoration: BoxDecoration(
+                          color: AppColors.violet,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.ink, width: 1.5),
+                          image: _pickedAvatar != null && !kIsWeb
+                              ? DecorationImage(
+                                  image: FileImage(File(_pickedAvatar!.path)),
+                                  fit: BoxFit.cover,
+                                )
+                              : (profile.avatarUrl != null &&
+                                      profile.avatarUrl!.isNotEmpty
+                                  ? DecorationImage(
+                                      image: NetworkImage(profile.avatarUrl!),
+                                      fit: BoxFit.cover,
+                                      onError: (_, _) {},
+                                    )
+                                  : null),
+                        ),
+                        alignment: Alignment.center,
+                        child: (_pickedAvatar == null &&
+                                (profile.avatarUrl == null ||
+                                    profile.avatarUrl!.isEmpty))
+                            ? Text(
+                                profile.initials,
+                                style:
+                                    AppText.display(24, color: Colors.white),
+                              )
+                            : null,
+                      ),
+                      Positioned(
+                        right: -2,
+                        bottom: -2,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: AppColors.lime,
+                            shape: BoxShape.circle,
+                            border:
+                                Border.all(color: AppColors.ink, width: 1.5),
+                          ),
+                          child: _uploadingAvatar
+                              ? const Padding(
+                                  padding: EdgeInsets.all(6),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.ink,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 14,
+                                  color: AppColors.ink,
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -188,7 +318,7 @@ class _ProfileFormState extends State<ProfileForm> {
               child: AppButton(
                 label: 'Save changes',
                 loading: _saving,
-                onPressed: () => _save(profile),
+                onPressed: () => _save(profile!),
               ),
             ),
           ],

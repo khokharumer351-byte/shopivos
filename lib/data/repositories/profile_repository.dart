@@ -12,10 +12,10 @@ class ProfileRepository {
   }
 
   Future<Profile> update(Profile profile) async {
+    final payload = {'id': profile.id, ...profile.toUpdateMap()};
     final row = await supabase
         .from('profiles')
-        .update(profile.toUpdateMap())
-        .eq('id', profile.id)
+        .upsert(payload)
         .select()
         .single();
     return Profile.fromMap(row);

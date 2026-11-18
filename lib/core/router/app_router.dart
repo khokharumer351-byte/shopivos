@@ -19,6 +19,7 @@ import '../../features/cart/cart_screen.dart';
 import '../../features/checkout/checkout_screen.dart';
 import '../../features/checkout/order_success_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/misc/mobile_splash_screen.dart';
 import '../../features/misc/not_found_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
 import '../../features/product/product_detail_screen.dart';
@@ -26,8 +27,9 @@ import '../../features/shop/shop_screen.dart';
 import '../../features/wishlist/wishlist_screen.dart';
 import '../../shared/layout/store_shell.dart';
 import '../../state/auth_provider.dart';
+import '../utils/platform.dart';
 
-const _authPages = {'/login', '/signup', '/forgot-password'};
+const _authPages = {'/login', '/signup', '/forgot-password', '/splash'};
 
 bool _requiresLogin(String path) =>
     path == '/checkout' ||
@@ -37,12 +39,38 @@ bool _requiresLogin(String path) =>
     path.startsWith('/order-success') ||
     path.startsWith('/admin');
 
-Page<void> _page(GoRouterState state, Widget child) =>
-    NoTransitionPage<void>(key: state.pageKey, child: child);
+Page<void> _page(GoRouterState state, Widget child) {
+  if (!isMobileApp) {
+    return NoTransitionPage<void>(key: state.pageKey, child: child);
+  }
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 280),
+    reverseTransitionDuration: const Duration(milliseconds: 220),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      );
+      return FadeTransition(
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.03, 0),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
+}
 
 GoRouter createRouter(AuthProvider auth) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: isMobileApp ? '/splash' : '/',
     refreshListenable: auth,
     redirect: (context, state) {
       final path = state.matchedLocation;
@@ -51,7 +79,7 @@ GoRouter createRouter(AuthProvider auth) {
         return '/reset-password';
       }
 
-      if (auth.isLoggedIn && _authPages.contains(path)) {
+      if (auth.isLoggedIn && _authPages.contains(path) && path != '/splash') {
         final from = state.uri.queryParameters['from'];
         return (from != null && from.startsWith('/') && !from.startsWith('//'))
             ? from
@@ -64,10 +92,24 @@ GoRouter createRouter(AuthProvider auth) {
           queryParameters: {'from': state.uri.toString()},
         ).toString();
       }
+
+      if (!auth.isLoggedIn && path.startsWith('/account')) {
+        return '/login';
+      }
+
+      if (path.startsWith('/admin')) {
+        if (auth.profileLoading) return null;
+        if (!auth.isAdmin) return '/';
+      }
       return null;
     },
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
+      GoRoute(
+        path: '/splash',
+        pageBuilder: (context, state) =>
+            _page(state, const MobileSplashScreen()),
+      ),
       ShellRoute(
         builder: (context, state, child) =>
             StoreShell(location: state.uri.toString(), child: child),

@@ -17,6 +17,7 @@ abstract final class AppTheme {
           onSecondary: AppColors.ink,
           surface: AppColors.surface,
           onSurface: AppColors.ink,
+          outline: AppColors.ink,
           error: AppColors.danger,
         );
 
@@ -24,6 +25,15 @@ abstract final class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.paper,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+        },
+      ),
       textTheme: GoogleFonts.interTextTheme().apply(
         bodyColor: AppColors.ink,
         displayColor: AppColors.ink,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../data/repositories/notification_repository.dart';
 import '../../../shared/widgets/app_button.dart';
@@ -99,7 +98,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('QUICK START', style: AppText.label(size: 11)),
+          Text('QUICK START', style: AdminText.label(size: 11)),
           const SizedBox(height: 10),
           Wrap(
             spacing: 8,
@@ -108,8 +107,8 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
               for (final (title, body, link) in _presets)
                 ActionChip(
                   label: Text(title),
-                  backgroundColor: AppColors.surface,
-                  side: const BorderSide(color: AppColors.ink, width: 1.5),
+                  backgroundColor: AdminColors.surface,
+                  side: const BorderSide(color: AdminColors.line),
                   shape: const StadiumBorder(),
                   onPressed: () => setState(() {
                     _title.text = title;
@@ -219,17 +218,14 @@ class _Preview extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('PREVIEW', style: AppText.label(size: 11)),
+        Text('PREVIEW', style: AdminText.label(size: 11)),
         const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: AdminColors.surface,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppColors.ink, width: 1.5),
-            boxShadow: const [
-              BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
-            ],
+            border: Border.all(color: AdminColors.line),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,12 +235,12 @@ class _Preview extends StatelessWidget {
                 height: 38,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColors.ink,
+                  color: AdminColors.lime,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   's.',
-                  style: AppText.display(18, color: AppColors.lime),
+                  style: AdminText.display(18, color: AdminColors.violet),
                 ),
               ),
               const SizedBox(width: 12),
@@ -256,25 +252,25 @@ class _Preview extends StatelessWidget {
                       children: [
                         Text(
                           'SHOPIVO',
-                          style: AppText.label(
+                          style: AdminText.label(
                             size: 10,
-                            color: AppColors.muted,
+                            color: AdminColors.muted,
                           ),
                         ),
                         const Spacer(),
                         Text(
                           'now',
-                          style: AppText.body(11, color: AppColors.muted),
+                          style: AdminText.body(11, color: AdminColors.muted),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
                       title,
-                      style: AppText.body(14, weight: FontWeight.w700),
+                      style: AdminText.body(14, weight: FontWeight.w700),
                     ),
                     const SizedBox(height: 2),
-                    Text(body, style: AppText.body(13, color: AppColors.muted)),
+                    Text(body, style: AdminText.body(13, color: AdminColors.muted)),
                   ],
                 ),
               ),

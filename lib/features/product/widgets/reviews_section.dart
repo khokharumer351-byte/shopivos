@@ -12,6 +12,7 @@ import '../../../data/repositories/review_repository.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/bits.dart';
 import '../../../shared/widgets/page_container.dart';
+import '../../../shared/widgets/state_views.dart';
 import '../../../state/auth_provider.dart';
 
 class ReviewsSection extends StatefulWidget {
@@ -137,6 +138,12 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           return const Padding(
             padding: EdgeInsets.all(24),
             child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(24),
+            child: ErrorView(message: friendlyError(snapshot.error!)),
           );
         }
         final reviews = snapshot.data ?? const <Review>[];

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/config/app_config.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../data/models/order.dart';
 import '../../../data/models/product.dart';
@@ -103,7 +102,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     label: 'Revenue',
                     value: formatPrice(revenue),
                     icon: Icons.trending_up_rounded,
-                    color: AppColors.lime,
+                    color: AdminColors.lime,
                   ),
                   StatCard(
                     label: 'Orders',
@@ -114,19 +113,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     label: 'Pending',
                     value: '$pending',
                     icon: Icons.hourglass_top_rounded,
-                    color: AppColors.peach,
+                    color: AdminColors.peach,
                   ),
                   StatCard(
                     label: 'Products',
                     value: '${data.products.length}',
                     icon: Icons.checkroom_outlined,
-                    color: AppColors.sky,
+                    color: AdminColors.sky,
                   ),
                   StatCard(
                     label: 'Customers',
                     value: '${data.customers.length}',
                     icon: Icons.people_outline_rounded,
-                    color: AppColors.violet,
+                    color: AdminColors.violet,
                   ),
                 ],
               ),
@@ -145,7 +144,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             padding: const EdgeInsets.all(24),
                             child: Text(
                               'No orders yet.',
-                              style: AppText.body(14, color: AppColors.muted),
+                              style: AdminText.body(14, color: AdminColors.muted),
                             ),
                           )
                         : Column(
@@ -155,6 +154,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: OrderTile(
                                     order: order,
+                                    status: AdminStatusChip(order.status),
                                     onTap: () =>
                                         showAdminOrderDialog(context, order),
                                   ),
@@ -173,7 +173,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             padding: const EdgeInsets.all(24),
                             child: Text(
                               'All stocked up ✦',
-                              style: AppText.body(14, color: AppColors.muted),
+                              style: AdminText.body(14, color: AdminColors.muted),
                             ),
                           )
                         : Column(
@@ -201,12 +201,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                     p.stock == 0
                                         ? 'Sold out'
                                         : '${p.stock} left',
-                                    style: AppText.body(
+                                    style: AdminText.body(
                                       13,
                                       weight: FontWeight.w700,
                                       color: p.stock == 0
-                                          ? AppColors.danger
-                                          : AppColors.warning,
+                                          ? AdminColors.danger
+                                          : AdminColors.warning,
                                     ),
                                   ),
                                 ),
@@ -255,7 +255,7 @@ class _Panel extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(title, style: AppText.display(22))),
+              Expanded(child: Text(title, style: AdminText.display(22))),
               ?action,
             ],
           ),

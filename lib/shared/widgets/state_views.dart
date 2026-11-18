@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import 'app_button.dart';
 
@@ -36,6 +35,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 16),
       child: Center(
@@ -48,26 +48,23 @@ class EmptyState extends StatelessWidget {
                 width: 88,
                 height: 88,
                 decoration: BoxDecoration(
-                  color: AppColors.lime,
+                  color: scheme.secondary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.ink, width: 1.5),
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
-                  ],
+                  border: Border.all(color: scheme.outline),
                 ),
-                child: Icon(icon, size: 40, color: AppColors.ink),
+                child: Icon(icon, size: 40, color: scheme.onSecondary),
               ),
               const SizedBox(height: 24),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: AppText.display(28),
+                style: AppText.display(28, color: scheme.onSurface),
               ),
               const SizedBox(height: 8),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: AppText.body(15, color: AppColors.muted),
+                style: AppText.body(15, color: scheme.onSurface.withValues(alpha: 0.65)),
               ),
               if (actionLabel != null && onAction != null) ...[
                 const SizedBox(height: 24),

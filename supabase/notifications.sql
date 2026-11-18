@@ -87,7 +87,7 @@ begin
       values (
         new.user_id,
         'Order confirmed ✦',
-        'We got your order ' || public.order_ref(new.id) || ' (' || '$' || to_char(new.total, 'FM999,999,990.00') || '). We''ll let you know when it moves.',
+        'We got your order ' || public.order_ref(new.id) || ' (' || public.format_pkr(new.total) || '). We''ll let you know when it moves.',
         '/account/orders/' || new.id,
         'order'
       );
@@ -95,7 +95,7 @@ begin
 
     perform public.notify_admins(
       'New order ' || public.order_ref(new.id),
-      new.full_name || ' just spent ' || '$' || to_char(new.total, 'FM999,999,990.00') || '.',
+      new.full_name || ' just spent ' || public.format_pkr(new.total) || '.',
       '/admin/orders'
     );
   end if;

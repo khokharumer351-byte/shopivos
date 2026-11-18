@@ -63,14 +63,15 @@ class InkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       padding: padding,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: const Color(0xFF0E0E10), width: 1.5),
+        border: Border.all(color: scheme.outline),
         boxShadow: shadow
-            ? const [BoxShadow(color: Color(0xFF0E0E10), offset: Offset(5, 5))]
+            ? [BoxShadow(color: scheme.outline, offset: const Offset(5, 5))]
             : null,
       ),
       child: child,

@@ -16,13 +16,15 @@ A modern-classic, Gen-Z flavoured e-commerce store built with **Flutter + Supaba
 1. Create a project at [supabase.com](https://supabase.com).
 2. Go to **SQL Editor → New query**, paste all of [`supabase/schema.sql`](supabase/schema.sql) and click **Run**.
 3. Run [`supabase/notifications.sql`](supabase/notifications.sql) the same way (after `schema.sql`). It adds the notifications table, triggers and realtime.
-4. (Optional, for demo data) Run [`supabase/seed.sql`](supabase/seed.sql) the same way.
-5. Go to **Authentication → URL Configuration** and set:
-   - **Site URL:** `http://localhost:5000`
-   - **Redirect URLs:** add both `http://localhost:5000/**` (website) and `io.shopivo.app://login-callback` (mobile app)
+4. **For an existing project**, also run [`supabase/backend_completion.sql`](supabase/backend_completion.sql). It is idempotent and adds avatar support, profile backfill, RLS insert policy, safe restock, PKR notification formatting, and verified product/category images. A fresh project gets all of this from `schema.sql` already.
+5. (Optional, for demo data) Run [`supabase/seed.sql`](supabase/seed.sql) the same way.
+6. Go to **Authentication → URL Configuration** and set:
+   - **Site URL:** `https://shopivos.vercel.app` (production) or `http://localhost:5000` (local)
+   - **Redirect URLs:** add `https://shopivos.vercel.app/**`, `https://shopivos.vercel.app/reset-password`, `http://localhost:5000/**`, `http://localhost:5000/reset-password`, and `io.shopivo.app://login-callback` (mobile app)
 
    This lets the password-reset and confirmation emails send people back to the website or open the app.
-6. *(Optional, for faster testing)* **Authentication → Providers → Email** → turn off **Confirm email**, so new accounts can sign in right away.
+7. **Authentication → SMTP Settings**: configure a custom SMTP provider (for example Resend: `smtp.resend.com`, port `587`, TLS, a verified sender domain). Supabase's default email quota is very low and often lands in spam. Also verify the sender domain/DKIM.
+8. *(Optional, for faster testing)* **Authentication → Providers → Email** → turn off **Confirm email**, so new accounts can sign in right away.
 
 ## 2. Add your keys
 
@@ -119,8 +121,10 @@ lib/
     ├── admin/                    # Shell + dashboard, products, categories, orders, customers, notify
     └── misc/                     # 404, setup-required screen
 supabase/
-├── schema.sql                    # Tables, RLS policies, triggers, RPCs, storage bucket
+├── schema.sql                    # Tables, RLS policies, triggers, RPCs, storage buckets
 ├── notifications.sql             # Notifications table, triggers, broadcast RPC, realtime
+├── backend_completion.sql        # Idempotent upgrade for existing projects
+├── product_images.sql            # Verified product/category image URLs
 └── seed.sql                      # Optional demo categories + products
 ```
 

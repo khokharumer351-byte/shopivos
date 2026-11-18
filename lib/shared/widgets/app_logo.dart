@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 
 class AppLogo extends StatelessWidget {
@@ -18,6 +17,7 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final logo = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -26,7 +26,7 @@ class AppLogo extends StatelessWidget {
           'shopivo',
           style: AppText.display(
             size,
-            color: light ? Colors.white : AppColors.ink,
+            color: light ? Colors.white : scheme.onSurface,
           ),
         ),
         Container(
@@ -34,10 +34,10 @@ class AppLogo extends StatelessWidget {
           height: size * 0.32,
           margin: EdgeInsets.only(left: 2, bottom: size * 0.12),
           decoration: BoxDecoration(
-            color: AppColors.lime,
+            color: scheme.secondary,
             shape: BoxShape.circle,
             border: Border.all(
-              color: light ? Colors.white : AppColors.ink,
+              color: light ? Colors.white : scheme.onSurface,
               width: 1.5,
             ),
           ),

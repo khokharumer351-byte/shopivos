@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import '../widgets/admin_theme.dart';
 import '../../../core/utils/feedback.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../data/models/order.dart';
 import '../../../data/repositories/order_repository.dart';
-import '../../../shared/widgets/bits.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../account/order_detail_screen.dart';
 import '../widgets/admin_page.dart';
@@ -137,9 +135,9 @@ class _StatusFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? AppColors.ink : AppColors.surface,
+      color: selected ? AdminColors.lime : AdminColors.surface,
       shape: const StadiumBorder(
-        side: BorderSide(color: AppColors.ink, width: 1.5),
+        side: BorderSide(color: AdminColors.line),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -148,10 +146,10 @@ class _StatusFilter extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Text(
             label,
-            style: AppText.body(
+            style: AdminText.body(
               13,
               weight: FontWeight.w600,
-              color: selected ? Colors.white : AppColors.ink,
+              color: selected ? AdminColors.violet : AdminColors.ink,
             ),
           ),
         ),
@@ -175,10 +173,10 @@ class _AdminOrderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 700;
     return Material(
-      color: AppColors.surface,
+      color: AdminColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: AppColors.ink, width: 1.5),
+        side: const BorderSide(color: AdminColors.line),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -191,17 +189,17 @@ class _AdminOrderRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(orderRef(order.id), style: AppText.display(17)),
+                    Text(orderRef(order.id), style: AdminText.display(17)),
                     const SizedBox(height: 4),
                     Text(
                       '${order.fullName}${order.customerEmail != null ? ' · ${order.customerEmail}' : ''}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.body(13),
+                      style: AdminText.body(13),
                     ),
                     Text(
                       '${formatDate(order.createdAt)} · ${order.itemCount} item${order.itemCount == 1 ? '' : 's'}',
-                      style: AppText.body(12, color: AppColors.muted),
+                      style: AdminText.body(12, color: AdminColors.muted),
                     ),
                   ],
                 ),
@@ -211,7 +209,7 @@ class _AdminOrderRow extends StatelessWidget {
                   width: 120,
                   child: Text(
                     formatPrice(order.total),
-                    style: AppText.display(17),
+                    style: AdminText.display(17),
                   ),
                 ),
               PopupMenuButton<String>(
@@ -227,7 +225,7 @@ class _AdminOrderRow extends StatelessWidget {
                             width: 10,
                             height: 10,
                             decoration: BoxDecoration(
-                              color: StatusChip.colorFor(s),
+                              color: AdminStatusChip.colorFor(s),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -244,7 +242,7 @@ class _AdminOrderRow extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    StatusChip(order.status),
+                    AdminStatusChip(order.status),
                     const Icon(Icons.expand_more_rounded),
                   ],
                 ),
@@ -261,11 +259,11 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
   return showDialog<void>(
     context: context,
     builder: (context) => Dialog(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AdminColors.surface,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(22),
-        side: const BorderSide(color: AppColors.ink, width: 1.5),
+        side: const BorderSide(color: AdminColors.line),
       ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560, maxHeight: 720),
@@ -280,7 +278,7 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
                   Expanded(
                     child: Text(
                       'Order ${orderRef(order.id)}',
-                      style: AppText.display(26),
+                      style: AdminText.display(26),
                     ),
                   ),
                   IconButton(
@@ -292,37 +290,37 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
               const SizedBox(height: 6),
               Row(
                 children: [
-                  StatusChip(order.status),
+                  AdminStatusChip(order.status),
                   const SizedBox(width: 10),
                   Text(
                     formatDate(order.createdAt),
-                    style: AppText.body(13, color: AppColors.muted),
+                    style: AdminText.body(13, color: AdminColors.muted),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              Text('CUSTOMER', style: AppText.label(size: 11)),
+              Text('CUSTOMER', style: AdminText.label(size: 11)),
               const SizedBox(height: 8),
               Text(
                 order.fullName,
-                style: AppText.body(15, weight: FontWeight.w700),
+                style: AdminText.body(15, weight: FontWeight.w700),
               ),
               if (order.customerEmail != null)
-                Text(order.customerEmail!, style: AppText.body(14)),
-              Text(order.phone, style: AppText.body(14)),
+                Text(order.customerEmail!, style: AdminText.body(14)),
+              Text(order.phone, style: AdminText.body(14)),
               Text(
                 order.shippingAddress,
-                style: AppText.body(14, color: AppColors.muted),
+                style: AdminText.body(14, color: AdminColors.muted),
               ),
               if ((order.notes ?? '').isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
                   'Note: ${order.notes}',
-                  style: AppText.serif(15, color: AppColors.muted),
+                  style: AdminText.serif(15, color: AdminColors.muted),
                 ),
               ],
               const SizedBox(height: 24),
-              Text('ITEMS', style: AppText.label(size: 11)),
+              Text('ITEMS', style: AdminText.label(size: 11)),
               const SizedBox(height: 12),
               for (final item in order.items) ...[
                 OrderItemRow(item: item),
@@ -340,9 +338,9 @@ Future<void> showAdminOrderDialog(BuildContext context, ShopOrder order) {
               const SizedBox(height: 6),
               Row(
                 children: [
-                  Text('Total', style: AppText.display(18)),
+                  Text('Total', style: AdminText.display(18)),
                   const Spacer(),
-                  Text(formatPrice(order.total), style: AppText.display(22)),
+                  Text(formatPrice(order.total), style: AdminText.display(22)),
                 ],
               ),
             ],
@@ -365,9 +363,9 @@ class _Row extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          Text(label, style: AppText.body(14, color: AppColors.muted)),
+          Text(label, style: AdminText.body(14, color: AdminColors.muted)),
           const Spacer(),
-          Text(value, style: AppText.body(14, weight: FontWeight.w600)),
+          Text(value, style: AdminText.body(14, weight: FontWeight.w600)),
         ],
       ),
     );

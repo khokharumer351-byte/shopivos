@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 
 enum AppButtonVariant { primary, accent, outline, ghost, danger }
@@ -41,12 +40,13 @@ class _AppButtonState extends State<AppButton> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final (background, foreground) = switch (widget.variant) {
-      AppButtonVariant.primary => (AppColors.ink, Colors.white),
-      AppButtonVariant.accent => (AppColors.lime, AppColors.ink),
-      AppButtonVariant.outline => (AppColors.surface, AppColors.ink),
-      AppButtonVariant.ghost => (Colors.transparent, AppColors.ink),
-      AppButtonVariant.danger => (AppColors.danger, Colors.white),
+      AppButtonVariant.primary => (scheme.primary, scheme.onPrimary),
+      AppButtonVariant.accent => (scheme.secondary, scheme.onSecondary),
+      AppButtonVariant.outline => (scheme.surface, scheme.onSurface),
+      AppButtonVariant.ghost => (Colors.transparent, scheme.onSurface),
+      AppButtonVariant.danger => (scheme.error, Colors.white),
     };
     final hasShadow = widget.variant != AppButtonVariant.ghost;
     final (height, fontSize, hPad) = switch (widget.size) {
@@ -118,11 +118,11 @@ class _AppButtonState extends State<AppButton> {
               borderRadius: BorderRadius.circular(999),
               border: widget.variant == AppButtonVariant.ghost
                   ? null
-                  : Border.all(color: AppColors.ink, width: 1.5),
+                  : Border.all(color: scheme.outline),
               boxShadow: hasShadow && _enabled && shadowOffset > 0
                   ? [
                       BoxShadow(
-                        color: AppColors.ink,
+                        color: scheme.outline,
                         offset: Offset(shadowOffset, shadowOffset),
                       ),
                     ]
@@ -147,8 +147,8 @@ class AppIconButton extends StatelessWidget {
     required this.icon,
     required this.onPressed,
     this.tooltip,
-    this.background = AppColors.surface,
-    this.foreground = AppColors.ink,
+    this.background,
+    this.foreground,
     this.size = 44,
     this.badge,
   });
@@ -156,25 +156,26 @@ class AppIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
-  final Color background;
-  final Color foreground;
+  final Color? background;
+  final Color? foreground;
   final double size;
   final int? badge;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final bg = background ?? scheme.surface;
+    final fg = foreground ?? scheme.onSurface;
     Widget child = Material(
-      color: background,
-      shape: const CircleBorder(
-        side: BorderSide(color: AppColors.ink, width: 1.5),
-      ),
+      color: bg,
+      shape: CircleBorder(side: BorderSide(color: scheme.outline)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
         child: SizedBox(
           width: size,
           height: size,
-          child: Icon(icon, size: size * 0.45, color: foreground),
+          child: Icon(icon, size: size * 0.45, color: fg),
         ),
       ),
     );
@@ -193,13 +194,13 @@ class AppIconButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 5),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppColors.lime,
+                color: scheme.secondary,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.ink, width: 1.5),
+                border: Border.all(color: scheme.outline),
               ),
               child: Text(
                 badge! > 99 ? '99+' : '$badge',
-                style: AppText.label(size: 10),
+                style: AppText.label(size: 10, color: scheme.onSecondary),
               ),
             ),
           ),

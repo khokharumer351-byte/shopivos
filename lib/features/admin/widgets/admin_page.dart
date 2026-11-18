@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text.dart';
+import 'admin_theme.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({
@@ -39,12 +38,12 @@ class AdminPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(title, style: AppText.display(compact ? 32 : 42)),
+                      Text(title, style: AdminText.display(compact ? 32 : 42)),
                       if (subtitle != null) ...[
                         const SizedBox(height: 4),
                         Text(
                           subtitle!,
-                          style: AppText.body(14, color: AppColors.muted),
+                          style: AdminText.body(14, color: AdminColors.muted),
                         ),
                       ],
                     ],
@@ -69,7 +68,7 @@ class StatCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.icon,
-    this.color = AppColors.surface,
+    this.color = AdminColors.surface,
   });
 
   final String label;
@@ -79,17 +78,14 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onDark = color == AppColors.ink || color == AppColors.violet;
-    final fg = onDark ? Colors.white : AppColors.ink;
+    final onDark = color == AdminColors.ink || color == AdminColors.violet;
+    final fg = onDark ? Colors.white : AdminColors.ink;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.ink, width: 1.5),
-        boxShadow: const [
-          BoxShadow(color: AppColors.ink, offset: Offset(4, 4)),
-        ],
+        border: Border.all(color: AdminColors.line),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +95,7 @@ class StatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   label.toUpperCase(),
-                  style: AppText.label(size: 11, color: fg),
+                  style: AdminText.label(size: 11, color: fg),
                 ),
               ),
               Icon(icon, color: fg, size: 22),
@@ -109,7 +105,7 @@ class StatCard extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value, style: AppText.display(34, color: fg)),
+            child: Text(value, style: AdminText.display(34, color: fg)),
           ),
         ],
       ),
